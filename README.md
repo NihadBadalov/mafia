@@ -1,32 +1,32 @@
-Mafia Game
+# Mafia Game
 
 Amount of players: 8-16
 
-Formula for n(Mafia players):
+## Formula for n(Mafia players):
 * M = N / k
 * M -> amount of mafia players
 * k -> coefficient, mostly around 3-4
 * The result is rounded to the lower side - math.floor
 
-Must always vote, refraining = voting for yourself
+## Must always vote, refraining = voting for yourself
 
-Teams:
+## Teams:
 * Civilians (Sheriff included) [TC]
 * Mafia [TM]
 
-Roles:
+## Roles:
 * Civilians
 * Sheriff
 * Mafia
 * Don (Sheriff equiv. of Mafia)
 
-Voting:
+## Voting:
 * All votes are equal -> skip
 * If it is the first day and only one person has been "flagged" (for all votes: -1 until votes of at least one player are 0), then the voting is skipped
 * For someone to get kicked, one person (when >=3 players) must get at least 2/3 of the votes
 * For votes to begin the 2nd time, 2 people must get equal amount of votes, ONLY WHEN >=4 players
 
-Game routine:
+## Game routine:
 * First night
 ** Mafia meets each other for 30sec to come up with a game plan
 * Nights
@@ -38,7 +38,7 @@ Game routine:
 ** The killed player(-s) have 45 seconds of a "post-death speech." 
 -- Days and nights go on until n(TM) == n(TC) -> where TM wins; or n(TM) == 0 -> where TC wins
 
-Servers:
+## Servers:
 * id: integer;
 * players: integer;
 * maxPlayerCount: integer;
