@@ -1,0 +1,135 @@
+@import "main";
+
+.wrapper {
+    display: flex;
+    flex-flow: column nowrap;
+    width: 100%;
+
+    & > * {
+        width: 100%;
+    }
+    
+    .header {
+        display: flex;
+        justify-content: space-around;
+        /*background-color: $header_background_color;*/
+        background-color: rgba(13, 36, 42, 0.5);
+        padding: 2em 1em;
+
+        nav, div {
+            display: flex;
+            flex-flow: row wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5em;
+
+            /*
+            & > h1 > a {
+                &:active, &:focus {
+                }
+            }
+            */
+        }
+
+        .header_actions button {
+            text-transform: uppercase;
+        }
+        
+        .nav_link {
+           color: #fff; 
+           font-weight: 800;
+           text-transform: uppercase;
+           text-decoration: none;
+        }
+        .nav_link:hover {
+            text-decoration: underline;
+        }
+    }
+    .main {
+        color: #fff;
+        height: 100%;
+
+        display: flex;
+        flex-flow: column nowrap;
+        align-self: stretch;
+
+
+        .main_inner {
+            flex: 1;
+            display: flex;
+            flex-flow: column wrap;
+            align-items: stretch;
+            justify-content: center;
+            gap: 1em;
+            padding: 2em 10dvw;
+
+            .create_server {
+                @include small-shadow;
+                display: flex;
+                flex-flow: column nowrap;
+                justify-content: center;
+                align-items: center;
+                height: 70dvh;
+                min-width: 80dvw;
+                border: 0.5em $header_background_color solid;
+                background-color: $header_background_color;
+                border-radius: 12px;
+                padding: 2em 1em;
+                gap: 1em;
+
+                input {
+                    @include small-shadow;
+                    width: 30%;
+                    min-height: 1em;
+                    border: 3px $header_background_color solid;
+                    border-radius: 0.8rem;
+                    font-size: 100%;
+                    white-space: break-spaces;
+                    word-wrap: break-word;
+                    padding: 0.5em 1em;
+                }
+
+                button {
+                    @include small-shadow;
+                    min-width: 30%;
+                    min-height: 0.5em;
+                    font-size: 100%;
+                    text-transform: uppercase;
+                    white-space: break-spaces;
+                    word-wrap: break-word;
+                }
+            }
+
+            .menu_buttons {
+                display: flex;
+                justify-content: center;
+                align-items: stretch;
+                flex-flow: column nowrap;
+                gap: 0.5em;
+
+                button {
+                    min-height: 1em;
+                    width: 100%;
+                    font-size: 125%;
+                    text-transform: uppercase;
+                    white-space: break-spaces;
+                    word-wrap: break-word;
+                }
+            }
+        }
+    }
+    footer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        gap: 2em;
+        font-weight: 600;
+        justify-self: flex-end;
+        padding: 0.5em 0;
+
+        a {
+            color: #fff;
+        }
+    }
+}

@@ -1,0 +1,75 @@
+<script lang="ts">
+    export let ownUserId: number;
+    export let ast: string;
+    export let serverId: number;
+
+    export let playerId: string | number;
+    export let playerName: string;
+    // number of GameRoles or 0 for default
+    export let playerRole: any = undefined;
+    export let ownCard: boolean = false;
+
+    function getImagePath(pR: any) {
+        let path = "/images/card";
+        switch (pR) {
+            case 1:
+                path += "_mafia.jpg";
+                break;
+
+            case 2:
+                path += "_don.jpg";
+                break;
+
+            case 3:
+                path += "_citizen.jpg";
+                break;
+
+            case 4:
+                path += "_doctor.jpg";
+                break;
+
+            case 5:
+                path += "_sheriff.jpg";
+                break;
+
+            default:
+                path += ".png";
+                break;
+        }
+
+        return path;
+    }
+    function keyboardVote(
+        e: KeyboardEvent & {
+            currentTarget: EventTarget & HTMLDivElement;
+        }
+    ) {
+        if (e.key !== "Enter" && e.key !== "Space") return;
+        vote();
+    }
+    function vote() {
+        fetch(`/api/servers/${serverId}/vote`, {
+            method: "POST",
+            body: JSON.stringify({
+                targetUserId: playerId,
+                userId: ownUserId,
+                ast: ast,
+            }),
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        } as RequestInit);
+    }
+</script>
+
+<!-- svelte-ignore a11y-click-events-have-key-events -->
+<div
+    on:click={() => vote()}
+    on:keyup={(e) => keyboardVote(e)}
+    role="link"
+    tabindex="0"
+    class="card card_{playerId} {ownCard ? 'ownCard' : ''}"
+>
+    <img src={getImagePath(playerRole)} alt="Card" />
+    <p>{@html playerName}</p>
+</div>

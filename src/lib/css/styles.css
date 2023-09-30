@@ -1,0 +1,246 @@
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Roboto", sans-serif;
+}
+
+*:focus {
+  outline-style: solid;
+  outline-color: #fff;
+}
+
+html, body, .wrapper {
+  height: 100%;
+}
+
+ul {
+  list-style-type: none;
+}
+
+/*
+    ######
+*/
+html {
+  font-size: 62.5%;
+  color: #fff;
+}
+
+body {
+  font-size: 1.6rem;
+  font-family: "Roboto", sans-serif;
+  /*font-family: 'Roboto Slab', serif;*/
+  background: rgb(0, 88, 116);
+  background: radial-gradient(circle, rgb(0, 88, 116) 0%, rgb(13, 35, 42) 50%, rgb(20, 75, 92) 100%);
+}
+
+button.btn {
+  width: 6em;
+  height: 2em;
+  background-color: #006d8f;
+  /*border-radius: 4px;*/
+  border-radius: 4px;
+  color: #fff;
+  border: 1px #3f3f3f solid;
+  transition: 0.075s all linear;
+  font-family: "Roboto", sans-serif;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+button.btn:hover, button.btn:active, button.btn:focus {
+  background-color: #00536e;
+}
+
+.serif_font {
+  font-family: "Roboto Slab", serif;
+}
+
+/* Scrollbars */
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #00076B #5F6364;
+}
+
+/* Chrome, Edge and Safari */
+*::-webkit-scrollbar {
+  width: 7px;
+  width: 7px;
+}
+
+*::-webkit-scrollbar-track {
+  border-radius: 1px;
+  background-color: #5F6364;
+}
+
+*::-webkit-scrollbar-track:hover {
+  background-color: #7D8384;
+}
+
+*::-webkit-scrollbar-track:active {
+  background-color: #5F6364;
+}
+
+*::-webkit-scrollbar-thumb {
+  border-radius: 1px;
+  background-color: #00076B;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: #00097E;
+}
+
+*::-webkit-scrollbar-thumb:active {
+  background-color: #000A94;
+}
+
+/*
+SPANS
+*/
+span.color_red {
+  color: #ff0000;
+}
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+*:focus {
+  outline-style: solid;
+  outline-color: #fff;
+}
+
+html, body, .wrapper {
+  height: 100%;
+}
+
+ul {
+  list-style-type: none;
+}
+
+html {
+  font-size: 62.5%;
+  color: #fff;
+}
+
+body {
+  font-size: 1.6rem;
+  font-family: "Roboto", sans-serif;
+  /*font-family: 'Roboto Slab', serif;*/
+  background: rgb(0, 88, 116);
+  background: radial-gradient(circle, rgb(0, 88, 116) 0%, rgb(13, 35, 42) 50%, rgb(20, 75, 92) 100%);
+}
+
+button.btn {
+  width: 6em;
+  height: 2em;
+  background-color: #006d8f;
+  /*border-radius: 4px;*/
+  border-radius: 4px;
+  color: #fff;
+  border: 1px #3f3f3f solid;
+  transition: 0.075s all linear;
+  font-family: "Roboto", sans-serif;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+button.btn:hover, button.btn:active, button.btn:focus {
+  background-color: #00536e;
+}
+
+.serif_font {
+  font-family: "Roboto Slab", serif;
+}
+
+.wrapper {
+  display: flex;
+  flex-flow: column nowrap;
+  width: 100%;
+}
+.wrapper > * {
+  width: 100%;
+}
+.wrapper .header {
+  display: flex;
+  justify-content: space-around;
+  /*background-color: $header_background_color;*/
+  background-color: rgba(13, 36, 42, 0.5);
+  padding: 2em 1em;
+}
+.wrapper .header nav, .wrapper .header div {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5em;
+  /*
+  & > h1 > a {
+      &:active, &:focus {
+      }
+  }
+  */
+}
+.wrapper .header .header_actions button {
+  text-transform: uppercase;
+}
+.wrapper .header .nav_link {
+  color: #fff;
+  font-weight: 800;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+.wrapper .header .nav_link:hover {
+  text-decoration: underline;
+}
+.wrapper .main {
+  color: #fff;
+  height: 100%;
+  display: flex;
+  flex-flow: column nowrap;
+  align-self: stretch;
+}
+.wrapper .main .main_inner {
+  flex: 1;
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 10dvw;
+}
+.wrapper .main .main_inner .server_list {
+  min-width: 40dvw !important;
+}
+.wrapper .main .main_inner .menu_buttons {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  flex-flow: column nowrap;
+  gap: 4em;
+}
+.wrapper .main .main_inner .menu_buttons button {
+  min-width: 30dvw;
+  min-height: 10dvh;
+  font-size: 200%;
+  text-transform: uppercase;
+  white-space: break-spaces;
+  word-wrap: break-word;
+}
+.wrapper footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: 2em;
+  font-weight: 600;
+  justify-self: flex-end;
+  padding: 0.5em 0;
+}
+.wrapper footer a {
+  color: #fff;
+}
+
+/*# sourceMappingURL=styles.css.map */

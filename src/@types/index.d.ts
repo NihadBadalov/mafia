@@ -1,0 +1,68 @@
+import type { GameRoles } from './GameRoles';
+import type { GameStates } from './GameStates';
+
+export type UserId = number;
+
+export interface GameServer {
+    id: number;
+    name: string;
+    maxPlayerCount: number;
+    mafiaCount: number;
+
+    players: UserId[];
+    playerBlacklist: UserId[];
+    playerRoles: { userId: UserId; role: typeof GameRoles[keyof typeof GameRoles] | number }[];
+
+    ownerId: UserId;
+    started: boolean;
+    state: GameStates;
+
+    announcements: {
+        [key: typeof GameRoles[keyof typeof GameRoles] | number]: string;
+    };
+    citizenChat: Chat;
+    mafiaChat: Chat;
+    playersCanChat: boolean;
+
+    mafiaVoteKill: boolean;
+    whoCanVoteKick: number[];
+    votingBetween: number[];
+    votes: {
+        don: number | undefined;
+        mafia: Votes[];
+        citizens: Votes[];
+    };
+    timer: number | undefined;
+}
+
+export interface User {
+    id: UserId;
+    name: string;
+}
+
+export interface UserAccessToken {
+    id: UserId;
+    token: string;
+}
+
+export interface ServerData {
+    servers: GameServer[];
+    users: User[];
+    userAsts: UserAccessToken[] | undefined;
+}
+
+export interface ModifiedServerData extends ServerData {
+    [key: string]: any;
+}
+
+export interface ChatMessage {
+    userId: UserId;
+    content: string;
+}
+export type Chat = Array<ChatMessage>;
+
+export type Votes = {
+    for: UserId;
+    by: UserId;
+};
+

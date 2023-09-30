@@ -1,0 +1,118 @@
+@use 'sass:map';
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+}
+*:focus {
+    outline-style: solid;
+    outline-color: #fff;
+}
+
+html, body, .wrapper {
+    height: 100%;
+}
+ul {
+    list-style-type: none;
+}
+
+$link_blue: #348da8;
+$header_background_color: #0d232a;
+
+$radial_background: rgb(0,88,116);
+$linear_background_gradient: linear-gradient(90deg, rgba(0,88,116,1) 0%, rgba(13,35,42,1) 50%, rgba(20,75,92,1) 100%);
+$radial_background_gradient: radial-gradient(circle, rgba(0,88,116,1) 0%, rgba(13,35,42,1) 50%, rgba(20,75,92,1) 100%);
+@mixin small-shadow {
+    box-shadow: 0px 0px 21px 8px rgba(0,0,0,0.25);
+}
+
+$color_names-by-colors: (
+    "red": #ff0000,
+);
+
+
+/*
+    ######
+*/
+html {
+    font-size: 62.5%;
+    color: #fff;
+}
+body {
+    font-size: 1.6rem;
+    font-family: 'Roboto', sans-serif;
+    /*font-family: 'Roboto Slab', serif;*/
+    background: $radial_background;
+    background: $radial_background_gradient;
+}
+
+button.btn {
+    width: 6em;
+    height: 2em;
+    background-color: #006d8f;
+    /*border-radius: 4px;*/
+    border-radius: 4px;
+    color: #fff;
+    border: 1px #3f3f3f solid;
+    transition: 0.075s all linear;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+}
+button.btn:hover, button.btn:active, button.btn:focus {
+    background-color: #00536e;
+}
+
+.serif_font {
+    font-family: 'Roboto Slab', serif;
+}
+
+
+/* Scrollbars */
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #00076B #5F6364;
+}
+
+/* Chrome, Edge and Safari */
+*::-webkit-scrollbar {
+  width: 7px;
+  width: 7px;
+}
+*::-webkit-scrollbar-track {
+  border-radius: 1px;
+  background-color: #5F6364;
+}
+
+*::-webkit-scrollbar-track:hover {
+  background-color: #7D8384;
+}
+
+*::-webkit-scrollbar-track:active {
+  background-color: #5F6364;
+}
+
+*::-webkit-scrollbar-thumb {
+  border-radius: 1px;
+  background-color: #00076B;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: #00097E;
+}
+
+*::-webkit-scrollbar-thumb:active {
+  background-color: #000A94;
+}
+
+
+/*
+SPANS
+*/
+@each $name, $colr in $color_names-by-colors {
+    span.color_#{$name} {
+        color: $colr;
+    }
+}
