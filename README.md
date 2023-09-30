@@ -1,38 +1,46 @@
-# create-svelte
+Mafia Game
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+Amount of players: 8-16
 
-## Creating a project
+Formula for n(Mafia players):
+* M = N / k
+* M -> amount of mafia players
+* k -> coefficient, mostly around 3-4
+* The result is rounded to the lower side - math.floor
 
-If you're seeing this, you've probably already done this step. Congrats!
+Must always vote, refraining = voting for yourself
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
+Teams:
+* Civilians (Sheriff included) [TC]
+* Mafia [TM]
 
-# create a new project in my-app
-npm create svelte@latest my-app
-```
+Roles:
+* Civilians
+* Sheriff
+* Mafia
+* Don (Sheriff equiv. of Mafia)
 
-## Developing
+Voting:
+* All votes are equal -> skip
+* If it is the first day and only one person has been "flagged" (for all votes: -1 until votes of at least one player are 0), then the voting is skipped
+* For someone to get kicked, one person (when >=3 players) must get at least 2/3 of the votes
+* For votes to begin the 2nd time, 2 people must get equal amount of votes, ONLY WHEN >=4 players
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+Game routine:
+* First night
+** Mafia meets each other for 30sec to come up with a game plan
+* Nights
+** Mafia wakes up, has 45 second to discuss who to kill & press buttons, Mafia sleeps
+** Don wakes up, his time is joint with Mafia's, he has to choose a player who will get killed, he gets told whether or not the killed player was the Sheriff, Don sleeps
+** Sheriff wakes up, has 25 seconds to choose someone, he will get told whether or not that player was on team Mafia
+* Days
+** It is announced who died (if any)
+** The killed player(-s) have 45 seconds of a "post-death speech." 
+-- Days and nights go on until n(TM) == n(TC) -> where TM wins; or n(TM) == 0 -> where TC wins
 
-```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+Servers:
+* id: integer;
+* players: integer;
+* maxPlayerCount: integer;
+* mafiaCount: integer;
+* serverName: string;
