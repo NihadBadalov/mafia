@@ -11,6 +11,7 @@
   export let ast: string;
   export let serverId: number;
   let formInputPlaceholder = "Enter your message";
+  let _server = data.servers.find((s) => s.id === serverId);
   $: disableSending = false;
   $: {
     let s = data.servers.find((s) => s.id === serverId);
@@ -62,20 +63,34 @@
   function fetchUser(uid: number) {
     cache[uid] =
       getUserById(uid, data as ModifiedServerData)?.name ?? "Unnamed user";
+
     if (uid === userId)
       cache[uid] =
         cache[uid] === "Unnamed user"
           ? cache[uid]
           : `<span class="color_red">${cache[uid]} (YOU)</span>`;
+
     if (isMafiaGameRole(getUserRoleInServer(uid, data)))
       cache[uid] = `<span class="color_red">[MAFIA]</span> ${cache[uid]}`;
 
     return cache[uid];
   }
 
-  for (let i = 0; i < messages.length; i++) {
-    if (cache[("" + messages[i]?.userId) as any]) continue;
-    fetchUser(messages[i]?.userId);
+  for (let i = 0; i < (_server?.players.length ?? messages.length); i++) {
+    if (
+      cache[
+        _server?.players.length
+          ? _server.players[i]
+          : (messages[i]?.userId as any)
+      ]
+    )
+      continue;
+
+    fetchUser(
+      _server?.players.length
+        ? _server.players[i]
+        : (messages[i]?.userId as any)
+    );
   }
 </script>
 
@@ -105,7 +120,7 @@
     <div class="game_chat__inner__message_holder">
       {#each messages as message}
         <p class="chatMessage {userId === message.userId ? 'ownMessage' : ''}">
-          {@html cache[message?.userId] ?? fetchUser(userId)}:
+          {@html cache[message?.userId]}:
           {message.content}
         </p>
       {/each}

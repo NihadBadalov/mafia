@@ -7,6 +7,8 @@
     (s: any) => s.id === data.currentServerId
   ) as GameServer;
   $: gameStarted = currentServer.started;
+  $: citizenChat = currentServer.citizenChat;
+  $: mafiaChat = currentServer.mafiaChat;
 
   import { customIo, socketEndpoint } from "$lib/webSocketConnection.js";
   import { onDestroy, onMount } from "svelte";
@@ -38,14 +40,16 @@
           break;
 
         case "indexSockets":
-          io.emit("indexedSocket", {
-            serverId: data?.currentServerId,
-            serverStarted: currentServer?.started,
-            successful: !!currentServer?.started,
-            role: currentServer.playerRoles.find(
-              (pr) => pr?.userId === data?.currentUserId
-            )?.role,
-          });
+          setTimeout(() => {
+            io.emit("indexedSocket", {
+              serverId: data?.currentServerId,
+              serverStarted: currentServer?.started,
+              successful: !!currentServer?.started,
+              role: currentServer.playerRoles.find(
+                (pr) => pr?.userId === data?.currentUserId
+              )?.role,
+            });
+          }, 1000);
           break;
 
         default:
@@ -56,10 +60,11 @@
     // User ids and names
     const cache: { [key: string]: string } = {};
 
-    /* io.on("chatMessageToClient", ({ iT1, iT2, iT3, userId }) => {
+    io.on("chatMessageToClient", ({ iT1, iT2, iT3, userId }) => {
       let chat = document.querySelector(
         ".game_chat > .game_chat__contents > .game_chat__inner__message_holder"
       );
+      console.log("we got a message", iT2);
       if (!chat) return;
 
       let p = document.createElement("p");
@@ -80,13 +85,14 @@
         return cache[uid];
       }
 
-      let innerText = iT1 + (cache[userId] ?? fetchUser(userId)) + ': ' + iT2 + iT3;
+      let innerText =
+        iT1 + (cache[userId] ?? fetchUser(userId)) + ": " + iT2 + iT3;
 
       p.innerHTML = innerText;
       if (userId === data?.currentUserId) p.classList.add("ownMessage");
 
       chat.append(p);
-    }); */
+    });
   });
 
   onDestroy(() => {
@@ -228,9 +234,7 @@
         {#key currentServer.state}
           <Chat
             {data}
-            messages={currentUserIsMafia()
-              ? currentServer.mafiaChat
-              : currentServer.citizenChat}
+            messages={currentUserIsMafia() ? mafiaChat : citizenChat}
             userId={data?.currentUserId}
             ast={data?.ast}
             serverId={data?.currentServerId}

@@ -39,11 +39,6 @@ export default function injectSocketIO(server: Partial<ServerOptions>) {
       }
     });
 
-    socket.on('indexSocketsFromServer', async ({ message, serverId }) => {
-      if (isNaN(serverId)) return;
-      io.of(`/game/${serverId}`).emit('serverEvent', 'indexSockets');
-    });
-
     socket.on('indexedSocket', async ({
       serverId,
       serverStarted,
@@ -52,7 +47,6 @@ export default function injectSocketIO(server: Partial<ServerOptions>) {
     }) => {
       if (isNaN(serverId) || isNaN(role)) return;
       if (!serverStarted || !successful) return;
-      console.log('SOCKET INDEXED');
 
       if (role === 0 || role === 1 || role === 2) {
         // Mafia team
@@ -127,36 +121,41 @@ export default function injectSocketIO(server: Partial<ServerOptions>) {
           io.of(`/game/${args?.serverId}`).emit('serverEvent', 'updateServer');
           break;
 
-        // case 'chatMessageFromServerToServer':
-        //   if (!args?.to
-        //     || !args?.serverId
-        //     || !args?.userId
-        //     || !args?.content) return;
-        //
-        //   let emitContent = {
-        //     // iT being innerText
-        //     iT1: '<p class="chatMessage">',
-        //     iT2: args?.content ?? '',
-        //     iT3: '</p>',
-        //     userId: args?.userId,
-        //   };
-        //
-        //   switch (args?.to) {
-        //     case 2:
-        //       // All
-        //       io.of(`/game/${args?.serverId}`).emit('chatMessageToClient', emitContent);
-        //       break;
-        //
-        //     case 0:
-        //       // Mafia
-        //       io.of(`/game/${args?.serverId}`).to('mafias').emit('chatMessageToClient', emitContent);
-        //       break;
-        //
-        //     case 1:
-        //       // Citizens
-        //       io.of(`/game/${args?.serverId}`).to('citizens').emit('chatMessageToClient', emitContent);
-        //       break;
-        //   }
+        case 'indexSocketsFromServer':
+          if (isNaN(args['serverId'])) return;
+          io.of(`/game/${args['serverId']}`).emit('serverEvent', 'indexSockets');
+          break;
+
+        case 'chatMessageFromServerToServer':
+          if (!args?.to
+            || !args?.serverId
+            || !args?.userId
+            || !args?.content) return;
+
+          let emitContent = {
+            // iT being innerText
+            iT1: '<p class="chatMessage">',
+            iT2: args?.content ?? '',
+            iT3: '</p>',
+            userId: args?.userId,
+          };
+
+          switch (args?.to) {
+            case 2:
+              // All
+              io.of(`/game/${args?.serverId}`).emit('chatMessageToClient', emitContent);
+              break;
+
+            case 0:
+              // Mafia
+              io.of(`/game/${args?.serverId}`).to('mafias').emit('chatMessageToClient', emitContent);
+              break;
+
+            case 1:
+              // Citizens
+              io.of(`/game/${args?.serverId}`).to('citizens').emit('chatMessageToClient', emitContent);
+              break;
+          }
 
         default:
           break;

@@ -46,13 +46,13 @@ export const POST: RequestHandler = async ({ request, params }) => {
       content: message,
     });
 
-    // io.emit('serverEvent', {
-    //   message: 'chatMessageFromServerToServer',
-    //   to: 2,
-    //   serverId: server?.id,
-    //   userId: userId,
-    //   content: message,
-    // });
+    io.emit('serverEvent', {
+      message: 'chatMessageFromServerToServer',
+      to: 2,
+      serverId: server?.id,
+      userId: userId,
+      content: message,
+    });
 
     // updateServer(server?.id);
 
@@ -66,25 +66,25 @@ export const POST: RequestHandler = async ({ request, params }) => {
       userId: userId,
       content: message,
     });
-    // io.emit('serverEvent', {
-    //   message: 'chatMessageFromServerToServer',
-    //   to: 1,
-    //   serverId: server?.id,
-    //   userId: userId,
-    //   content: message,
-    // });
+    io.emit('serverEvent', {
+      message: 'chatMessageFromServerToServer',
+      to: 1,
+      serverId: server?.id,
+      userId: userId,
+      content: message,
+    });
   }
-  /* server.mafiaChat.push({
+  server.mafiaChat.push({
     userId: userId,
     content: message,
-  }); */
-  // io.emit('serverEvent', {
-  //   message: 'chatMessageFromServerToServer',
-  //   to: 0,
-  //   serverId: server?.id,
-  //   userId: userId,
-  //   content: message,
-  // });
+  });
+  io.emit('serverEvent', {
+    message: 'chatMessageFromServerToServer',
+    to: 0,
+    serverId: server?.id,
+    userId: userId,
+    content: message,
+  });
 
   // updateServer(server?.id);
 
