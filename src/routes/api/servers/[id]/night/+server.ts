@@ -123,7 +123,7 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
     method: 'POST',
     body: JSON.stringify({
       origin: 'server',
-      dayType: 'first',
+      dayType: type === 'first' ? 'first' : 'notFirst',
     }),
     headers: {
       'Content-Type': 'application/json',
