@@ -2,9 +2,9 @@ import { json, type RequestHandler } from '@sveltejs/kit';
 import { _data } from '../index';
 import { io } from '$lib/webSocketConnection.js';
 import { getGameServerWithUserById, getUserByAst, getUserRoleInServer, handleUserSession, isMafiaGameRole } from '$lib';
-import type { ServerData, User } from '$typings';
-import { GameStates } from '$typings/GameStates';
-import { GameRoles } from '$typings/GameRoles';
+import type { ServerData, User } from '$types';
+import { GameStates } from '$types/GameStates';
+import { GameRoles } from '$types/GameRoles';
 
 // Send message to server
 function sendMessage(event: string, text: string | object, ep: string) {
@@ -32,37 +32,37 @@ export const GET: RequestHandler = async ({ cookies, setHeaders, fetch, url }) =
     if (!server.started) continue;
 
     if (!user || !userServer || (typeof (userServer?.id) === 'number' && userServer?.id !== server.id)) {
-        // Hide everything
-        for (let j = 0; j < server.playerRoles?.length; j++) {
-            server.playerRoles[j].role = GameRoles.Unknown;
-        }
-        for (const [roleId] of Object.entries(server.announcements)) {
-            server.announcements[+roleId] = '';
-        }
-        continue;
+      // Hide everything
+      for (let j = 0; j < server.playerRoles?.length; j++) {
+        server.playerRoles[j].role = GameRoles.Unknown;
+      }
+      for (const [roleId] of Object.entries(server.announcements)) {
+        server.announcements[+roleId] = '';
+      }
+      continue;
     }
 
     // Hide non-mafia for Mafia
     const userServerRoleId = getUserRoleInServer(user?.id);
     const userIsMafia = isMafiaGameRole(userServerRoleId);
     if (userIsMafia) {
-        for (let j = 0; j < server.playerRoles?.length; j++) {
-            if (!isMafiaGameRole(server.playerRoles[j].role)) server.playerRoles[j].role = GameRoles.Unknown;
-        }
+      for (let j = 0; j < server.playerRoles?.length; j++) {
+        if (!isMafiaGameRole(server.playerRoles[j].role)) server.playerRoles[j].role = GameRoles.Unknown;
+      }
     }
 
     // Hide mafia for Non-mafia
     if (!userIsMafia) {
-        for (let j = 0; j < server.playerRoles?.length; j++) {
-            if (server.playerRoles[j]?.userId === user?.id) continue;
-            //if (isMafiaGameRole(server.playerRoles[j]?.role)) server.playerRoles[j].role = GameRoles.Unknown;
-            server.playerRoles[j].role = GameRoles.Unknown;
-        }
+      for (let j = 0; j < server.playerRoles?.length; j++) {
+        if (server.playerRoles[j]?.userId === user?.id) continue;
+        //if (isMafiaGameRole(server.playerRoles[j]?.role)) server.playerRoles[j].role = GameRoles.Unknown;
+        server.playerRoles[j].role = GameRoles.Unknown;
+      }
     }
 
     for (const [roleId] of Object.entries(server.announcements)) {
-        if (+roleId === userServerRoleId) continue;
-        server.announcements[+roleId] = '';
+      if (+roleId === userServerRoleId) continue;
+      server.announcements[+roleId] = '';
     }
   }
 

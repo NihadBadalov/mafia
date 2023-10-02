@@ -1,9 +1,9 @@
 import { json, error, type RequestHandler } from '@sveltejs/kit';
 import { _data } from '$api';
 import { getUserByAst, getUserRoleInServer } from '$lib';
-import type { GameServer } from '$typings';
-import { GameRoles } from '$typings/GameRoles';
-import { GameStates } from '$typings/GameStates';
+import type { GameServer } from '$types';
+import { GameRoles } from '$types/GameRoles';
+import { GameStates } from '$types/GameStates';
 import { io } from '$lib/webSocketConnection';
 
 export const POST: RequestHandler = async ({ request, params }) => {

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { PlayerCard, Chat } from "$lib/components";
-  import type { GameServer, ModifiedServerData, User } from "$typings";
+  import type { GameServer, ModifiedServerData, User } from "$types";
 
   export let data: ModifiedServerData;
   $: currentServer = data.servers.find(
@@ -13,7 +13,7 @@
   import { customIo, socketEndpoint } from "$lib/webSocketConnection.js";
   import { onDestroy, onMount } from "svelte";
   import { invalidateAll } from "$app/navigation";
-  import { GameRoles } from "$typings/GameRoles";
+  import { GameRoles } from "$types/GameRoles";
   import { getUserById, getUserRoleInServer, isMafiaGameRole } from "$lib";
 
   const io = customIo(`${socketEndpoint}/game/${data.currentServerId}`);

@@ -1,9 +1,9 @@
 <script lang="ts">
   import { getUserById, getUserRoleInServer, isMafiaGameRole } from "$lib";
-  import type { ChatMessage, ModifiedServerData } from "$typings";
+  import type { ChatMessage, ModifiedServerData } from "$types";
   import { onMount } from "svelte";
-  import { GameStates } from "$typings/GameStates";
-  import { GameRoles } from "$typings/GameRoles";
+  import { GameStates } from "$types/GameStates";
+  import { GameRoles } from "$types/GameRoles";
 
   export let data: ModifiedServerData;
   export let messages: ChatMessage[] = [];
