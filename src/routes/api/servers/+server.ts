@@ -61,6 +61,12 @@ export const GET: RequestHandler = async ({ cookies, setHeaders, fetch, url }) =
         if (server.playerRoles[j]?.userId === user?.id) continue;
         server.playerRoles[j].role = GameRoles.Unknown;
       }
+
+      server.mafiaChat = [];
+      server.whoCanVoteKick = [];
+      server.votingBetween = [];
+      server.votes.don = undefined;
+      server.votes.mafia = [];
     }
 
     // Hide other stuff
