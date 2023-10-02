@@ -64,7 +64,6 @@
       let chat = document.querySelector(
         ".game_chat > .game_chat__contents > .game_chat__inner__message_holder"
       );
-      console.log("we got a message", iT2);
       if (!chat) return;
 
       let p = document.createElement("p");

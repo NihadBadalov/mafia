@@ -45,7 +45,9 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
 
   voting = await voting.json();
 
-  if (!(voting as any)?.complete) {
+  if (!(voting as any)?.complete
+    // Don't start a second vote-kick round if no one has voted
+    && (Array.isArray((voting as any)?.kickedPerson) && (voting as any)?.kickedPerson.length !== 0)) {
     // Pending between 2 people
     server.votingBetween = (voting as any)?.kickedPerson;
 
