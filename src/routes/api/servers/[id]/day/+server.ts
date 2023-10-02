@@ -47,13 +47,15 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
 
     if (!(voting as any)?.complete) {
         // Pending between 2 people
-        server.votingBetween = (voting as any)?.votingBetween;
+        server.votingBetween = (voting as any)?.kickedPerson;
+
+        await wait(3_000);
 
         voting = await fetch(`/api/servers/${server.id}/voting`, {
             method: 'POST',
             body: JSON.stringify({
                 origin: 'server',
-                votingBetween: (voting as any)?.votingBetween,
+                votingBetween: server?.votingBetween,
             }),
             headers: {
                 'Content-Type': 'application/json',
