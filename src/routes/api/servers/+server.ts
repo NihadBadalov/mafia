@@ -31,8 +31,10 @@ export const GET: RequestHandler = async ({ cookies, setHeaders, fetch, url }) =
     if (!server.playerRoles?.length) continue;
     if (!server.started) continue;
 
+    // "Outer-sessional" data hiding - hide everything
     if (!user || !userServer || (typeof (userServer?.id) === 'number' && userServer?.id !== server.id)) {
-      // Hide everything
+      // Idea: Literally reset the properties to their primitive values,
+      // such as [] or {} instead of iterating thru them
       for (let j = 0; j < server.playerRoles?.length; j++) {
         server.playerRoles[j].role = GameRoles.Unknown;
       }
@@ -42,24 +44,26 @@ export const GET: RequestHandler = async ({ cookies, setHeaders, fetch, url }) =
       continue;
     }
 
-    // Hide non-mafia for Mafia
+    // "Inner-sessional" data hiding
     const userServerRoleId = getUserRoleInServer(user?.id);
     const userIsMafia = isMafiaGameRole(userServerRoleId);
+
     if (userIsMafia) {
+      // Hide non-mafia playerRoles for Mafia
       for (let j = 0; j < server.playerRoles?.length; j++) {
         if (!isMafiaGameRole(server.playerRoles[j].role)) server.playerRoles[j].role = GameRoles.Unknown;
       }
     }
 
-    // Hide mafia for Non-mafia
     if (!userIsMafia) {
+      // Hide mafia playerRoles for Non-mafia
       for (let j = 0; j < server.playerRoles?.length; j++) {
         if (server.playerRoles[j]?.userId === user?.id) continue;
-        //if (isMafiaGameRole(server.playerRoles[j]?.role)) server.playerRoles[j].role = GameRoles.Unknown;
         server.playerRoles[j].role = GameRoles.Unknown;
       }
     }
 
+    // Hide other stuff
     for (const [roleId] of Object.entries(server.announcements)) {
       if (+roleId === userServerRoleId) continue;
       server.announcements[+roleId] = '';
@@ -127,7 +131,6 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
     mafiaChat: [],
     playersCanChat: true,
 
-    mafiaVoteKill: false,
     votingBetween: [],
     whoCanVoteKick: [],
     votes: {

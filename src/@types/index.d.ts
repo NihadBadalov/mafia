@@ -24,7 +24,6 @@ export interface GameServer {
     mafiaChat: Chat;
     playersCanChat: boolean;
 
-    mafiaVoteKill: boolean;
     whoCanVoteKick: number[];
     votingBetween: number[];
     votes: {
