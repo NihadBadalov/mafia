@@ -26,6 +26,7 @@ export const GET: RequestHandler = async ({ cookies, setHeaders, fetch, url }) =
   let dc = structuredClone(_data) as ServerData;
   dc.userAsts = undefined;
   delete dc.userAsts;
+  delete dc.serverPassphrase;
 
   for (const server of dc.servers) {
     if (!server.playerRoles?.length) continue;

@@ -4,6 +4,7 @@ export let _data = {
   servers: [],
   users: [],
   userAsts: [],
+  serverPassphrase: _generateUserToken(64),
 } as unknown as ServerData;
 
 export function _generateUserToken(length: number): string {

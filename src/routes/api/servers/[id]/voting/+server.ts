@@ -10,7 +10,7 @@ import { io } from '$lib/webSocketConnection';
 export const POST: RequestHandler = async ({ request, params }) => {
   let { origin, votingBetween, passedDonChoice } = await request.json();
 
-  if (origin !== 'server')
+  if (origin !== _data.serverPassphrase)
     throw error(403, 'Not Authorized');
 
   if (!params?.id || isNaN(params?.id as any))

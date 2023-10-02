@@ -48,6 +48,7 @@ export interface ServerData {
     servers: GameServer[];
     users: User[];
     userAsts: UserAccessToken[] | undefined;
+    serverPassphrase: string | undefined;
 }
 
 export interface ModifiedServerData extends ServerData {

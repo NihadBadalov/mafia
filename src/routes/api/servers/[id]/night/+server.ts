@@ -10,7 +10,7 @@ import { gameAnnounce, getUserById, getUserRoleInServer, isMafiaGameRole } from 
 export const POST: RequestHandler = async ({ request, params, fetch }) => {
   let { origin, type } = await request.json();
 
-  if (origin !== 'server')
+  if (origin !== _data.serverPassphrase)
     throw error(403, 'Not Authorized');
 
   if (!params?.id || isNaN(params?.id as any))
@@ -57,7 +57,7 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
     voting = await fetch(`/api/servers/${server.id}/voting`, {
       method: 'POST',
       body: JSON.stringify({
-        origin: 'server',
+        origin: _data.serverPassphrase,
       }),
       headers: {
         'Content-Type': 'application/json',
@@ -73,7 +73,7 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
       voting = await fetch(`/api/servers/${server.id}/voting`, {
         method: 'POST',
         body: JSON.stringify({
-          origin: 'server',
+          origin: _data.serverPassphrase,
           votingBetween: voting?.votingBetween,
           passedDonChoice: voting?.donChoice,
         }),
@@ -125,7 +125,7 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
     fetch(`/api/servers/${server.id}/gameEnd`, {
       method: 'POST',
       body: JSON.stringify({
-        origin: 'server',
+        origin: _data.serverPassphrase,
       }),
       headers: {
         'Content-Type': 'application/json',
@@ -136,7 +136,7 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
     fetch(`/api/servers/${server.id}/night`, {
       method: 'POST',
       body: JSON.stringify({
-        origin: 'server',
+        origin: _data.serverPassphrase,
       }),
       headers: {
         'Content-Type': 'application/json',

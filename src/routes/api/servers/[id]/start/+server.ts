@@ -77,7 +77,7 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
   fetch(`/api/servers/${server.id}/night`, {
     method: 'POST',
     body: JSON.stringify({
-      origin: 'server',
+      origin: _data.serverPassphrase,
       type: 'first',
     }),
     headers: {
