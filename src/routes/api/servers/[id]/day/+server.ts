@@ -3,7 +3,7 @@ import { _data } from '$api';
 import type { GameServer } from '$types';
 import { GameStates } from '$types/GameStates';
 import { setTimeout as wait } from 'node:timers/promises';
-import { gameAnnounce, getUserById } from '$lib';
+import { gameAnnounce, getUserById, getUserRoleInServer, isMafiaGameRole } from '$lib';
 import { io } from '$lib/webSocketConnection';
 
 
@@ -126,16 +126,30 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
     await wait(7_000);
   }
 
-  fetch(`/api/servers/${server.id}/night`, {
-    method: 'POST',
-    body: JSON.stringify({
-      origin: 'server',
-      dayType: 'first',
-    }),
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  } as RequestInit);
+  const endVotePlayerRoles = server.players.map(pid => isMafiaGameRole(getUserRoleInServer(pid)));
+  if (endVotePlayerRoles.filter(e => e) >= endVotePlayerRoles.filter(e => !e)) {
+    // Mafias >= citizens
+    fetch(`/api/servers/${server.id}/gameEnd`, {
+      method: 'POST',
+      body: JSON.stringify({
+        origin: 'server',
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    } as RequestInit);
+  }
+  else {
+    fetch(`/api/servers/${server.id}/night`, {
+      method: 'POST',
+      body: JSON.stringify({
+        origin: 'server',
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    } as RequestInit);
+  }
 
 
   // @ts-ignore
