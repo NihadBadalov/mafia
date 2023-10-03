@@ -16,6 +16,10 @@ export interface GameServer {
     ownerId: UserId;
     started: boolean;
     state: GameStates;
+    specialStates: {
+      sheriffAbility: boolean;
+      doctorAbility: boolean;
+    };
 
     announcements: {
         [key: typeof GameRoles[keyof typeof GameRoles] | number]: string;
@@ -28,6 +32,7 @@ export interface GameServer {
     votingBetween: number[];
     votes: {
         don: number | undefined;
+        doctor: number | undefined;
         mafia: Votes[];
         citizens: Votes[];
     };

@@ -5,6 +5,7 @@ import { GameStates } from '$types/GameStates';
 import { setTimeout as wait } from 'node:timers/promises';
 import { io } from '$lib/webSocketConnection';
 import { gameAnnounce, getUserById, getUserRoleInServer, isMafiaGameRole } from '$lib';
+import { GameRoles } from '$types/GameRoles';
 
 
 export const POST: RequestHandler = async ({ request, params, fetch }) => {
@@ -51,8 +52,14 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
     server.timer = undefined;
   }
   else {
+    // Not the first night
+    // Mafia voting
     server.votes.mafia = [];
-    await gameAnnounce('VOTE TO <span class="color_red">KILL</span> SOMEONE<br>(don\'t vote to skip)', 'mafia', serverId);
+    await gameAnnounce(
+      'VOTE TO <span class="color_red">KILL</span> SOMEONE<br>(don\'t vote to skip)',
+      'mafia',
+      serverId
+    );
 
     voting = await fetch(`/api/servers/${server.id}/voting`, {
       method: 'POST',
@@ -84,11 +91,75 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
       voting = await voting.json();
     }
 
-  }
+    // Sheriff
+    if (server.players.some(pid => getUserRoleInServer(pid) === GameRoles.Sheriff)) {
+      server.specialStates.sheriffAbility = true;
 
+      await gameAnnounce(
+        '<span class="color_red">MAFIA</span> GOES TO SLEEP,<br>THE <span class="color_red">SHERIFF</span> WAKES UP',
+        'all',
+        serverId,
+      );
+      await gameAnnounce(
+        'CLICK ON SOMEONE<br>TO <span class="color_red">VIEW</span> THEIR <span class="color_red">ROLE</span>',
+        [GameRoles.Sheriff],
+        serverId,
+      );
 
-  if (type !== 'first') {
-    const killedPersonId = (voting as any)?.killedPerson;
+      for (let i = 30; i > -1; i--) {
+        if (
+          (server.specialStates.sheriffAbility as boolean) === false
+        ) break;
+        server.timer = i;
+        io.emit('serverEvent', {
+          message: 'updateServer',
+          serverId: serverId,
+        });
+        await wait(1000);
+      }
+      server.timer = undefined;
+
+      server.specialStates.sheriffAbility = false;
+    }
+
+    // Doctor
+    let doctorChoice: number | undefined;
+    if (server.players.some(pid => getUserRoleInServer(pid) === GameRoles.Doctor)) {
+      server.specialStates.doctorAbility = true;
+
+      await gameAnnounce(
+        '<span class="color_red">SHERIFF</span> GOES TO SLEEP,<br>THE <span class="color_red">DOCTOR</span> WAKES UP',
+        'all',
+        serverId,
+      );
+      await gameAnnounce(
+        'CLICK ON SOMEONE TO<br><span class="color_red">SAVE</span> THEM FOR THE<span class="color_red">NIGHT</span>',
+        [GameRoles.Doctor],
+        serverId,
+      );
+
+      for (let i = 30; i > -1; i--) {
+        if (
+          (server.specialStates.doctorAbility as boolean) === false
+        ) break;
+        server.timer = i;
+        io.emit('serverEvent', {
+          message: 'updateServer',
+          serverId: serverId,
+        });
+        await wait(1000);
+      }
+      server.timer = undefined;
+
+      server.specialStates.doctorAbility = false;
+      doctorChoice = server.votes.doctor;
+      server.votes.doctor = undefined;
+    }
+
+    // Announcing and near-end
+    const killedPersonId = typeof ((voting as any)?.killedPerson) === 'number'
+      ? ((voting as any)?.killedPerson === doctorChoice ? [] : (voting as any)?.killedPerson)
+      : ((voting as any)?.killedPerson as number[]).filter(n => n !== doctorChoice);
     const killText = (() => {
       if (typeof (killedPersonId) === 'number') {
         let u = getUserById(killedPersonId);
@@ -114,6 +185,7 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
 
     await wait(4_000);
   }
+
 
   await wait(3_000);
 

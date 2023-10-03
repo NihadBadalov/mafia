@@ -200,6 +200,7 @@
         {#each currentServer.players as playerId}
           {#if playerId === data?.currentUserId}
             <PlayerCard
+              {data}
               {playerId}
               playerName={getPlayerNameById(playerId)}
               playerRole={currentServer.playerRoles.find(
@@ -212,6 +213,7 @@
             />
           {:else if (currentServer.playerRoles.find((pr) => pr.userId === data?.currentUserId)?.role === GameRoles.Mafia || currentServer.playerRoles.find((pr) => pr.userId === data?.currentUserId)?.role === GameRoles.Don) && (currentServer.playerRoles.find((pr) => pr.userId === playerId)?.role === GameRoles.Mafia || currentServer.playerRoles.find((pr) => pr.userId === playerId)?.role === GameRoles.Don)}
             <PlayerCard
+              {data}
               {playerId}
               playerName={getPlayerNameById(playerId)}
               playerRole={currentServer.playerRoles.find(
@@ -223,6 +225,7 @@
             />
           {:else}
             <PlayerCard
+              {data}
               {playerId}
               playerName={getPlayerNameById(playerId)}
               ownUserId={data?.currentUserId}

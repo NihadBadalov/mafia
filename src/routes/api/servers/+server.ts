@@ -127,6 +127,10 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
     ownerId: (getUserByAst(cookies.get('ast') as unknown as string) as unknown as User)?.id,
     started: false,
     state: GameStates.Waiting,
+    specialStates: {
+      sheriffAbility: false,
+      doctorAbility: false,
+    },
 
     announcements: {
       [GameRoles.Mafia]: '',
@@ -143,6 +147,7 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
     whoCanVoteKick: [],
     votes: {
       don: undefined,
+      doctor: undefined,
       mafia: [],
       citizens: [],
     },
