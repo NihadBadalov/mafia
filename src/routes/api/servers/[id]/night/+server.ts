@@ -52,7 +52,7 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
   }
   else {
     server.votes.mafia = [];
-    await gameAnnounce('VOTE TO <span class="color_red">KILL</span> SOMEONE', 'mafia', serverId);
+    await gameAnnounce('VOTE TO <span class="color_red">KILL</span> SOMEONE<br>(don\'t vote to skip)', 'mafia', serverId);
 
     voting = await fetch(`/api/servers/${server.id}/voting`, {
       method: 'POST',
