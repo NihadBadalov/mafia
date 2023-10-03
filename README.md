@@ -8,7 +8,7 @@ Amount of players: 8-16
 * k -> coefficient, mostly around 3-4
 * The result is rounded to the lower side - math.floor
 
-## Must always vote, refraining = voting for yourself
+_Must always vote; refraining = voting for yourself_
 
 ## Teams:
 * Civilians (Sheriff included) [TC]
@@ -28,19 +28,12 @@ Amount of players: 8-16
 
 ## Game routine:
 * First night
-** Mafia meets each other for 30sec to come up with a game plan
+* * Mafia meets each other for 30sec to come up with a game plan
 * Nights
-** Mafia wakes up, has 45 second to discuss who to kill & press buttons, Mafia sleeps
-** Don wakes up, his time is joint with Mafia's, he has to choose a player who will get killed, he gets told whether or not the killed player was the Sheriff, Don sleeps
-** Sheriff wakes up, has 25 seconds to choose someone, he will get told whether or not that player was on team Mafia
+* * Mafia wakes up, has 45 second to discuss who to kill & press buttons, Mafia sleeps
+* * Don wakes up, his time is joint with Mafia's, he has to choose a player who will get killed, he gets told whether or not the killed player was the Sheriff, Don sleeps
+* * Sheriff wakes up, has 25 seconds to choose someone, he will get told whether or not that player was on team Mafia
 * Days
-** It is announced who died (if any)
-** The killed player(-s) have 45 seconds of a "post-death speech." 
+* * It is announced who died (if any)
+* * The killed player(-s) have 45 seconds of a "post-death speech." 
 -- Days and nights go on until n(TM) == n(TC) -> where TM wins; or n(TM) == 0 -> where TC wins
-
-## Servers:
-* id: integer;
-* players: integer;
-* maxPlayerCount: integer;
-* mafiaCount: integer;
-* serverName: string;
