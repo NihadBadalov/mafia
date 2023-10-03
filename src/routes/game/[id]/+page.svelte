@@ -12,10 +12,9 @@
 
   import { customIo, socketEndpoint } from "$lib/webSocketConnection.js";
   import { onDestroy, onMount } from "svelte";
-  import { invalidateAll } from "$app/navigation";
+  import { goto, invalidateAll } from "$app/navigation";
   import { GameRoles } from "$types/GameRoles";
   import { getUserById, getUserRoleInServer, isMafiaGameRole } from "$lib";
-    import { redirect } from "@sveltejs/kit";
 
   const io = customIo(`${socketEndpoint}/game/${data.currentServerId}`);
 
@@ -41,7 +40,7 @@
           break;
 
         case "redirectToMainPage":
-          redirect(307, '/');
+          goto('/');
           break;
 
         case "indexSockets":
