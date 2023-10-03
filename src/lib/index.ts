@@ -52,6 +52,7 @@ export function getIncludedRolesForGameAnnouncement(
   }
   else if (inc === 'all') {
     include = [
+      GameRoles.Unknown,
       GameRoles.Mafia,
       GameRoles.Don,
       GameRoles.Citizen,
@@ -67,6 +68,7 @@ export function getIncludedRolesForGameAnnouncement(
   }
   else if (inc === 'citizens') {
     include = [
+      GameRoles.Unknown,
       GameRoles.Citizen,
       GameRoles.Doctor,
       GameRoles.Sheriff,
@@ -77,6 +79,7 @@ export function getIncludedRolesForGameAnnouncement(
   }
   else {
     include = [
+      GameRoles.Unknown,
       GameRoles.Mafia,
       GameRoles.Don,
       GameRoles.Citizen,

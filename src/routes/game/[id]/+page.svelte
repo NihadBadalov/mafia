@@ -15,6 +15,7 @@
   import { invalidateAll } from "$app/navigation";
   import { GameRoles } from "$types/GameRoles";
   import { getUserById, getUserRoleInServer, isMafiaGameRole } from "$lib";
+    import { redirect } from "@sveltejs/kit";
 
   const io = customIo(`${socketEndpoint}/game/${data.currentServerId}`);
 
@@ -37,6 +38,10 @@
         // TODO: check if joining a server works without refreshing afterwards
         case "refreshPage":
           invalidateAll();
+          break;
+
+        case "redirectToMainPage":
+          redirect(307, '/');
           break;
 
         case "indexSockets":

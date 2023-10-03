@@ -126,6 +126,11 @@ export default function injectSocketIO(server: Partial<ServerOptions>) {
           io.of(`/game/${args['serverId']}`).emit('serverEvent', 'indexSockets');
           break;
 
+        case 'gameEndRedirect':
+          if (isNaN(args['serverId'])) return;
+          io.of(`/game/${args['serverId']}`).emit('serverEvent', 'redirectToMainPage');
+          break;
+
         case 'chatMessageFromServerToServer':
           if (!args?.to
             || !args?.serverId

@@ -40,6 +40,7 @@ export const GET: RequestHandler = async ({ cookies, setHeaders, fetch, url }) =
         server.playerRoles[j].role = GameRoles.Unknown;
       }
       for (const [roleId] of Object.entries(server.announcements)) {
+        if (roleId === ''+GameRoles.Unknown) continue;
         server.announcements[+roleId] = '';
       }
       continue;

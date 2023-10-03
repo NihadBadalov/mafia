@@ -151,7 +151,7 @@ export const POST: RequestHandler = async ({ request, params }) => {
     }
     else {
       await gameAnnounce(
-        'DISCUSS WHO TO <span class="color_red">KILL</span><br>(vote for yourselves to skip)',
+        'DISCUSS WHO TO <span class="color_red">KILL</span>',
         'mafia',
         serverId,
       );
@@ -214,6 +214,5 @@ export const POST: RequestHandler = async ({ request, params }) => {
       // @ts-ignore
     }, { statusCode: 200 });
   }
-
 }
 

@@ -16,7 +16,7 @@ export const load: PageServerLoad = (async ({ fetch, params, cookies }) => {
   const servers: GameServer[] = data.servers;
 
   if (!params?.id || isNaN(params?.id as any))
-    throw error(404, 'Couldn\'t find the server');
+    throw redirect(307, '/');
 
   if (!servers.find(s => s.id === +params.id))
     throw redirect(307, '/');

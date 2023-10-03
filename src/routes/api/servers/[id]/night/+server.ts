@@ -66,9 +66,8 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
 
     voting = await voting.json();
 
-    if (voting
-      && typeof (voting) !== 'undefined'
-      && !voting?.complete) {
+    if (!(voting as any)?.complete
+      && (Array.isArray((voting as any)?.killedPerson) && (voting as any)?.killedPerson.length !== 0)) {
       // There was a voting and it was incomplete
       voting = await fetch(`/api/servers/${server.id}/voting`, {
         method: 'POST',
@@ -104,8 +103,7 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
     // Kill player, if there is one to kill
     if (killText?.endsWith(' WAS KILLED')) {
       server.playerBlacklist.push(killedPersonId);
-      if (server.players.indexOf(killedPersonId) !== 1)
-        server.players.splice(server.playerBlacklist.indexOf(killedPersonId), 1);
+      server.players = server.players.filter(pid => pid !== killedPersonId);
     }
 
     await gameAnnounce(
@@ -120,7 +118,8 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
   await wait(3_000);
 
   const endVotePlayerRoles = server.players.map(pid => isMafiaGameRole(getUserRoleInServer(pid)));
-  if (endVotePlayerRoles.filter(e => e) >= endVotePlayerRoles.filter(e => !e)) {
+  if (endVotePlayerRoles.filter(e => e).length === 0
+    || endVotePlayerRoles.filter(e => e).length >= endVotePlayerRoles.filter(e => !e).length) {
     // Mafias >= citizens
     fetch(`/api/servers/${server.id}/gameEnd`, {
       method: 'POST',
@@ -133,10 +132,11 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
     } as RequestInit);
   }
   else {
-    fetch(`/api/servers/${server.id}/night`, {
+    fetch(`/api/servers/${server.id}/day`, {
       method: 'POST',
       body: JSON.stringify({
         origin: _data.serverPassphrase,
+        dayType: type === 'first' ? 'first' : 'notFirst',
       }),
       headers: {
         'Content-Type': 'application/json',

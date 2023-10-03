@@ -71,8 +71,8 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
     voting = await voting.json();
 
     if (!(voting as any)?.complete
-      // Don't start a second vote-kick round if no one has voted
       && (Array.isArray((voting as any)?.kickedPerson) && (voting as any)?.kickedPerson.length !== 0)) {
+      // Don't start a second vote-kick round if no one has voted
       // Pending between 2 people
       server.votingBetween = (voting as any)?.kickedPerson;
 
@@ -109,8 +109,7 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
     // Kick player, if there is one to kick
     if (kickText?.endsWith(' WAS VOTE-KICKED')) {
       server.playerBlacklist.push(kickedPersonId);
-      if (server.players.indexOf(kickedPersonId) !== 1)
-        server.players.splice(server.playerBlacklist.indexOf(kickedPersonId), 1);
+      server.players = server.players.filter(pid => pid !== kickedPersonId);
       io.emit('serverEvent', {
         message: 'updateServer',
         serverId: serverId,
@@ -127,7 +126,8 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
   }
 
   const endVotePlayerRoles = server.players.map(pid => isMafiaGameRole(getUserRoleInServer(pid)));
-  if (endVotePlayerRoles.filter(e => e) >= endVotePlayerRoles.filter(e => !e)) {
+  if (endVotePlayerRoles.filter(e => e).length === 0
+    || endVotePlayerRoles.filter(e => e).length >= endVotePlayerRoles.filter(e => !e).length) {
     // Mafias >= citizens
     fetch(`/api/servers/${server.id}/gameEnd`, {
       method: 'POST',
