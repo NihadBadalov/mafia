@@ -1,5 +1,4 @@
 import ioClient from 'socket.io-client';
-//const ENDPOINT = 'http://localhost:3000';
 const ENDPOINT = 'http://192.168.2.103:3000';
 import { dev } from '$app/environment';
 
