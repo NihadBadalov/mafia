@@ -23,48 +23,60 @@
     io.emit(event, { message: text, endpoint: data?.endpoint });
   }
 
+  // User ids and names
+  const cache: { [key: string]: string } = {};
+
+  function playSound(soundName: string) {
+    const audioElement: HTMLAudioElement | null =
+      document.querySelector("#gameSound");
+    if (!audioElement) return;
+    audioElement.src = `/audios/${soundName}.mp3`;
+    try {
+      audioElement.play();
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   onMount(() => {
     io.on("fallbackEvent", (message) => {
       sendMessage("fallbackEvent", message);
     });
-    io.on("serverEvent", async (message) => {
-      // Message from server
-      switch (message) {
-        case "updateServer":
-          invalidateAll();
-          break;
 
-        // TODO: check if joining a server works without refreshing afterwards
-        case "refreshPage":
-          invalidateAll();
-          break;
-
-        case "redirectToMainPage":
-          goto('/');
-          break;
-
-        case "indexSockets":
-          setTimeout(() => {
-            io.emit("indexedSocket", {
-              serverId: data?.currentServerId,
-              serverStarted: currentServer?.started,
-              successful: !!currentServer?.started,
-              role: currentServer.playerRoles.find(
-                (pr) => pr?.userId === data?.currentUserId
-              )?.role,
-            });
-          }, 1000);
-          break;
-
-        default:
-          break;
-      }
+    io.on("playSound", (soundName) => {
+      playSound(soundName);
     });
 
-    // User ids and names
-    const cache: { [key: string]: string } = {};
-
     io.on("chatMessageToClient", ({ iT1, iT2, iT3, userId }) => {
+      /*
+      Quick summary on why we cannot use sounds for in-game messages:
+
+      Actually, scrap everything below. The reason is
+      that svelte reactivity updates faster than the WS (idk how and why)
+      which is why it cannot play an audio
+
+      - "chatMessageToClient" WS Event is only for messages written
+      during GameStates.Waiting 
+
+      Since:
+
+      - Updating in-game messages is done through svelte's reactivity;
+      this happens due to consistent updateServer WS Events happening
+      throughout the whole gameplay. For example, the timers (which are
+      also consistent)
+
+      But there are no frequent updateServer WSEs during the Waiting state
+      hence why the message updating during Waiting is done through WSEs.
+      This means that we are able to emit the event of incoming messages
+      with the "chatMessageToClient" WSE, but not the in-game ones, as
+      the updating is made using svelte's reactivity.
+
+      A possible workaround would be to not use "$:" for chat messages
+      and instead use currentServer.mafia/citizenChat after checking
+      whether or not the current player is a Mafia.
+      And after that you simply start debugging the WS part of
+      real-time messages
+      */
       let chat = document.querySelector(
         ".game_chat > .game_chat__contents > .game_chat__inner__message_holder"
       );
@@ -95,6 +107,41 @@
       if (userId === data?.currentUserId) p.classList.add("ownMessage");
 
       chat.append(p);
+      playSound("beep");
+    });
+
+    io.on("serverEvent", async (message) => {
+      // Message from server
+      switch (message) {
+        case "updateServer":
+          invalidateAll();
+          break;
+
+        // TODO: check if joining a server works without refreshing afterwards
+        case "refreshPage":
+          invalidateAll();
+          break;
+
+        case "redirectToMainPage":
+          goto("/");
+          break;
+
+        case "indexSockets":
+          setTimeout(() => {
+            io.emit("indexedSocket", {
+              serverId: data?.currentServerId,
+              serverStarted: currentServer?.started,
+              successful: !!currentServer?.started,
+              role: currentServer.playerRoles.find(
+                (pr) => pr?.userId === data?.currentUserId
+              )?.role,
+            });
+          }, 1000);
+          break;
+
+        default:
+          break;
+      }
     });
   });
 
@@ -148,6 +195,8 @@
     );
   };
 </script>
+
+<audio src="/audios/gong.mp3" id="gameSound" />
 
 <div class="wrapper">
   <div class="header">
@@ -271,12 +320,25 @@
   />
 
   <script defer>
-    window.addEventListener("DOMContentLoaded", (event) => {
+    /* const audioElement = document.querySelector("audio");
+    let audioCtx;
+    if (!audioCtx) audioCtx = new AudioContext();
+
+    const gainNode = new GainNode(audioCtx);
+    const panner = new StereoPannerNode(audioCtx, { pan: 0 });
+
+    window.onload = function () {
+      setTimeout(() => {
+        audioElement.play();
+      }, 3000);
+    }; */
+
+    /* window.addEventListener("DOMContentLoaded", (event) => {
       let currentUserId = document.querySelector("#currentUserIdP");
       let playerCard = document.querySelector(
         `.card_${currentUserId.innerText}`
       );
       // console.log(playerCard);
-    });
+    }); */
   </script>
 </svelte:head>

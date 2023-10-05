@@ -131,11 +131,17 @@ export default function injectSocketIO(server: Partial<ServerOptions>) {
           io.of(`/game/${args['serverId']}`).emit('serverEvent', 'redirectToMainPage');
           break;
 
+        case 'playSound':
+          if (!args?.message || !args?.soundName || isNaN(args?.serverId)) return;
+          io.of(`/game/${args['serverId']}`).emit('playSound', args.soundName);
+          break;
+
         case 'chatMessageFromServerToServer':
           if (!args?.to
             || !args?.serverId
             || !args?.userId
             || !args?.content) return;
+          //console.log('some message');
 
           let emitContent = {
             // iT being innerText

@@ -10,7 +10,6 @@
 
   import { customIo, socketEndpoint } from "$lib/webSocketConnection.js";
   import { onMount } from "svelte";
-
   const io = customIo(`${socketEndpoint}/main`);
 
   onMount(() => {
@@ -38,8 +37,6 @@
     rel="stylesheet"
   />
 </svelte:head>
-
-<audio src="/audios/gong.mp3" style="" />
 
 <div class="wrapper">
   <div class="header">
@@ -89,23 +86,4 @@
       <a href="/privacy">Privacy Policy</a>
     </footer>
   </div>
-
-  <script>
-    // for legacy browsers
-
-    let AudioContext;
-    let audio;
-    let context;
-    let source;
-    document.addEventListener("click", function () {
-      AudioContext ??= window.AudioContext || window.webkitAudioContext;
-      audio ??= document.querySelector("audio");
-      context ??= new AudioContext();
-      source ??= context.createMediaElementSource(audio);
-      if (context.state === "suspended") {
-        context.resume();
-      }
-      audio.play();
-    });
-  </script>
 </div>
