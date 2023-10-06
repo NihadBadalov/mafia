@@ -33,6 +33,12 @@ export const POST: RequestHandler = async ({ request, params }) => {
       ?? (server?.votingBetween?.length ? server?.votingBetween : undefined)
       ?? structuredClone(server.players);
 
+    io.emit('serverEvent', {
+      message: 'playSound',
+      soundName: 'voting',
+      serverId: server?.id,
+    });
+
     if (server.votingBetween.length === 2) {
       // Anounce that we are voting between 2 players
       const votingBetweenUsers: User[] = [];
@@ -128,6 +134,12 @@ export const POST: RequestHandler = async ({ request, params }) => {
       ?? structuredClone(server.players);
     server.votingBetween = server.votingBetween
       .filter(p => !isMafiaGameRole(getUserRoleInServer(p)));
+
+    io.emit('serverEvent', {
+      message: 'playSound',
+      soundName: 'night',
+      serverId: server?.id,
+    });
 
     if (server.votingBetween.length === 2) {
       // Anounce that we are voting between 2 players

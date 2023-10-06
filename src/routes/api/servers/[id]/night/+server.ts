@@ -133,7 +133,7 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
         serverId,
       );
       await gameAnnounce(
-        'CLICK ON SOMEONE TO<br><span class="color_red">SAVE</span> THEM FOR THE<span class="color_red">NIGHT</span>',
+        'CLICK ON SOMEONE TO<br><span class="color_red">SAVE</span> THEM FOR THE <span class="color_red">NIGHT</span>',
         [GameRoles.Doctor],
         serverId,
       );

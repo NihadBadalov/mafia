@@ -53,6 +53,11 @@ export const POST: RequestHandler = async ({ request, params }) => {
       userId: userId,
       content: message,
     });
+    io.emit('serverEvent', {
+      message: 'playSound',
+      soundName: 'beep',
+      serverId: server?.id,
+    });
 
     // updateServer(server?.id);
 
@@ -66,6 +71,10 @@ export const POST: RequestHandler = async ({ request, params }) => {
       userId: userId,
       content: message,
     });
+    server.mafiaChat.push({
+      userId: userId,
+      content: message,
+    });
     io.emit('serverEvent', {
       message: 'chatMessageFromServerToServer',
       to: 1,
@@ -73,18 +82,30 @@ export const POST: RequestHandler = async ({ request, params }) => {
       userId: userId,
       content: message,
     });
+    io.emit('serverEvent', {
+      message: 'playSound',
+      soundName: 'beep',
+      serverId: server?.id,
+    });
   }
-  server.mafiaChat.push({
-    userId: userId,
-    content: message,
-  });
-  io.emit('serverEvent', {
-    message: 'chatMessageFromServerToServer',
-    to: 0,
-    serverId: server?.id,
-    userId: userId,
-    content: message,
-  });
+  else {
+    server.mafiaChat.push({
+      userId: userId,
+      content: message,
+    });
+    io.emit('serverEvent', {
+      message: 'chatMessageFromServerToServer',
+      to: 0,
+      serverId: server?.id,
+      userId: userId,
+      content: message,
+    });
+    io.emit('serverEvent', {
+      message: 'playSound',
+      soundName: 'beep',
+      serverId: server?.id,
+    });
+  }
 
   // updateServer(server?.id);
 

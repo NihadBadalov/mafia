@@ -132,7 +132,7 @@ export default function injectSocketIO(server: Partial<ServerOptions>) {
           break;
 
         case 'playSound':
-          if (!args?.message || !args?.soundName || isNaN(args?.serverId)) return;
+          if (!args?.soundName || isNaN(args?.serverId)) return;
           io.of(`/game/${args['serverId']}`).emit('playSound', args.soundName);
           break;
 
