@@ -55,6 +55,7 @@
     const audioElement: HTMLAudioElement | null =
       document.querySelector("#gameSound");
     if (!audioElement) return;
+    audioElement.volume = 0.02;
     audioElement.src = `/audios/${soundName}.mp3`;
     try {
       audioElement.play();

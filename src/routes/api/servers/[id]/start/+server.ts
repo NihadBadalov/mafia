@@ -67,12 +67,19 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
 
   server.started = true;
 
+  io.emit('serverEvent', {
+    message: 'playSound',
+    soundName: 'gong',
+    serverId: serverId,
+  });
+
   // Notify server that we have to index sockets through their roles
   // and add them to mafia/citizen their rooms
   io.emit('serverEvent', {
     message: 'indexSocketsFromServer',
     serverId: serverId,
   });
+
 
   fetch(`/api/servers/${server.id}/night`, {
     method: 'POST',

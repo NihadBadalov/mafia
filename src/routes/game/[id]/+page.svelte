@@ -30,7 +30,21 @@
     const audioElement: HTMLAudioElement | null =
       document.querySelector("#gameSound");
     if (!audioElement) return;
+    audioElement.volume = 0.02;
     audioElement.src = `/audios/${soundName}.mp3`;
+    try {
+      audioElement.play();
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  function playSong(songName: string) {
+    const audioElement: HTMLAudioElement | null =
+      document.querySelector("#gameSong");
+    if (!audioElement) return;
+    audioElement.volume = 0.02;
+    audioElement.src = `/audios/${songName}.mp3`;
     try {
       audioElement.play();
     } catch (e) {
@@ -45,6 +59,10 @@
 
     io.on("playSound", (soundName) => {
       playSound(soundName);
+    });
+
+    io.on("playSong", (songName) => {
+      playSong(songName);
     });
 
     io.on("chatMessageToClient", ({ iT1, iT2, iT3, userId }) => {
@@ -197,6 +215,7 @@
 </script>
 
 <audio src="/audios/gong.mp3" id="gameSound" />
+<audio src="/audios/gong.mp3" id="gameSong" />
 
 <div class="wrapper">
   <div class="header">

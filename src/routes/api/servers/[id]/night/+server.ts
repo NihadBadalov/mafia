@@ -30,7 +30,7 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
 
   io.emit('serverEvent', {
     message: 'playSong',
-    soundName: 'night',
+    songName: 'night',
     serverId: serverId,
   });
 

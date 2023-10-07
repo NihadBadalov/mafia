@@ -34,8 +34,8 @@ export const POST: RequestHandler = async ({ request, params }) => {
       ?? structuredClone(server.players);
 
     io.emit('serverEvent', {
-      message: 'playSound',
-      soundName: 'voting',
+      message: 'playSong',
+      songName: 'voting',
       serverId: server?.id,
     });
 
@@ -136,8 +136,8 @@ export const POST: RequestHandler = async ({ request, params }) => {
       .filter(p => !isMafiaGameRole(getUserRoleInServer(p)));
 
     io.emit('serverEvent', {
-      message: 'playSound',
-      soundName: 'night',
+      message: 'playSong',
+      songName: 'voting',
       serverId: server?.id,
     });
 
