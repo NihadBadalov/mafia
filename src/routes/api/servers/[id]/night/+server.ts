@@ -27,6 +27,13 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
 
 
   server.state = GameStates.Night;
+
+  io.emit('serverEvent', {
+    message: 'playSong',
+    soundName: 'night',
+    serverId: serverId,
+  });
+
   io.emit('serverEvent', {
     message: 'updateServer',
     serverId: serverId,
@@ -80,7 +87,7 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
         method: 'POST',
         body: JSON.stringify({
           origin: _data.serverPassphrase,
-          votingBetween: voting?.votingBetween,
+          votingBetween: voting?.killedPerson,
           passedDonChoice: voting?.donChoice,
         }),
         headers: {
