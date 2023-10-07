@@ -32,12 +32,16 @@ export const POST: RequestHandler = async ({ request, params }) => {
 
   let userRole = getUserRoleInServer(user?.id);
   if (userRole !== GameRoles.Sheriff)
-    throw error(403, 'Can not vote as a spectator');
+    throw error(403, 'Cannot view roles as not a Sheriff');
 
   const targetUserRole = getUserRoleInServer(targetUser?.id);
   if (!targetUserRole)
     throw error(403, 'Couldn\'t fetch target user\'s role in the game server');
 
+  if (!server.specialStates.sheriffAbility)
+    return json({}, { statusCode: 200 } as ResponseInit);
+
+  server.specialStates.sheriffAbility = false;
 
   await gameAnnounce(
     `${targetUser?.name}'S ROLE IS<br>${GameRoles[''+targetUserRole as any]}`,
@@ -46,8 +50,6 @@ export const POST: RequestHandler = async ({ request, params }) => {
   );
 
   await wait(3_000);
-
-  server.specialStates.sheriffAbility = false;
 
 
   // @ts-ignore

@@ -32,7 +32,13 @@ export const POST: RequestHandler = async ({ request, params }) => {
 
   let userRole = getUserRoleInServer(user?.id);
   if (userRole !== GameRoles.Doctor)
-    throw error(403, 'Can not vote as a spectator');
+    throw error(403, 'Cannot save as not a Doctor');
+
+
+  if (!server.specialStates.doctorAbility)
+    return json({}, { statusCode: 200 } as ResponseInit);
+
+  server.specialStates.doctorAbility = false;
 
   server.votes.doctor = targetUser?.id;
   await gameAnnounce(
@@ -42,8 +48,6 @@ export const POST: RequestHandler = async ({ request, params }) => {
   );
 
   await wait(3_000);
-
-  server.specialStates.doctorAbility = false;
 
 
   // @ts-ignore
