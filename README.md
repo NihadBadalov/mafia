@@ -1,4 +1,7 @@
 # Mafia Game
+
+Note 2023-Oct-11: halted for about 2 weeks; I'm on vacation
+
 ## Contributing
 <details>
   <summary markdown="span">How to contribute</summary>
