@@ -110,38 +110,6 @@ span.color_red {
 .wrapper > * {
   width: 100%;
 }
-.wrapper .header {
-  display: flex;
-  justify-content: space-around;
-  /*background-color: $header_background_color;*/
-  background-color: rgba(13, 36, 42, 0.5);
-  padding: 2em 1em;
-}
-.wrapper .header nav, .wrapper .header div {
-  display: flex;
-  flex-flow: row wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 1.5em;
-  /*
-  & > h1 > a {
-      &:active, &:focus {
-      }
-  }
-  */
-}
-.wrapper .header .header_actions button {
-  text-transform: uppercase;
-}
-.wrapper .header .nav_link {
-  color: #fff;
-  font-weight: 800;
-  text-transform: uppercase;
-  text-decoration: none;
-}
-.wrapper .header .nav_link:hover {
-  text-decoration: underline;
-}
 .wrapper .main {
   color: #fff;
   height: 100%;
