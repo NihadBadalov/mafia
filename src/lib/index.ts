@@ -202,7 +202,7 @@ export async function handleUserSession(cookies: Cookies, fetch: any, endpoint: 
   // User session
   if (!cookies.get('ast')
     || !cookies.get('ast')?.length
-    || !getUserByAst(cookies.get('ast') as unknown as string)) {
+    || !getUserByAst(cookies.get('ast')! as string)) {
     // Not in session 
     const username = `User ${Math.round(Math.random() * 999999)}`;
     const userToken = _generateUserToken(30);
