@@ -1,7 +1,7 @@
 import { json, type RequestHandler } from '@sveltejs/kit';
 import { _data } from '../index';
 import { io } from '$lib/webSocketConnection.js';
-import { getGameServerWithUserById, getUserByAst, getUserRoleInServer, handleUserSession, isMafiaGameRole } from '$lib';
+import { getGameServerWithUserById, getUserByAst, getUserRoleInServer, isMafiaGameRole } from '$lib';
 import type { ServerData, User } from '$types';
 import { GameStates } from '$types/GameStates';
 import { GameRoles } from '$types/GameRoles';
@@ -11,8 +11,7 @@ function sendMessage(event: string, text: string | object, ep: string) {
   io.emit(event, { message: text, endpoint: ep });
 }
 
-export const GET: RequestHandler = async ({ cookies, setHeaders, fetch, url }) => {
-  handleUserSession(cookies, fetch, url?.href);
+export const GET: RequestHandler = async ({ cookies, setHeaders, url }) => {
   let user = getUserByAst(cookies.get('ast'));
   let userServer;
   if (user) userServer = getGameServerWithUserById(user?.id);
