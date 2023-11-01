@@ -60,21 +60,20 @@ button.btn:hover, button.btn:active, button.btn:focus {
   cursor: pointer;
   color: #028ab5;
   text-decoration: underline;
-
-  &.no_underline {
-    text-decoration: none;
-  }
+}
+.fake_link.no_underline {
+  text-decoration: none;
 }
 
 .bold {
   font-weight: 700;
-  &.underline {
-    text-decoration: underline;
-    text-underline-offset: 0.2ch;
-  }
-  &.important {
-    background-color: #550000;
-  }
+}
+.bold.underline {
+  text-decoration: underline;
+  text-underline-offset: 0.2ch;
+}
+.bold.important {
+  background-color: #550000;
 }
 
 /* Scrollbars */
