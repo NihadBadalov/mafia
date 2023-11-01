@@ -48,7 +48,7 @@
                     font-weight: 700;
                   }
                 }
-                p {
+                p#action_call {
                   text-align: left;
                   span {
                     margin-left: 1ch;
@@ -61,6 +61,18 @@
                   }
                 }
 
+                input {
+                    @include small-shadow;
+                    width: 30%;
+                    min-height: 1em;
+                    border: 3px $header_background_color solid;
+                    border-radius: 0.8rem;
+                    font-size: 100%;
+                    white-space: break-spaces;
+                    word-wrap: break-word;
+                    padding: 0.5em 1em;
+                }
+
                 button {
                     @include small-shadow;
                     min-width: 30%;
@@ -71,11 +83,13 @@
                     word-wrap: break-word;
                     margin-top: 2rem;
 
-                    display: flex;
-                    flex-flow: row nowrap;
-                    align-items: center;
-                    justify-content: center;
-                    gap: 1rem;
+                    &#btn_google {
+                      display: flex;
+                      flex-flow: row nowrap;
+                      align-items: center;
+                      justify-content: center;
+                      gap: 1rem;
+                    }
                 }
             }
 

@@ -3,7 +3,6 @@
   import { goto } from "$app/navigation";
   import { ServerList } from "$lib/components";
   import { invalidateAll } from "$app/navigation";
-  import { dev } from "$app/environment";
 
   export let data: PageData;
   $: ({ servers } = data);
@@ -53,8 +52,10 @@
       <a class="nav_link" href="/discordLink">Discord</a>
     </nav>
     <div class="header_actions">
-      <button class="btn" id="btn_account">Account</button>
-      <button class="btn" id="btn_log_out">Log Out</button>
+      <button class="btn" id="btn_account" on:click={() => goto("/account")}>
+        Account
+      </button>
+      <!-- <button class="btn" id="btn_log_out">Log Out</button> -->
     </div>
   </div>
   <div class="main">
@@ -64,19 +65,21 @@
         <button
           class="btn"
           id="btn_join_random"
-          on:click={() => goto("/random")}>Join a random game</button
+          on:click={() => goto("/random")}
         >
+          Join a random game
+        </button>
         <button
           class="btn"
           id="btn_join_random"
-          on:click={() => goto("/create")}>Create a game</button
+          on:click={() => goto("/create/server")}>Create a game</button
         >
-        <button class="btn" id="btn_servers" on:click={() => goto("/servers")}
-          >Servers</button
-        >
-        <button class="btn" id="btn_servers" on:click={() => goto("/guide")}
-          >Guide</button
-        >
+        <button class="btn" id="btn_servers" on:click={() => goto("/servers")}>
+          Servers
+        </button>
+        <button class="btn" id="btn_servers" on:click={() => goto("/guide")}>
+          Guide
+        </button>
       </div>
     </div>
 

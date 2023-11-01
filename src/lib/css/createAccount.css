@@ -147,10 +147,10 @@ span.color_red {
 .wrapper .main .main_inner .create_account h1 span {
   font-weight: 700;
 }
-.wrapper .main .main_inner .create_account p {
+.wrapper .main .main_inner .create_account p#action_call {
   text-align: left;
 }
-.wrapper .main .main_inner .create_account p span {
+.wrapper .main .main_inner .create_account p#action_call span {
   margin-left: 1ch;
   font-weight: 700;
   letter-spacing: 0.13ch;
@@ -158,6 +158,17 @@ span.color_red {
   text-transform: uppercase;
   text-decoration: underline;
   text-underline-offset: 0.4ch;
+}
+.wrapper .main .main_inner .create_account input {
+  box-shadow: 0px 0px 21px 8px rgba(0, 0, 0, 0.25);
+  width: 30%;
+  min-height: 1em;
+  border: 3px #0d232a solid;
+  border-radius: 0.8rem;
+  font-size: 100%;
+  white-space: break-spaces;
+  word-wrap: break-word;
+  padding: 0.5em 1em;
 }
 .wrapper .main .main_inner .create_account button {
   box-shadow: 0px 0px 21px 8px rgba(0, 0, 0, 0.25);
@@ -168,6 +179,8 @@ span.color_red {
   white-space: break-spaces;
   word-wrap: break-word;
   margin-top: 2rem;
+}
+.wrapper .main .main_inner .create_account button#btn_google {
   display: flex;
   flex-flow: row nowrap;
   align-items: center;

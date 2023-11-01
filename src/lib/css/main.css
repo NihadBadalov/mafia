@@ -56,6 +56,27 @@ button.btn:hover, button.btn:active, button.btn:focus {
   font-family: "Roboto Slab", serif;
 }
 
+.fake_link {
+  cursor: pointer;
+  color: #028ab5;
+  text-decoration: underline;
+
+  &.no_underline {
+    text-decoration: none;
+  }
+}
+
+.bold {
+  font-weight: 700;
+  &.underline {
+    text-decoration: underline;
+    text-underline-offset: 0.2ch;
+  }
+  &.important {
+    background-color: #550000;
+  }
+}
+
 /* Scrollbars */
 /* Firefox */
 * {

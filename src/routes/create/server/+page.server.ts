@@ -3,7 +3,7 @@ import { fail, redirect, type Actions } from '@sveltejs/kit';
 export const actions = {
     default: async ({ request, fetch }) => {
         const data = await request.formData();
-        const serverName = data.get('serverName') || '';
+        const serverName: string = data.get('serverName') as string || '';
         let maxPlayerAmount = data.get('maxPlayerAmount') as unknown as number;
         let amountOfMafia = data.get('amountOfMafia') as unknown as number;
 
