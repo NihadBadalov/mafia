@@ -16,6 +16,7 @@ const config = {
       $routes: 'src/routes',
       $api: 'src/routes/api',
       $types: 'src/@types',
+      $stores: 'src/stores',
     },
   },
   onwarn: (warning, handler) => {
