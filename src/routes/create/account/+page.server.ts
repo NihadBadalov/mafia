@@ -38,3 +38,4 @@ export const actions = {
     return { success: true, registering, email, password };
   },
 } satisfies Actions;
+

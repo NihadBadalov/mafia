@@ -55,7 +55,6 @@
       <button class="btn" id="btn_account" on:click={() => goto("/account")}>
         Account
       </button>
-      <!-- <button class="btn" id="btn_log_out">Log Out</button> -->
     </div>
   </div>
   <div class="main">
