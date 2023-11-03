@@ -2,7 +2,7 @@
   import { enhance } from "$app/forms";
   import { goto } from "$app/navigation";
   import { auth } from "$lib/firebase/firebase.client";
-  import { authHandlers, authStore } from "$stores/authStore";
+  import { authHandlers, authStore } from "$stores/auth";
   import { onMount } from "svelte";
 
   export let form: any;
