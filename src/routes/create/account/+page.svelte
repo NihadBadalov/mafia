@@ -113,7 +113,7 @@
           bind:value={email}
           type="email"
           autocomplete="off"
-          placeholder="Email"
+          placeholder="Enter your email"
           name="email"
           required
         />
@@ -125,21 +125,25 @@
           bind:value={password}
           type="password"
           autocomplete="off"
-          placeholder="Password"
+          placeholder="Enter you password"
           name="password"
+          minlength="6"
           required
         />
 
         {#if register}
-          <p style="width: 30%; text-align: left; margin-bottom: -1em;">
+          <p
+            style="width: 30%; text-align: left; margin-bottom: -1em;"
+          >
             Confirm Password
           </p>
           <input
             bind:value={confirmPassword}
             type="password"
             autocomplete="off"
-            placeholder="Confirm Password"
+            placeholder="Confirm your password"
             name="confirmPassword"
+            minlength="6"
             required
           />
         {/if}
@@ -147,7 +151,14 @@
         <button class="btn" type="submit">
           {buttonText}
         </button>
-        <!-- <button class="btn" id="btn_google" on:click={() => goto("/auth/")}>
+
+        <p>OR</p>
+
+        <button
+          class="btn"
+          id="btn_google"
+          on:click={async () => await authHandlers.loginWithGoogle()}
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             height="1em"
@@ -161,8 +172,8 @@
               d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z"
             /></svg
           >
-          <span>SIGN IN WITH <bold>GOOGLE</bold></span>
-        </button> -->
+          <span>CONTINUE WITH <bold>GOOGLE</bold></span>
+        </button>
 
         {#if register}
           <p id="action_call">

@@ -1,5 +1,5 @@
-import { auth } from "$lib/firebase/firebase.client";
-import { createUserWithEmailAndPassword, sendPasswordResetEmail, signInWithEmailAndPassword, signOut, updateEmail, updatePassword, type User, type UserCredential } from "firebase/auth";
+import { auth, provider } from "$lib/firebase/firebase.client";
+import { createUserWithEmailAndPassword, fetchSignInMethodsForEmail, GoogleAuthProvider, OAuthCredential, sendPasswordResetEmail, signInWithEmailAndPassword, signInWithPopup, signOut, updateEmail, updatePassword, type User, type UserCredential } from "firebase/auth";
 import { writable, type Writable } from "svelte/store";
 
 export const authStore = writable<{
@@ -16,7 +16,56 @@ export const authStore = writable<{
   currentUser: User | null;
 }>;
 
+type LoginWithGoogleReturnType = Promise<
+  { user: User; token: string | undefined }
+  | { email: any; credential: OAuthCredential | null; errorCode: string; errorMessage: string }
+>;
+
 export const authHandlers = {
+  userExists: async (email: string): Promise<boolean> => {
+    if (!email) return false;
+    return fetchSignInMethodsForEmail(auth, email)
+      .then((signInMethods) => {
+        return signInMethods && signInMethods.length > 0;
+      })
+      .catch(() => false);
+  },
+
+  loginWithGoogle: async (): LoginWithGoogleReturnType => {
+    return signInWithPopup(auth, provider)
+      .then((result) => {
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        const token = credential!.accessToken;
+        // The signed-in user info.
+        const user = result.user;
+        // IdP data available using getAdditionalUserInfo(result)
+
+        console.log(credential, token, user);
+        return {
+          user,
+          token,
+        };
+      }).catch((error) => {
+        // Handle Errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // The email of the user's account used.
+        const email = error.customData.email;
+        // The AuthCredential type that was used.
+        const credential = GoogleAuthProvider.credentialFromError(error);
+
+        return {
+          email,
+          credential,
+          errorCode,
+          errorMessage,
+        }
+      });
+  },
+
+
+
   login: async (email: string, password: string): Promise<UserCredential> => {
     return signInWithEmailAndPassword(auth, email, password);
   },

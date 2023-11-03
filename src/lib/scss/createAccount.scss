@@ -81,7 +81,11 @@
                     text-transform: uppercase;
                     white-space: break-spaces;
                     word-wrap: break-word;
-                    margin-top: 2rem;
+                    transition: 0.4s all linear;
+
+                    &:first-of-type {
+                      margin-top: 2rem;
+                    }
 
                     &#btn_google {
                       display: flex;

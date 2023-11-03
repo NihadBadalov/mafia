@@ -198,6 +198,9 @@ span.color_red {
   text-transform: uppercase;
   white-space: break-spaces;
   word-wrap: break-word;
+  transition: 0.4s all linear;
+}
+.wrapper .main .main_inner .create_account button:first-of-type {
   margin-top: 2rem;
 }
 .wrapper .main .main_inner .create_account button#btn_google {

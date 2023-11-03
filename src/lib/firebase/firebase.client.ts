@@ -1,7 +1,6 @@
-// Import the functions you need from the SDKs you need
 import { deleteApp, getApp, getApps, initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-import { getAuth, setPersistence, inMemoryPersistence } from 'firebase/auth';
+import { getAuth, GoogleAuthProvider } from 'firebase/auth';
+import { getDatabase } from 'firebase/database';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -15,10 +14,11 @@ const firebaseConfig = {
   messagingSenderId: import.meta.env.VITE_MESSAGINGSENDERID,
   appId: import.meta.env.VITE_APPID,
   measurementId: import.meta.env.VITE_MEASUREMENTID,
+  databaseURL: import.meta.env.DATABASEURL,
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
+// const app = initializeApp(firebaseConfig);
 let firebaseApp;
 if (!getApps().length) {
   firebaseApp = initializeApp(firebaseConfig);
@@ -30,3 +30,5 @@ else {
 }
 
 export const auth = getAuth(firebaseApp);
+const database = getDatabase();
+export const provider = new GoogleAuthProvider();

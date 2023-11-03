@@ -1,8 +1,7 @@
-<script>
-  import { enhance } from "$app/forms";
+<script lang="ts">
   import { goto } from "$app/navigation";
   import { auth } from "$lib/firebase/firebase.client";
-  import { authStore } from "$stores/authStore";
+  import { authHandlers, authStore } from "$stores/authStore";
   import { onMount } from "svelte";
 
   onMount(async () => {
@@ -16,6 +15,10 @@
       }
     });
   });
+
+  async function logOut() {
+    await authHandlers.logout();
+  }
 </script>
 
 <div class="wrapper">
@@ -32,16 +35,17 @@
       <a class="nav_link" href="/discordLink">Discord</a>
     </nav>
     <div class="header_actions">
-      <button class="btn" id="btn_account">Account</button>
-      <button class="btn" id="btn_log_out">Log Out</button>
+      <button class="btn" id="btn_account" on:click={() => goto("/account")}
+        >Account
+      </button>
+      <button class="btn" id="btn_log_out" on:click={async () => logOut()}
+        >Log Out</button
+      >
     </div>
   </div>
+
   <div class="main">
-    <form class="main_inner" method="POST" use:enhance>
-      <div class="create_server">
-        <h1>Welcome!<br />Create an Account</h1>
-      </div>
-    </form>
+    <div class="main_inner" />
 
     <footer>
       <a href="/discordLink">Our Discord Server</a>
@@ -50,3 +54,14 @@
     </footer>
   </div>
 </div>
+
+<svelte:head>
+  <title>Account - Mafia</title>
+  <link rel="stylesheet" href="/src/lib/css/account.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100;200;300;400;500;600;700;800;900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+    rel="stylesheet"
+  />
+</svelte:head>

@@ -7,11 +7,9 @@
 </svelte:head>
 
 <script lang="ts">
-    //import type { PageData } from './$types';
     import { goto } from '$app/navigation';
     import { enhance } from '$app/forms';
 
-    //export let data: PageData;
     export let form: any;
 
     import { io } from '$lib/webSocketConnection.js';
