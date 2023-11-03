@@ -5,6 +5,7 @@ import { dev } from '$app/environment';
 import type { Cookies } from '@sveltejs/kit';
 import { GameRoles } from '$types/GameRoles';
 import { io } from '$lib/webSocketConnection';
+import { auth } from './firebase/firebase.client';
 
 function updateServer(serverId: number) {
   io.emit('serverEvent', {
@@ -204,6 +205,8 @@ export async function handleUserSession(cookies: Cookies, fetch: any, endpoint: 
     || !cookies.get('ast')?.length
     || !getUserByAst(cookies.get('ast')! as string)) {
     // Not in session 
+    const fbs = cookies.get('fbs');
+    // const firebaseUser = await auth.verify
     const username = `User ${Math.round(Math.random() * 999999)}`;
     const userToken = _generateUserToken(30);
 

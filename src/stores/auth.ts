@@ -1,6 +1,8 @@
+import { browser } from "$app/environment";
 import { auth, provider } from "$lib/firebase/firebase.client";
 import { createUserWithEmailAndPassword, fetchSignInMethodsForEmail, GoogleAuthProvider, OAuthCredential, sendPasswordResetEmail, signInWithEmailAndPassword, signInWithPopup, signOut, updateEmail, updatePassword, type User, type UserCredential } from "firebase/auth";
 import { writable, type Writable } from "svelte/store";
+import cookie from 'cookie';
 
 export const authStore = writable<{
   isLoading: boolean;
@@ -41,7 +43,6 @@ export const authHandlers = {
         const user = result.user;
         // IdP data available using getAdditionalUserInfo(result)
 
-        console.log(credential, token, user);
         return {
           user,
           token,
@@ -90,4 +91,29 @@ export const authHandlers = {
     await updatePassword(user, password);
   },
 };
+
+if (browser) {
+  auth.onIdTokenChanged(async (newUser) => {
+    const currentToken = cookie.parse(document.cookie)?.token;
+    const token = await newUser?.getIdToken();
+    document.cookie = cookie.serialize('fbs', token ?? '', {
+      path: '/',
+      maxAge: token ? undefined : 0,
+    });
+    authStore.update((curr) => {
+      return { ...curr, isLoading: false, currentUser: newUser };
+    });
+
+    // The reload would be needed if we were to use signInWithRedirect
+    /* if (!currentToken
+      && token
+      && document.location.pathname !== '/create/account')
+      document.location.reload(); */
+  });
+
+  // Refresh user token every 10 minutes
+  setInterval(async () => {
+    await auth?.currentUser?.getIdToken();
+  }, 10 * 60 * 1000);
+}
 

@@ -1,8 +1,10 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
   import { auth } from "$lib/firebase/firebase.client";
-  import { authHandlers, authStore } from "$stores/authStore";
+  import { authHandlers, authStore } from "$stores/auth";
   import { onMount } from "svelte";
+
+  let userDisplayName: string | undefined | null;
 
   onMount(async () => {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
@@ -13,6 +15,8 @@
       if (!$authStore.currentUser && !$authStore.isLoading) {
         await goto("/create/account");
       }
+
+      userDisplayName = user?.displayName;
     });
   });
 
@@ -45,7 +49,9 @@
   </div>
 
   <div class="main">
-    <div class="main_inner" />
+    <div class="main_inner">
+      <h1>Welcome to the Party, {userDisplayName}!</h1>
+    </div>
 
     <footer>
       <a href="/discordLink">Our Discord Server</a>

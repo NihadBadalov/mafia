@@ -1,4 +1,4 @@
-import { authHandlers } from '$stores/authStore';
+import { authHandlers } from '$stores/auth';
 import { fail, type Actions } from '@sveltejs/kit';
 
 export const actions = {
