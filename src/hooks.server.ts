@@ -1,4 +1,4 @@
-import { handleUserSession } from "$lib";
+import { handleUserSession } from "$lib/server";
 import type { Handle, RequestEvent } from "@sveltejs/kit";
 
 const userSessionHandlerTimeout = new Set();
