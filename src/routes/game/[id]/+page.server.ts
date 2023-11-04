@@ -1,5 +1,5 @@
 import { redirect, error } from '@sveltejs/kit';
-import { handleUserSession } from '$lib';
+import { handleUserSession } from '$lib/server';
 import type { GameServer } from '$types';
 import type { PageServerLoad } from './$types';
 
