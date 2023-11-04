@@ -1,8 +1,11 @@
+import { getUserByAst } from '$lib';
+import { _data } from '$routes/api';
 import { authHandlers } from '$stores/auth';
 import { fail, type Actions } from '@sveltejs/kit';
+import type { UserCredential } from 'firebase/auth';
 
 export const actions = {
-  default: async ({ request }) => {
+  default: async ({ request, cookies }) => {
     const data = await request.formData();
     const email: string = data.get('email') as string || '';
     const password: string = data.get('password') as string || '';
@@ -23,14 +26,21 @@ export const actions = {
 
 
     try {
+      let userCredentials: UserCredential;
       if (registering) {
-        await authHandlers.signup(email, password);
+        userCredentials = await authHandlers.signup(email, password);
       }
       else {
-        await authHandlers.login(email, password);
+        userCredentials = await authHandlers.login(email, password);
+      }
+
+      if (cookies.get('ast')
+        && userCredentials.user.displayName) {
+          const dataUser = getUserByAst(cookies.get('ast'));
+          if (dataUser) dataUser.name = userCredentials.user.displayName ?? dataUser?.name;
       }
     }
-    catch(e: any) {
+    catch (e: any) {
       console.error(e);
       // Not necessarily a server error, but oh well!
       return fail(500, { serverError: true, errorCode: e?.code });
