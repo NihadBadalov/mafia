@@ -25,7 +25,6 @@ export const GET: RequestHandler = async ({ cookies, setHeaders, url }) => {
   let dc = structuredClone(_data) as ServerData;
   dc.userAsts = undefined;
   delete dc.userAsts;
-  delete dc.userFbts;
   delete dc.serverPassphrase;
 
   for (const server of dc.servers) {
