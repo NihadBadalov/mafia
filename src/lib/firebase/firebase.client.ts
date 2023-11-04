@@ -30,5 +30,6 @@ else {
 }
 
 export const auth = getAuth(firebaseApp);
-const database = getDatabase();
+export const database = getDatabase();
 export const provider = new GoogleAuthProvider();
+
