@@ -71,8 +71,8 @@ export const authHandlers = {
     return signInWithEmailAndPassword(auth, email, password);
   },
 
-  signup: async (email: string, password: string): Promise<void> => {
-    await createUserWithEmailAndPassword(auth, email, password);
+  signup: async (email: string, password: string): Promise<UserCredential> => {
+    return createUserWithEmailAndPassword(auth, email, password);
   },
 
   logout: async (): Promise<void> => {
