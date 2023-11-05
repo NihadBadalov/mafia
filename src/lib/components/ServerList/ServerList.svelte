@@ -1,5 +1,4 @@
 <script lang="ts">
-  // import { goto } from '$app/navigation';
   export let data: any;
   export let title: string = "";
 </script>
