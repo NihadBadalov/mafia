@@ -4,70 +4,71 @@ import type { GameStates } from './GameStates';
 export type UserId = number;
 
 export interface GameServer {
-    id: number;
-    name: string;
-    maxPlayerCount: number;
-    mafiaCount: number;
+  id: number;
+  name: string;
+  maxPlayerCount: number;
+  mafiaCount: number;
 
-    players: UserId[];
-    playerBlacklist: UserId[];
-    playerRoles: { userId: UserId; role: typeof GameRoles[keyof typeof GameRoles] | number }[];
+  players: UserId[];
+  initialPlayers: UserId[];
+  playerBlacklist: UserId[];
+  playerRoles: { userId: UserId; role: typeof GameRoles[keyof typeof GameRoles] | number }[];
 
-    ownerId: UserId;
-    started: boolean;
-    state: GameStates;
-    specialStates: {
-      sheriffAbility: boolean;
-      doctorAbility: boolean;
-    };
+  ownerId: UserId;
+  started: boolean;
+  state: GameStates;
+  specialStates: {
+    sheriffAbility: boolean;
+    doctorAbility: boolean;
+  };
 
-    announcements: {
-        [key: typeof GameRoles[keyof typeof GameRoles] | number]: string;
-    };
-    citizenChat: Chat;
-    mafiaChat: Chat;
-    playersCanChat: boolean;
+  announcements: {
+    [key: typeof GameRoles[keyof typeof GameRoles] | number]: string;
+  };
+  citizenChat: Chat;
+  mafiaChat: Chat;
+  playersCanChat: boolean;
 
-    whoCanVoteKick: number[];
-    votingBetween: number[];
-    votes: {
-        don: number | undefined;
-        doctor: number | undefined;
-        mafia: Votes[];
-        citizens: Votes[];
-    };
-    timer: number | undefined;
+  whoCanVoteKick: number[];
+  votingBetween: number[];
+  votes: {
+    don: number | undefined;
+    doctor: number | undefined;
+    mafia: Votes[];
+    citizens: Votes[];
+  };
+  timer: number | undefined;
 }
 
 export interface User {
-    id: UserId;
-    name: string;
+  id: UserId;
+  name: string;
 }
 
 export interface UserAccessToken {
-    id: UserId;
-    token: string;
+  id: UserId;
+  token: string;
 }
 
 export interface ServerData {
-    servers: GameServer[];
-    users: User[];
-    userAsts: UserAccessToken[] | undefined;
-    serverPassphrase: string | undefined;
+  servers: GameServer[];
+  users: User[];
+  userAsts: UserAccessToken[] | undefined;
+  serverPassphrase: string | undefined;
 }
 
 export interface ModifiedServerData extends ServerData {
-    [key: string]: any;
+  [key: string]: any;
 }
 
 export interface ChatMessage {
-    userId: UserId;
-    content: string;
+  userId: UserId;
+  content: string;
 }
 export type Chat = Array<ChatMessage>;
 
 export type Votes = {
-    for: UserId;
-    by: UserId;
+  for: UserId;
+  by: UserId;
 };
 

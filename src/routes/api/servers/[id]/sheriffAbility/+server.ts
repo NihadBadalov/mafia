@@ -44,7 +44,7 @@ export const POST: RequestHandler = async ({ request, params }) => {
   server.specialStates.sheriffAbility = false;
 
   await gameAnnounce(
-    `${targetUser?.name}'S ROLE IS<br>${GameRoles[''+targetUserRole as any]}`,
+    `${targetUser?.name}'S ROLE IS<br>${GameRoles['' + targetUserRole as any]}`,
     [GameRoles.Sheriff],
     serverId,
   );

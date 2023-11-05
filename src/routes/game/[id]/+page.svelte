@@ -245,7 +245,9 @@
       <a class="nav_link" href="/discordLink">Discord</a>
     </nav>
     <div class="header_actions">
-      <button class="btn" id="btn_account" on:click={() => goto('/account')}>Account</button>
+      <button class="btn" id="btn_account" on:click={() => goto("/account")}
+        >Account</button
+      >
     </div>
   </div>
   <div class="main">

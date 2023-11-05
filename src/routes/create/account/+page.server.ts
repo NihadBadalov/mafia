@@ -37,8 +37,8 @@ export const actions = {
 
       if (cookies.get('ast')
         && userCredentials.user.displayName) {
-          const dataUser = getUserByAst(cookies.get('ast'));
-          if (dataUser) dataUser.name = userCredentials.user.displayName ?? dataUser?.name;
+        const dataUser = getUserByAst(cookies.get('ast'));
+        if (dataUser) dataUser.name = userCredentials.user.displayName ?? dataUser?.name;
       }
     }
     catch (e: any) {

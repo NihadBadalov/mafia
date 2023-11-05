@@ -40,7 +40,7 @@ export const POST: RequestHandler = async ({ request, params }) => {
 
 
   await gameAnnounce(
-    `${targetUser?.name}'S ROLE IS<br>${GameRoles[''+targetUserRole as any]}`,
+    `${targetUser?.name}'S ROLE IS<br>${GameRoles['' + targetUserRole as any]}`,
     [GameRoles.Sheriff],
     serverId,
   );

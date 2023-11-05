@@ -87,10 +87,9 @@
     } as RequestInit);
 
     if (!response?.ok) {
-      playSound('wronganswer');
-    }
-    else {
-      playSound('beep2');
+      playSound("wronganswer");
+    } else {
+      playSound("beep2");
     }
   }
 </script>

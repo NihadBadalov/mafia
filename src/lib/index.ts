@@ -1,8 +1,6 @@
 // place files you want to import through the `$lib` alias in this folder.
 import { _data, _generateUserToken } from '$api';
 import type { GameServer, ModifiedServerData, User, UserId } from '$types';
-import { dev } from '$app/environment';
-import type { Cookies } from '@sveltejs/kit';
 import { GameRoles } from '$types/GameRoles';
 import { io } from '$lib/webSocketConnection';
 
