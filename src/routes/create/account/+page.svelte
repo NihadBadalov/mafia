@@ -3,9 +3,11 @@
   import { goto } from "$app/navigation";
   import { auth } from "$lib/firebase/firebase.client";
   import { authHandlers, authStore } from "$stores/auth";
+  import type { UserAccessToken } from "$types";
   import { onMount } from "svelte";
 
   export let form: any;
+  export let data: { ast: UserAccessToken };
 
   onMount(async () => {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
@@ -75,6 +77,10 @@
       }
     };
   }
+
+  async function loginWithGoogle() {
+    await authHandlers.loginWithGoogle(data?.ast, fetch);
+  }
 </script>
 
 <div class="wrapper">
@@ -132,9 +138,7 @@
         />
 
         {#if register}
-          <p
-            style="width: 30%; text-align: left; margin-bottom: -1em;"
-          >
+          <p style="width: 30%; text-align: left; margin-bottom: -1em;">
             Confirm Password
           </p>
           <input
@@ -157,7 +161,7 @@
         <button
           class="btn"
           id="btn_google"
-          on:click={async () => await authHandlers.loginWithGoogle()}
+          on:click={async () => await loginWithGoogle()}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

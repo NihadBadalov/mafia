@@ -48,12 +48,10 @@ export async function handleUserSession(cookies: Cookies, fetch: any, endpoint: 
   }
 
   // If user is auth'ed, change their username and return userId
-  else if (cookies.get('ast')) {
+  else if (cookies.get('ast') && cookies.get('fbs')) {
     const user = getUserByAst(cookies.get('ast'));
     if (!user) return;
-
     if (!guestUserUsernameRegExp.test(user.name)) return user?.id;
-    if (!cookies.get('fbs')) return user?.id;
 
     const firebaseUserId = await adminAuth.verifyIdToken(cookies.get('fbs') as string)
       .then((user) => user.uid)

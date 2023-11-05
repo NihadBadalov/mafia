@@ -4,8 +4,7 @@ import type { Handle, RequestEvent } from "@sveltejs/kit";
 const userSessionHandlerTimeout = new Set();
 
 export const handle: Handle = async ({ event, resolve }) => {
-  if (event.cookies.get('ast') === undefined
-     && !userSessionHandlerTimeout.has(event.getClientAddress())) {
+  if (!userSessionHandlerTimeout.has(event.getClientAddress())) {
     userSessionHandlerTimeout.add(event.getClientAddress());
     await handleUserSession(event?.cookies, event?.fetch, event?.url?.href);
   }
