@@ -7,6 +7,10 @@ export const handle: Handle = async ({ event, resolve }) => {
   if (!userSessionHandlerTimeout.has(event.getClientAddress())) {
     userSessionHandlerTimeout.add(event.getClientAddress());
     await handleUserSession(event?.cookies, event?.fetch, event?.url?.href);
+    setTimeout(
+      () => userSessionHandlerTimeout.delete(event.getClientAddress()),
+      10_000
+    );
   }
 
   const response = await resolve(event! as unknown as RequestEvent);
