@@ -3,6 +3,7 @@ import { _data } from '$routes/api';
 import { authHandlers } from '$stores/auth';
 import { fail, type Actions } from '@sveltejs/kit';
 import type { UserCredential } from 'firebase/auth';
+import type { PageServerLoad } from '../../$types';
 
 export const actions = {
   default: async ({ request, cookies }) => {
@@ -49,3 +50,8 @@ export const actions = {
   },
 } satisfies Actions;
 
+export const load: PageServerLoad = (async ({ cookies }) => {
+  return {
+    ast: cookies.get('ast'),
+  };
+});

@@ -3,6 +3,8 @@ import { auth, provider } from "$lib/firebase/firebase.client";
 import { createUserWithEmailAndPassword, fetchSignInMethodsForEmail, GoogleAuthProvider, OAuthCredential, sendPasswordResetEmail, signInWithEmailAndPassword, signInWithPopup, signOut, updateEmail, updatePassword, type User, type UserCredential } from "firebase/auth";
 import { writable, type Writable } from "svelte/store";
 import cookie from 'cookie';
+import type { UserAccessToken } from "$types";
+import { getUserByAst } from "$lib";
 
 export const authStore = writable<{
   isLoading: boolean;
@@ -33,15 +35,28 @@ export const authHandlers = {
       .catch(() => false);
   },
 
-  loginWithGoogle: async (): LoginWithGoogleReturnType => {
+  loginWithGoogle: async (ast?: UserAccessToken, fetch?: any): LoginWithGoogleReturnType => {
     return signInWithPopup(auth, provider)
-      .then((result) => {
+      .then(async (result) => {
         // This gives you a Google Access Token. You can use it to access the Google API.
         const credential = GoogleAuthProvider.credentialFromResult(result);
         const token = credential!.accessToken;
         // The signed-in user info.
         const user = result.user;
         // IdP data available using getAdditionalUserInfo(result)
+
+        if (ast && fetch) {
+          fetch('/api/auth/updateUser', {
+            method: 'POST',
+            body: JSON.stringify({
+              ast,
+              idToken: await user.getIdToken(),
+            }),
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          } as RequestInit);
+        }
 
         return {
           user,
