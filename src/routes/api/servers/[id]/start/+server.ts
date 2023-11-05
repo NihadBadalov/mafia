@@ -3,7 +3,6 @@ import { _data } from '$api';
 import { arrayShuffle, getUserByAst, randomEnumValue } from '$lib';
 import type { GameServer } from '$types';
 import { GameRoles } from '$types/GameRoles';
-import { GameStates } from '$types/GameStates';
 import { io } from '$lib/webSocketConnection';
 
 

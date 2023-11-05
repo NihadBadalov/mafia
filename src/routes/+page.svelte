@@ -12,14 +12,8 @@
   const io = customIo(`${socketEndpoint}/main`);
 
   onMount(() => {
-    io.on("message", (message) => {
-      // Message from server
-      console.log("Message from server", message);
-    });
     io.on("serverEvent", async (message) => {
-      // Message from server
       if (message !== "updateServers") return;
-
       invalidateAll();
     });
   });

@@ -8,7 +8,7 @@
 
   export let playerId: string | number;
   export let playerName: string;
-  // number of GameRoles or 0 for default
+  // number from GameRoles or 0 for a default card image
   export let playerRole: any = undefined;
   export let ownCard: boolean = false;
 

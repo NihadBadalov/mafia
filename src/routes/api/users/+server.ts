@@ -1,10 +1,6 @@
 import { json, type RequestHandler } from '@sveltejs/kit'
 import { _data } from '../index';
 
-export const GET: RequestHandler = async (event) => {
-  return json({ ..._data, endpoint: event?.url?.href });
-}
-
 export const POST: RequestHandler = async ({ request }) => {
   let { event, username } = await request.json();
 

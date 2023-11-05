@@ -4,7 +4,6 @@ import { createUserWithEmailAndPassword, fetchSignInMethodsForEmail, GoogleAuthP
 import { writable, type Writable } from "svelte/store";
 import cookie from 'cookie';
 import type { UserAccessToken } from "$types";
-import { getUserByAst } from "$lib";
 
 export const authStore = writable<{
   isLoading: boolean;

@@ -4,16 +4,6 @@
 
   export let form: any;
 
-  import { io } from "$lib/webSocketConnection.js";
-  import { onMount } from "svelte";
-
-  onMount(() => {
-    io.on("message", (message) => {
-      // Message from server
-      console.log("Message from server", message);
-    });
-  });
-
   let _playerAmount = (form?.maxPlayerAmount as any as number) ?? 6;
   $: _minMafiaAmount = Math.floor(_playerAmount / 4) - 1 || 1;
   $: _maxMafiaAmount = Math.ceil(_playerAmount / 3);
