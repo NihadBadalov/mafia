@@ -23,7 +23,7 @@ export async function handleUserSession(cookies: Cookies, fetch: any, endpoint: 
     const username = firebaseUser?.displayName ?? `User ${Math.round(Math.random() * 999999)}`;
     const userToken = _generateUserToken(30);
 
-    const response = await fetch(getFullEndpointUrl('/api/users', endpoint), {
+    const response = await fetch(getFullEndpointUrl('/api/user', endpoint), {
       method: 'POST',
       body: JSON.stringify({
         event: 'createUser',
