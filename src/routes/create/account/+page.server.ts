@@ -55,3 +55,4 @@ export const load: PageServerLoad = (async ({ cookies }) => {
     ast: cookies.get('ast'),
   };
 });
+
