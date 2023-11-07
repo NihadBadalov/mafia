@@ -64,6 +64,7 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
     server.playerRoles = [...server.playerRoles, { userId: playerIds[i], role: role }];
   }
 
+  server.initialPlayers = [...server.players];
   server.started = true;
 
   io.emit('serverEvent', {

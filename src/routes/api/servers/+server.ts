@@ -114,6 +114,7 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
     mafiaCount: amountOfMafia,
 
     players: [],
+    initialPlayers: [],
     playerRoles: [],
     playerBlacklist: [],
 
