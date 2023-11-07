@@ -1,0 +1,162 @@
+@import "main";
+
+.wrapper {
+    display: flex;
+    flex-flow: column nowrap;
+    width: 100%;
+
+    & > * {
+        width: 100%;
+    }
+    
+    .main {
+        color: #fff;
+        height: 100%;
+
+        display: flex;
+        flex-flow: column nowrap;
+        align-self: stretch;
+
+
+        .main_inner.spinner {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .main_inner {
+            flex: 1;
+            display: flex;
+            flex-flow: column wrap;
+            align-items: stretch;
+            justify-content: center;
+            gap: 1em;
+            padding: 2em 10dvw;
+            text-align: center;
+
+            .account {
+                @include small-shadow;
+                display: flex;
+                flex-flow: column nowrap;
+                justify-content: center;
+                align-items: center;
+                height: 70dvh;
+                min-width: 80dvw;
+                border: 0.5em $header_background_color solid;
+                background-color: $header_background_color;
+                border-radius: 12px;
+                padding: 2em 1em;
+                gap: 1em;
+
+                .account_details {
+                  display: grid;
+                  grid-template: minmax(75px, 1fr)/ 2fr 8fr;
+                  gap: 2rem 1.5rem;
+                  min-width: 300px;
+                  min-height: 200px;
+                  width: 40%;
+                  background-color: rgba(0,0,0,.25);
+                  padding: 2rem;
+                  border-radius: 1em;
+
+                  .account__pfp {
+                    place-self: center center;
+                    grid-area: 1 / 1 / span 1 / span 1;
+                    width: 75px;
+                    aspect-ratio: 1/1;
+                    border-radius: 1rem;
+                  }
+                  .account__info {
+                    grid-area: 1 / 2 / span 1 / span 1;
+                    display: flex;
+                    flex-flow: column nowrap;
+                    justify-content: space-evenly;
+                    align-items: flex-start;
+                    background-color: rgba(0,0,0,0.5);
+                    padding: 1rem;
+                    border-radius: 1rem;
+
+                    .bottom p {
+                      font-size: 3rem;
+                      span {
+                        font-size: 1rem;
+                      }
+                    }
+                  }
+                  .account__stats {
+                    grid-area: 2 / 1 / span 1 / span 1;
+                    text-align: left;
+                    display: flex;
+                    flex-flow: column nowrap;
+                    gap: 1rem;
+                    overflow-y: auto;
+                    >*{
+                      background-color: rgba(0,0,0,0.5);
+                      padding: 0.45rem;
+                      border-radius: 1rem;
+                    }
+                  }
+                  .account__last_games {
+                    display: flex;
+                    flex-flow: column nowrap;
+                    justify-content: flex-start;
+                    align-items: stretch;
+                    gap: 1rem;
+
+                    grid-area: 2 / 2 / span 1 / span 1;
+                    background-color: rgba(0,0,0,0.5);
+                    padding: 1rem;
+                    border-radius: 1rem;
+                    overflow-x: hidden;
+                    overflow-y: auto;
+
+                    >* {
+                      display: flex;
+                      flex-flow: row nowrap;
+                      align-items: center;
+                      justify-content: space-between;
+                      background-color: rgba(255,255,255,0.1);
+                      padding: 0.5rem 1rem;
+                      border-radius: 0.5rem;
+                      &:first-child {
+                        font-size: 1rem;
+                      }
+                    }
+                  }
+                }
+            }
+
+            .menu_buttons {
+                display: flex;
+                justify-content: center;
+                align-items: stretch;
+                flex-flow: column nowrap;
+                gap: 0.5em;
+
+                button {
+                    min-height: 1em;
+                    width: 100%;
+                    font-size: 125%;
+                    text-transform: uppercase;
+                    white-space: break-spaces;
+                    word-wrap: break-word;
+                }
+            }
+        }
+    }
+    footer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        gap: 2em;
+        font-weight: 600;
+        justify-self: flex-end;
+        padding: 0.5em 0;
+
+        a {
+            color: #fff;
+        }
+    }
+}
+

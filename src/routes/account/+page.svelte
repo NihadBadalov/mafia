@@ -3,26 +3,36 @@
   import { auth } from "$lib/firebase/firebase.client";
   import { authHandlers, authStore } from "$stores/auth";
   import { onMount } from "svelte";
+  import { LoadingSpinner } from "$lib/components";
+  import type { User } from "firebase/auth";
+  import type { User as DataUser } from "$types";
 
-  let userDisplayName: string | undefined | null;
+  export let data: { currentUser: DataUser };
+  let user: User;
 
   onMount(async () => {
-    const unsubscribe = auth.onAuthStateChanged(async (user) => {
+    const unsubscribe = auth.onAuthStateChanged(async (usr) => {
       authStore.update((curr) => {
-        return { ...curr, isLoading: false, currentUser: user };
+        return { ...curr, isLoading: false, currentUser: usr };
       });
 
-      if (!$authStore.currentUser && !$authStore.isLoading) {
+      if (!usr || (!$authStore.currentUser && !$authStore.isLoading)) {
         await goto("/create/account");
       }
 
-      userDisplayName = user?.displayName;
+      user = usr!;
     });
   });
 
   async function logOut() {
     await authHandlers.logout();
   }
+
+  $: userJoinDate = !isNaN(new Date(user?.metadata?.creationTime!).getDay())
+    ? new Intl.DateTimeFormat("en-CA", {
+        dateStyle: "short",
+      })?.format(new Date(user?.metadata?.creationTime!))
+    : null;
 </script>
 
 <div class="wrapper">
@@ -49,9 +59,85 @@
   </div>
 
   <div class="main">
-    <div class="main_inner">
-      <h1>Welcome to the Party, {userDisplayName}!</h1>
-    </div>
+    {#if user}
+      <div class="main_inner" style="display: {user ? 'flex' : 'none'};">
+        <div class="account">
+          <h1>Your Account</h1>
+          <div class="account_details">
+            <img src={user.photoURL} alt="Account" class="account__pfp" />
+
+            <div class="account__info">
+              <div class="top">
+                <span class="presence">Online</span>
+              </div>
+
+              <div class="bottom">
+                <p>
+                  {user.displayName}
+                  <span class="account__id"
+                    >ID: {data?.currentUser?.id ?? 0}</span
+                  >
+                </p>
+              </div>
+            </div>
+
+            <div class="account__stats">
+              <div>
+                <p>Joined:<br />{userJoinDate}</p>
+              </div>
+              <div>
+                <p>Winrate:<br />0.7 (70%)</p>
+              </div>
+              <div>
+                <p>Games:<br />123</p>
+              </div>
+            </div>
+
+            <div class="account__last_games">
+              <div>
+                <span>W/L</span>
+                <p class="game__server_name">Server Name</p>
+                <p class="game__player_role">Player Role</p>
+                <p class="game__player_amount">Player Amount</p>
+              </div>
+              <div>
+                <span>L</span>
+                <p class="game__server_name">Wazzup boyz</p>
+                <p class="game__player_role">Mafia</p>
+                <p class="game__player_amount">6</p>
+              </div>
+              <div>
+                <span>L</span>
+                <p class="game__server_name">Wazzup boyz</p>
+                <p class="game__player_role">Mafia</p>
+                <p class="game__player_amount">6</p>
+              </div>
+              <div>
+                <span>L</span>
+                <p class="game__server_name">Wazzup boyz</p>
+                <p class="game__player_role">Mafia</p>
+                <p class="game__player_amount">6</p>
+              </div>
+              <div>
+                <span>L</span>
+                <p class="game__server_name">Wazzup boyz</p>
+                <p class="game__player_role">Mafia</p>
+                <p class="game__player_amount">6</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Spinner -->
+    {:else}
+      <div
+        class="main_inner spinner"
+        style="display: {!user ? 'flex' : 'none'};"
+      >
+        <LoadingSpinner active={!user} classes={[]} />
+      </div>
+    {/if}
 
     <footer>
       <a href="/discordLink">Our Discord Server</a>
