@@ -1,10 +1,9 @@
 import * as firebaseAdmin from 'firebase-admin';
-const { credential, auth, database, initializeApp } = firebaseAdmin;
 import { building } from "$app/environment";
 import { getApps } from "firebase-admin/app";
 
 const firebaseAdminConfig = {
-  credential: credential.cert({
+  credential: firebaseAdmin.credential.cert({
     privateKey: import.meta.env.VITE_SERVICEACCOUNTPRIVATEKEY.replace(/\\n/gm, "\n"),
     clientEmail: import.meta.env.VITE_SERVICEACCOUNTEMAIL,
     projectId: import.meta.env.VITE_PROJECTID,
@@ -15,10 +14,10 @@ const firebaseAdminConfig = {
 function makeApp() {
   return getApps().length
     ? getApps()[0]!
-    : initializeApp(firebaseAdminConfig);
+    : firebaseAdmin.initializeApp(firebaseAdminConfig);
 }
 
 export const firebase = building ? undefined : makeApp();
-export const adminAuth = building ? undefined : auth(firebase);
-export const adminDatabase = building ? undefined : database(firebase);
+export const adminAuth = building ? undefined : firebaseAdmin.auth(firebase);
+export const adminDatabase = building ? undefined : firebaseAdmin.database(firebase);
 
