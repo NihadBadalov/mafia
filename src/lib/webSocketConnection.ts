@@ -1,6 +1,6 @@
 import ioClient from 'socket.io-client';
 import { dev } from '$app/environment';
-const ENDPOINT = dev ? 'http://192.168.2.103:3000' : 'themafia.xyz:3000';
+const ENDPOINT = dev ? 'http://192.168.2.103:3000' : 'https://themafia.xyz';
 
 const socket = ioClient(`${ENDPOINT}/server`, {
   secure: !dev,
