@@ -12,7 +12,15 @@
   onMount(async () => {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
       authStore.update((curr) => {
-        return { ...curr, isLoading: false, currentUser: user };
+        return {
+          ...curr,
+          isLoading: false,
+          currentUser: user,
+          currentUsername:
+            typeof form?.username === "string"
+              ? form?.username
+              : curr?.currentUsername,
+        };
       });
 
       if ($authStore.currentUser) {
@@ -32,10 +40,12 @@
   $: if (form?.missing) {
     formError = "One of the fields is missing!";
   } else if (form?.incorrect) {
-    if (form?.email) {
+    if (form?.username) {
+      formError = "Username is too short! (min. 5 characters)";
+    } else if (form?.email) {
       formError = "Email is incorrect!";
     } else if (form?.password) {
-      formError = "Password is incorrect!";
+      formError = "Password is too short! (min. 8 characters)";
     } else if (form?.confirmPassword) {
       formError = "Confirmation password is incorrect!";
     } else {
@@ -62,15 +72,7 @@
         result?.data?.email &&
         result?.data?.password
       ) {
-        result?.data?.registering
-          ? await authHandlers.signup(
-              result?.data?.email,
-              result?.data?.password
-            )
-          : await authHandlers.login(
-              result?.data?.email,
-              result?.data?.password
-            );
+        await authHandlers.login(result?.data?.email, result?.data?.password);
         await goto("/account");
       } else {
         update();
@@ -114,6 +116,21 @@
           Welcome{!register ? " back" : ""}!<br /><span>{headingText}</span>
         </h1>
 
+        {#if register}
+          <p style="width: 30%; text-align: left; margin-bottom: -1em;">
+            Username
+          </p>
+          <input
+            bind:value={email}
+            type="text"
+            autocomplete="off"
+            placeholder="Enter your username"
+            name="username"
+            minlength="5"
+            required
+          />
+        {/if}
+
         <p style="width: 30%; text-align: left; margin-bottom: -1em;">Email</p>
         <input
           bind:value={email}
@@ -147,7 +164,7 @@
             autocomplete="off"
             placeholder="Confirm your password"
             name="confirmPassword"
-            minlength="6"
+            minlength="8"
             required
           />
         {/if}

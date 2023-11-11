@@ -5,7 +5,7 @@ export let _data = {
   users: [],
   userAsts: [],
   serverPassphrase: _generateUserToken(64),
-} as unknown as ServerData;
+} as ServerData;
 
 export function _generateUserToken(length: number): string {
   let result = '';

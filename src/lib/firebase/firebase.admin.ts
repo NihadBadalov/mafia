@@ -1,6 +1,7 @@
 import {
   auth,
   credential,
+  database,
   initializeApp,
 } from "firebase-admin";
 import { getApps } from "firebase-admin/app";
@@ -22,4 +23,5 @@ function makeApp() {
 
 export const firebase = makeApp();
 export const adminAuth = auth(firebase);
+export const adminDatabase = database(firebase);
 

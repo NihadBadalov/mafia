@@ -34,7 +34,7 @@
                 flex-flow: column nowrap;
                 justify-content: center;
                 align-items: center;
-                height: 70dvh;
+                // height: 70dvh;
                 min-width: 80dvw;
                 border: 0.5em $header_background_color solid;
                 background-color: $header_background_color;
@@ -64,7 +64,7 @@
                 input {
                     @include small-shadow;
                     width: 30%;
-                    min-height: 1em;
+                    min-height: 2.5em;
                     border: 3px $header_background_color solid;
                     border-radius: 0.8rem;
                     font-size: 100%;
@@ -76,7 +76,8 @@
                 button {
                     @include small-shadow;
                     min-width: 30%;
-                    min-height: 0.5em;
+                    min-height: 2em;
+                    height: 2rem;
                     font-size: 100%;
                     text-transform: uppercase;
                     white-space: break-spaces;

@@ -4,10 +4,12 @@ import { authHandlers } from '$stores/auth';
 import { fail, type Actions } from '@sveltejs/kit';
 import type { UserCredential } from 'firebase/auth';
 import type { PageServerLoad } from '../../$types';
+import { rawAdminDatabaseActions, xpActions, usernameActions } from '$lib/firebase/database';
 
 export const actions = {
   default: async ({ request, cookies }) => {
     const data = await request.formData();
+    const username: string = data.get('username') as string || '';
     const email: string = data.get('email') as string || '';
     const password: string = data.get('password') as string || '';
     const confirmPassword: string = data.get('confirmPassword') as string;
@@ -23,6 +25,7 @@ export const actions = {
     if (registering) {
       if (!confirmPassword) return fail(400, { confirmPassword, missing: true });
       if (password !== confirmPassword) return fail(400, { confirmPassword, incorrect: true });
+      if (username?.length < 5) return fail(400, { username, incorrect: true });
     }
 
 
@@ -35,10 +38,23 @@ export const actions = {
         userCredentials = await authHandlers.login(email, password);
       }
 
+      // Change username based on account's display name
       if (cookies.get('ast')
-        && userCredentials.user.displayName) {
+        && userCredentials?.user?.displayName) {
         const dataUser = getUserByAst(cookies.get('ast'));
         if (dataUser) dataUser.name = userCredentials.user.displayName ?? dataUser?.name;
+      }
+
+      // Store custom username
+      if (registering && username && userCredentials?.user?.uid) {
+        await usernameActions.set(rawAdminDatabaseActions.db, userCredentials?.user?.uid, username?.trim());
+      }
+
+      // Create an XP database row for the user
+      if (userCredentials?.user?.uid) {
+        if (!await xpActions.userXpRecordsExists(rawAdminDatabaseActions.db, userCredentials.user?.uid)) {
+          await xpActions.set(rawAdminDatabaseActions.db, userCredentials.user?.uid, 0);
+        }
       }
     }
     catch (e: any) {
@@ -46,7 +62,7 @@ export const actions = {
       // Not necessarily a server error, but oh well!
       return fail(500, { serverError: true, errorCode: e?.code });
     }
-    return { success: true, registering, email, password };
+    return { success: true, registering, email, password, username };
   },
 } satisfies Actions;
 

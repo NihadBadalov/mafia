@@ -8,16 +8,12 @@ import type { UserAccessToken } from "$types";
 export const authStore = writable<{
   isLoading: boolean;
   currentUser: User | null;
+  currentUsername: string | null;
 }>({
   isLoading: true,
-  currentUser: null
-} as {
-  isLoading: boolean;
-  currentUser: User | null;
-}) as Writable<{
-  isLoading: boolean;
-  currentUser: User | null;
-}>;
+  currentUser: null,
+  currentUsername: null,
+});
 
 type LoginWithGoogleReturnType = Promise<
   { user: User; token: string | undefined }
