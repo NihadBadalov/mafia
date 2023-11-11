@@ -1,0 +1,47 @@
+import { f as fail, r as redirect } from "../../../../chunks/index.js";
+const actions = {
+  default: async ({ request, fetch }) => {
+    const data = await request.formData();
+    const serverName = data.get("serverName") || "";
+    let maxPlayerAmount = data.get("maxPlayerAmount");
+    let amountOfMafia = data.get("amountOfMafia");
+    if (!serverName)
+      return fail(400, { serverName, missing: true });
+    if (serverName.length < 3)
+      return fail(400, { serverName, incorrect: true });
+    if (!maxPlayerAmount)
+      return fail(400, { maxPlayerAmount, missing: true });
+    if (isNaN(maxPlayerAmount))
+      return fail(422, { maxPlayerAmount, incorrect: true });
+    maxPlayerAmount = +maxPlayerAmount;
+    if (maxPlayerAmount < 6 || maxPlayerAmount > 16)
+      return fail(400, { maxPlayerAmount, incorrect: true });
+    if (!amountOfMafia)
+      return fail(400, { amountOfMafia, missing: true });
+    if (isNaN(amountOfMafia))
+      return fail(422, { amountOfMafia, incorrect: true });
+    amountOfMafia = +amountOfMafia;
+    if (amountOfMafia < Math.floor(maxPlayerAmount / 4) - 1 || amountOfMafia > Math.ceil(maxPlayerAmount / 3))
+      return fail(400, { amountOfMafia, incorrect: true });
+    const response = await fetch("/api/servers", {
+      method: "POST",
+      body: JSON.stringify({
+        serverName,
+        maxPlayerAmount,
+        amountOfMafia
+      }),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    });
+    const responseJson = await response.json();
+    if (responseJson?.success === true) {
+      throw redirect(303, `/game/${responseJson.serverId}`);
+    } else {
+      return fail(500, { serverError: true });
+    }
+  }
+};
+export {
+  actions
+};

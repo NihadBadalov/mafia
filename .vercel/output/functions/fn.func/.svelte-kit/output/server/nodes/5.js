@@ -1,0 +1,10 @@
+import * as server from '../entries/pages/create/server/_page.server.ts.js';
+
+export const index = 5;
+let component_cache;
+export const component = async () => component_cache ??= (await import('../entries/pages/create/server/_page.svelte.js')).default;
+export { server };
+export const server_id = "src/routes/create/server/+page.server.ts";
+export const imports = ["_app/immutable/nodes/5.ca2feacf.js","_app/immutable/chunks/scheduler.5d79c82b.js","_app/immutable/chunks/index.22729539.js","_app/immutable/chunks/navigation.5f9acbba.js","_app/immutable/chunks/singletons.a37cd152.js","_app/immutable/chunks/forms.6cb3ceb2.js","_app/immutable/chunks/parse.bee59afc.js"];
+export const stylesheets = [];
+export const fonts = [];
