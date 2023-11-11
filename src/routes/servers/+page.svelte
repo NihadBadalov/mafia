@@ -34,8 +34,8 @@
 
 <svelte:head>
   <title>Servers - Mafia</title>
-  <link rel="stylesheet" href="/src/lib/css/servers.css" />
-  <link rel="stylesheet" href="/src/lib/css/serverList.css" />
+  <link rel="stylesheet" href="/css/servers.css" />
+  <link rel="stylesheet" href="/css/serverList.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
   <link

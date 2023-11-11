@@ -149,7 +149,7 @@
 
 <svelte:head>
   <title>Account - Mafia</title>
-  <link rel="stylesheet" href="/src/lib/css/account.css" />
+  <link rel="stylesheet" href="/css/account.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
   <link

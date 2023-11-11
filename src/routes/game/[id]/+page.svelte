@@ -345,7 +345,7 @@
 
 <svelte:head>
   <title>{currentServer.name || "Game"} - Mafia</title>
-  <link rel="stylesheet" href="/src/lib/css/game.css" />
+  <link rel="stylesheet" href="/css/game.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
   <link

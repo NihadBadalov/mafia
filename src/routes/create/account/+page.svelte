@@ -248,7 +248,7 @@
 
 <svelte:head>
   <title>Create Account - Mafia</title>
-  <link rel="stylesheet" href="/src/lib/css/createAccount.css" />
+  <link rel="stylesheet" href="/css/createAccount.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
   <link

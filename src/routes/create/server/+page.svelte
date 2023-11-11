@@ -20,7 +20,7 @@
 
 <svelte:head>
   <title>Create Server - Mafia</title>
-  <link rel="stylesheet" href="/src/lib/css/createServer.css" />
+  <link rel="stylesheet" href="/css/createServer.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
   <link
