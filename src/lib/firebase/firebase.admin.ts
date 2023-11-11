@@ -1,4 +1,4 @@
-import * as firebaseAdmin from 'firebase-admin';
+import firebaseAdmin from 'firebase-admin';
 import { building } from "$app/environment";
 import { getApps } from "firebase-admin/app";
 
