@@ -25,6 +25,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@sveltejs/adapter-vercel": "^3.0.3",
 		"express": "^4.18.2",
 		"firebase": "^10.5.2",
 		"firebase-admin": "^11.11.0",
