@@ -1,9 +1,6 @@
-import {
-  auth,
-  credential,
-  database,
-  initializeApp,
-} from "firebase-admin";
+import pkg from 'firebase-admin';
+const { credential, auth, database, initializeApp } = pkg;
+import { building } from "$app/environment";
 import { getApps } from "firebase-admin/app";
 
 const firebaseAdminConfig = {
@@ -21,7 +18,7 @@ function makeApp() {
     : initializeApp(firebaseAdminConfig);
 }
 
-export const firebase = makeApp();
-export const adminAuth = auth(firebase);
-export const adminDatabase = database(firebase);
+export const firebase = building ? undefined : makeApp();
+export const adminAuth = building ? undefined : auth(firebase);
+export const adminDatabase = building ? undefined : database(firebase);
 
