@@ -1,5 +1,5 @@
-import pkg from 'firebase-admin';
-const { credential, auth, database, initializeApp } = pkg;
+import * as firebaseAdmin from 'firebase-admin';
+const { credential, auth, database, initializeApp } = firebaseAdmin;
 import { building } from "$app/environment";
 import { getApps } from "firebase-admin/app";
 
