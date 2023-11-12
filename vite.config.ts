@@ -4,8 +4,12 @@ import { webSocketServer } from './webSocketPluginVite';
 
 export default defineConfig({
   server: {
-    port: 443,
+    origin: 'https://www.themafia.xyz',
+    host: 'localhost',
+    port: 3000,
     https: false,
+    // port: 443,
+    // https: false,
   },
   plugins: [
     sveltekit(),
