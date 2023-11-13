@@ -40,5 +40,5 @@ jobs:
           password: ${{ secrets.SSH_PASSWORD }}
           script: |
             cd ~/mafia
-            git pull origin main && npm run build && pm2 restart all
+            git pull origin main && npm install && npm run build && pm2 restart all
 
