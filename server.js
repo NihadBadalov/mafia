@@ -7,7 +7,7 @@ const app = express();
 const server = http.createServer(app);
 
 // Inject SocketIO
-injectSocketIO(server as any);
+injectSocketIO(server);
 
 // SvelteKit handlers
 app.use(handler);

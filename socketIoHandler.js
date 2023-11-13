@@ -1,7 +1,10 @@
-import { Server, type ServerOptions } from 'socket.io';
-import type { Socket } from 'socket.io-client';
+import { Server } from 'socket.io';
 
-function getFullEndpointUrl(endpointPath: string, currentLocationHref: string): string {
+/**
+  * @param endpointPath string
+  * @param currentLocationHref string
+  */
+function getFullEndpointUrl(endpointPath, currentLocationHref) {
   const url = new URL(currentLocationHref);
   let fullApiUrl = '';
   fullApiUrl = `${url.protocol}//${url.hostname}:${url.port}`;
@@ -9,20 +12,20 @@ function getFullEndpointUrl(endpointPath: string, currentLocationHref: string): 
   return fullApiUrl;
 }
 
-function updateServers(io: Server) {
+function updateServers(io) {
   io.of('/main').emit('serverEvent', 'updateServers');
   io.of('/servers').emit('serverEvent', 'updateServers');
 }
 
 
-const sockets: Socket[] = [];
-export default function injectSocketIO(server: Partial<ServerOptions>) {
+const sockets = [];
+export default function injectSocketIO(server) {
   const io = new Server(server);
   // All namespaces
   const allNamespaces = io.of(/\/.*/);
 
   allNamespaces.on('connection', (socket) => {
-    sockets.push(socket as any);
+    sockets.push(socket);
     socket.join('lobby');
 
     socket.on('fallbackEvent', async ({ message: event, endpoint }) => {
@@ -179,7 +182,7 @@ export default function injectSocketIO(server: Partial<ServerOptions>) {
     });
 
     socket.on('disconnecting', async () => {
-      sockets.splice(sockets.indexOf(socket as any), 1);
+      sockets.splice(sockets.indexOf(socket), 1);
       socket.emit('fallbackEvent', 'dU');
     });
 
