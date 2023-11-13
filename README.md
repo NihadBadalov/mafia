@@ -1,4 +1,16 @@
 # Mafia Game
+<a href="https://www.themafia.xyz/">
+    <img alt="Website" src="https://img.shields.io/website?url=https%3A%2F%2Fwww.themafia.xyz">
+</a>
+<br>
+<a href="https://github.com/NihadBadalov/mafia">
+  <img alt="Deploy badge" src="https://github.com/NihadBadalov/mafia/actions/workflows/deploy.yml/badge.svg">
+</a>
+<br>
+<a href="https://discord.gg/s823fUb7VB">
+  <img alt="Discord" src="https://img.shields.io/discord/1133337836930740296?logo=discord">
+</a>
+
 ## Contributing
 <details>
   <summary markdown="span">How to contribute</summary>
