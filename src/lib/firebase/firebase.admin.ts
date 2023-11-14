@@ -17,7 +17,7 @@ function makeApp() {
     : firebaseAdmin.initializeApp(firebaseAdminConfig);
 }
 
-export const firebase = building ? undefined : makeApp();
-export const adminAuth = building ? undefined : firebaseAdmin.auth(firebase);
-export const adminDatabase = building ? undefined : firebaseAdmin.database(firebase);
+export const firebase: ReturnType<typeof makeApp> = building ? undefined : makeApp() as any;
+export const adminAuth: ReturnType<typeof firebaseAdmin.auth> = building ? undefined : firebaseAdmin.auth(firebase) as any;
+export const adminDatabase: ReturnType<typeof firebaseAdmin.database> = building ? undefined : firebaseAdmin.database(firebase) as any;
 
