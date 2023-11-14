@@ -1,6 +1,7 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
   import { goto } from "$app/navigation";
+  import { Opengraph } from "$lib/components";
   import { auth } from "$lib/firebase/firebase.client";
   import { authHandlers, authStore } from "$stores/auth";
   import type { UserAccessToken } from "$types";
@@ -258,4 +259,5 @@
     href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100;200;300;400;500;600;700;800;900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
     rel="stylesheet"
   />
+  <Opengraph />
 </svelte:head>

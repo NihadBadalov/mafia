@@ -6,7 +6,7 @@
   import { getUserById, getUserRoleInServer, isMafiaGameRole } from "$lib";
   import { auth } from "$lib/firebase/firebase.client";
   import { authStore } from "$stores/auth";
-  import { PlayerCard, Chat } from "$lib/components";
+  import { PlayerCard, Chat, Opengraph } from "$lib/components";
   import type { GameServer, ModifiedServerData, User } from "$types";
 
   export let data: ModifiedServerData;
@@ -375,4 +375,5 @@
       // console.log(playerCard);
     }); */
   </script>
+  <Opengraph />
 </svelte:head>
