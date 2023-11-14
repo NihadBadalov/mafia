@@ -7,7 +7,10 @@
   import type { User } from "firebase/auth";
   import type { User as DataUser } from "$types";
 
-  export let data: { currentUser: DataUser };
+  export let data: {
+    currentUser: DataUser;
+    currentUsername: string | null;
+  };
   let user: User;
 
   onMount(async () => {
@@ -73,7 +76,9 @@
 
               <div class="bottom">
                 <p>
-                  {user.displayName}
+                  {user.displayName ??
+                    data?.currentUsername ??
+                    data.currentUser.name}
                   <span class="account__id"
                     >ID: {data?.currentUser?.id ?? 0}</span
                   >
