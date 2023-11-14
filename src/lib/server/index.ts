@@ -1,5 +1,6 @@
 import { dev } from "$app/environment";
 import { getFullEndpointUrl, getUserByAst } from "$lib";
+import { rawAdminDatabaseActions, usernameActions } from "$lib/firebase/database";
 import { adminAuth } from "$lib/firebase/firebase.admin";
 import { _data, _generateUserToken } from "$routes/api";
 import type { Cookies } from "@sveltejs/kit";
@@ -62,7 +63,11 @@ export async function handleUserSession(cookies: Cookies, fetch: any, endpoint: 
     const dataUser = _data.users.find(u => u.id === user?.id);
     if (!dataUser) return user?.id;
 
-    dataUser.name = firebaseUser.displayName ?? user?.name;
+    const databaseUsername = await usernameActions?.get(rawAdminDatabaseActions.db, firebaseUserId as string);
+
+    dataUser.name = firebaseUser.displayName
+      ?? databaseUsername
+      ?? user?.name;
   }
 
   return getUserByAst(cookies.get('ast'))?.id;
