@@ -5,6 +5,8 @@ import { fail, type Actions } from '@sveltejs/kit';
 import type { UserCredential } from 'firebase/auth';
 import type { PageServerLoad } from '../../$types';
 import { rawAdminDatabaseActions, xpActions, usernameActions } from '$lib/firebase/database';
+import { z } from 'zod';
+const emailSchema = z.string().email();
 
 export const actions = {
   default: async ({ request, cookies }) => {
@@ -18,6 +20,7 @@ export const actions = {
 
     if (!email) return fail(400, { email, missing: true });
     if (email.length < 6) return fail(400, { email, incorrect: true });
+    if (!emailSchema.safeParse(email)?.success) return fail(400, { email, incorrect: true, zod: true});
 
     if (!password) return fail(400, { password, missing: true });
     if (password.length < 8) return fail(400, { password, incorrect: true });

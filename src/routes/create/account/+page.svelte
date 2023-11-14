@@ -30,6 +30,7 @@
   });
 
   let register = true;
+  let username = "";
   let email = "";
   let password = "";
   let confirmPassword = "";
@@ -43,7 +44,9 @@
     if (form?.username) {
       formError = "Username is too short! (min. 5 characters)";
     } else if (form?.email) {
-      formError = "Email is incorrect!";
+      formError = form?.zod
+        ? "Email format is incorrect!"
+        : "Email is incorrect!";
     } else if (form?.password) {
       formError = "Password is too short! (min. 8 characters)";
     } else if (form?.confirmPassword) {
@@ -121,7 +124,7 @@
             Username
           </p>
           <input
-            bind:value={email}
+            bind:value={username}
             type="text"
             autocomplete="off"
             placeholder="Enter your username"
