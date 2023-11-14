@@ -121,7 +121,8 @@ export const xpActions = {
 };
 
 export const usernameActions = {
-  get: async (database: FirebaseDb, userId: string) => {
+  get: async (database: FirebaseDb, userId: string): Promise<string | null> => {
+    if (typeof userId !== "string") return null;
     const databaseReference = ref(database as any);
     const data = await get(child(databaseReference, `username/${userId}`))
       .then((snapshot) => {
