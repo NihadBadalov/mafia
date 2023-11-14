@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { PageData } from "./$types";
   import { goto } from "$app/navigation";
-  import { ServerList } from "$lib/components";
+  import { ServerList, Header } from "$lib/components";
   import { invalidateAll } from "$app/navigation";
 
   export let data: PageData;
@@ -32,25 +32,17 @@
 </svelte:head>
 
 <div class="wrapper">
-  <div class="header">
-    <div>
-      <h1 class="serif_font">
-        <a href="/" style="color: #fff; text-decoration: none;">
-          MAFIA — Online Card Game
-        </a>
-      </h1>
-    </div>
-    <nav>
-      <a class="nav_link" href="/">Home</a>
-      <a class="nav_link" href="/servers">Servers</a>
-      <a class="nav_link" href="/discordLink">Discord</a>
-    </nav>
-    <div class="header_actions">
-      <button class="btn" id="btn_account" on:click={() => goto("/account")}>
-        Account
-      </button>
-    </div>
-  </div>
+  <Header
+    links={{
+      Home: "/",
+      Servers: "/servers",
+      Discord: "/discordLink",
+    }}
+    buttons={{
+      Account: "/account",
+    }}
+  />
+
   <div class="main">
     <div class="main_inner">
       <ServerList data={{ servers: servers }} />

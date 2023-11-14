@@ -1,4 +1,6 @@
 <script>
+  import { goto } from "$app/navigation";
+
   /**
    * @type {{ [key: string]: string; }};
    */
@@ -9,7 +11,10 @@
    */
   export let buttons;
 
-  import { goto } from "$app/navigation";
+  /**
+   * @type {{ [key: string]: (() => any); }};
+   */
+  export let actionButtons={};
 </script>
 
 <div class="header">
@@ -28,6 +33,11 @@
   <div class="header_actions">
     {#each Object.entries(buttons) as [name, location]}
       <button class="btn" id="btn_account" on:click={() => goto(location)}>
+        {name}
+      </button>
+    {/each}
+    {#each Object.entries(actionButtons) as [name, location]}
+      <button class="btn" id="btn_account" on:click={() => location()}>
         {name}
       </button>
     {/each}

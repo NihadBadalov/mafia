@@ -1,6 +1,7 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
   import { enhance } from "$app/forms";
+    import { Header } from "$lib/components";
 
   export let form: any;
 
@@ -30,23 +31,17 @@
 </svelte:head>
 
 <div class="wrapper">
-  <div class="header">
-    <div>
-      <h1 class="serif_font">
-        <a href="/" style="color: #fff; text-decoration: none;">
-          MAFIA — Online Card Game
-        </a>
-      </h1>
-    </div>
-    <nav>
-      <a class="nav_link" href="/">Home</a>
-      <a class="nav_link" href="/discordLink">Discord</a>
-    </nav>
-    <div class="header_actions">
-      <button class="btn" id="btn_account">Account</button>
-      <button class="btn" id="btn_log_out">Log Out</button>
-    </div>
-  </div>
+  <Header
+    links={{
+      Home: "/",
+      Servers: "/servers",
+      Discord: "/discordLink",
+    }}
+    buttons={{
+      Account: "/account",
+    }}
+  />
+
   <div class="main">
     <form class="main_inner" method="POST" use:enhance>
       <div class="create_server">
