@@ -1,8 +1,8 @@
 import { Server } from 'socket.io';
 
 /**
-  * @param endpointPath string
-  * @param currentLocationHref string
+  * @param endpointPath {string}
+  * @param currentLocationHref {string}
   */
 function getFullEndpointUrl(endpointPath, currentLocationHref) {
   const url = new URL(currentLocationHref);
@@ -12,13 +12,23 @@ function getFullEndpointUrl(endpointPath, currentLocationHref) {
   return fullApiUrl;
 }
 
+/**
+  * @param io {Server}
+  */
 function updateServers(io) {
   io.of('/main').emit('serverEvent', 'updateServers');
   io.of('/servers').emit('serverEvent', 'updateServers');
 }
 
 
+/**
+  * @type {Array<any>}
+  * Array of Sockets
+  */
 const sockets = [];
+/**
+  * @param server {Partial<import('socket.io').ServerOptions>}
+  */
 export default function injectSocketIO(server) {
   const io = new Server(server);
   // All namespaces
@@ -64,7 +74,7 @@ export default function injectSocketIO(server) {
 
     socket.on('joinServer', async ({ message, endpoint }) => {
       // joinServer from client
-      const { serverId, userId, ast } = message;
+      const { serverId, userId, ast, fbs } = message;
       if (isNaN(serverId)) return;
 
       const response = await fetch(
@@ -74,6 +84,7 @@ export default function injectSocketIO(server) {
           body: JSON.stringify({
             userId: userId,
             ast: ast,
+            fbs: fbs,
           }),
           headers: {
             'Content-Type': 'application/json',

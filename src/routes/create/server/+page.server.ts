@@ -1,11 +1,15 @@
 import { fail, redirect, type Actions } from '@sveltejs/kit';
 
 export const actions = {
-  default: async ({ request, fetch }) => {
+  default: async ({ request, fetch, cookies }) => {
     const data = await request.formData();
     const serverName: string = data.get('serverName') as string || '';
     let maxPlayerAmount = data.get('maxPlayerAmount') as unknown as number;
     let amountOfMafia = data.get('amountOfMafia') as unknown as number;
+
+
+    if (!cookies.get('fbs'))
+      return fail(403, { notLoggedIn: true });
 
     if (!serverName) return fail(400, { serverName, missing: true });
     if (serverName.length < 3) return fail(400, { serverName, incorrect: true });

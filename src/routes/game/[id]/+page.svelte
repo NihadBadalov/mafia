@@ -206,11 +206,13 @@
         return { ...curr, isLoading: false, currentUser: user };
       });
 
-      if (!$authStore.currentUser && !$authStore.isLoading) {
-        await goto("/create/account");
-      }
-
       userDisplayName = user?.displayName;
+
+      if (!$authStore.currentUser && !$authStore.isLoading) {
+        // Redirect user to account creation page if not logged in
+        // await goto("/create/account");
+        userDisplayName = null;
+      }
     });
   });
 
@@ -231,6 +233,7 @@
     serverId: data.currentServerId,
     userId: data.currentUserId,
     ast: data.ast,
+    fbs: data?.fbs,
   });
 
   function getPlayerNameById(pId: number): string {
@@ -288,6 +291,11 @@
     </div>
   </div>
   <div class="main">
+    {#if userDisplayName === null}
+      <h2 style="color: #ff0000; margin: 1rem;">
+        YOU CANNOT PLAY IN THIS SERVER BECAUSE YOU ARE NOT LOGGED IN
+      </h2>
+    {/if}
     <h2 class="gameStateText">{gameState}</h2>
     <div class="main_inner">
       <div class="top">

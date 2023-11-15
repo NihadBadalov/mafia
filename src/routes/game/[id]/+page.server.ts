@@ -27,6 +27,7 @@ export const load: PageServerLoad = (async ({ fetch, params, cookies }) => {
     currentServerId: currentServer.id,
     currentUserId,
     ast: cookies.get('ast'),
+    fbs: cookies.get('fbs') ?? '',
   };
 });
 

@@ -96,6 +96,13 @@
           <p style="color: #ff6060; font-weight: 600;">
             Server error: couldn't create a server.
           </p>
+
+        {:else if form?.notLoggedIn}
+          <p style="color: #ff6060; font-weight: 600; text-align: center;">
+            You are not logged in!
+            <br/>
+            <a href="/create/account" class="fake_link">Log in or create an account</a>
+          </p>
         {/if}
       </div>
 

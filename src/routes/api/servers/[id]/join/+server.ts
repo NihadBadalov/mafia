@@ -2,6 +2,7 @@ import { json, error, type RequestHandler } from '@sveltejs/kit';
 import { _data } from '$api';
 import { io } from '$lib/webSocketConnection.js';
 import { getUserByAst } from '$lib';
+import { adminAuth } from '$lib/firebase/firebase.admin';
 
 // Send message to server
 function sendMessage(event: string, text: string | object, ep: string) {
@@ -9,9 +10,20 @@ function sendMessage(event: string, text: string | object, ep: string) {
 }
 
 export const POST: RequestHandler = async ({ request, params, url }) => {
-  let { userId, ast } = await request.json();
+  let { userId, ast, fbs } = await request.json();
 
   if (getUserByAst(ast)?.id != userId)
+    throw error(403, 'Not Authorized');
+
+  if (!fbs)
+    throw error(403, 'Not Authorized');
+
+  // Check if the Firebase user exists
+  const firebaseUserId = fbs ? await adminAuth.verifyIdToken(fbs as string)
+    .then((user) => user.uid)
+    .catch(() => null) : null;
+
+  if (!firebaseUserId)
     throw error(403, 'Not Authorized');
 
   if (!params?.id || isNaN(params?.id as any))
