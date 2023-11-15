@@ -180,6 +180,9 @@ LOADING SPINNER
   flex-flow: column nowrap;
   align-self: stretch;
 }
+.wrapper .main h2.gameStateText {
+  margin: 0.5rem;
+}
 .wrapper .main .main_inner {
   flex: 1;
   display: flex;

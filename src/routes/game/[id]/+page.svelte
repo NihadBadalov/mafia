@@ -8,6 +8,7 @@
   import { authStore } from "$stores/auth";
   import { PlayerCard, Chat, Opengraph } from "$lib/components";
   import type { GameServer, ModifiedServerData, User } from "$types";
+    import { GameStates } from "$types/GameStates";
 
   export let data: ModifiedServerData;
   $: currentServer = data.servers.find(
@@ -16,6 +17,36 @@
   $: gameStarted = currentServer.started;
   $: citizenChat = currentServer.citizenChat;
   $: mafiaChat = currentServer.mafiaChat;
+  $: gameState = '';
+  $: {
+    switch (currentServer.state) {
+      case GameStates.Waiting: 
+        gameState = 'WAITING FOR PLAYERS';
+        break;
+
+      case GameStates.Day:
+        if (currentServer.players.length === currentServer.votingBetween.length
+          && currentServer.players.every((val, ind) => val === currentServer.votingBetween[ind]))
+          gameState = 'VOTE-KICK VOTING';
+        break;
+
+
+      case GameStates.Night:
+        if (currentServer.specialStates.doctorAbility) {
+          gameState = 'DOCTOR IS CHOOSING WHOM TO KEEP ALIVE';
+        }
+        else if (currentServer.specialStates.sheriffAbility) {
+          gameState = 'SHERIFF IS CHOOSING WHOSE ROLE TO VIEW';
+        }
+        else {
+          gameState = 'MAFIA IS CHOOSING WHO TO KILL';
+        }
+        break;
+
+      default:
+        break;
+    }
+  }
   let userDisplayName: string | undefined | null;
 
   const io = customIo(`${socketEndpoint}/game/${data.currentServerId}`);
@@ -251,6 +282,7 @@
     </div>
   </div>
   <div class="main">
+    <h2 class="gameStateText">{gameState}</h2>
     <div class="main_inner">
       <div class="top">
         {#if !gameStarted}
