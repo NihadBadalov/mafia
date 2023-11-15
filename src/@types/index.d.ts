@@ -37,6 +37,8 @@ export interface GameServer {
     mafia: Votes[];
     citizens: Votes[];
   };
+
+  totalTimerSeconds: number | undefined;
   timer: number | undefined;
 }
 

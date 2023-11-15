@@ -34,6 +34,8 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
       serverId,
     );
 
+    // Start a timer
+    server.totalTimerSeconds = 45;
     for (let i = 45; i > -1; i--) {
       if (
         server.votes.citizens.length === server.players.length
@@ -45,6 +47,7 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
       });
       await wait(1000);
     }
+    server.totalTimerSeconds = undefined;
     server.timer = undefined;
 
     await wait(3_000);

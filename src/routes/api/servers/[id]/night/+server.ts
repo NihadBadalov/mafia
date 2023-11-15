@@ -48,6 +48,9 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
   let voting;
   if (type === 'first') {
     await gameAnnounce('DISCUSS THE GAME <span class="color_red">PLAN</span>', 'mafia', serverId);
+
+    // Start a timer
+    server.totalTimerSeconds = 30;
     for (let i = 30; i > -1; i--) {
       server.timer = i;
       io.emit('serverEvent', {
@@ -56,6 +59,7 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
       });
       await wait(1000);
     }
+    server.totalTimerSeconds = undefined;
     server.timer = undefined;
   }
   else {
@@ -113,6 +117,8 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
         serverId,
       );
 
+      // Start a timer
+      server.totalTimerSeconds = 30;
       for (let i = 30; i > -1; i--) {
         if (
           (server.specialStates.sheriffAbility as boolean) === false
@@ -124,6 +130,7 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
         });
         await wait(1000);
       }
+      server.totalTimerSeconds = undefined;
       server.timer = undefined;
 
       server.specialStates.sheriffAbility = false;
@@ -145,6 +152,8 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
         serverId,
       );
 
+      // Start a timer
+      server.totalTimerSeconds = 30;
       for (let i = 30; i > -1; i--) {
         if (
           (server.specialStates.doctorAbility as boolean) === false
@@ -156,6 +165,7 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
         });
         await wait(1000);
       }
+      server.totalTimerSeconds = undefined;
       server.timer = undefined;
 
       server.specialStates.doctorAbility = false;

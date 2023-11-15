@@ -8,7 +8,7 @@
   import { authStore } from "$stores/auth";
   import { PlayerCard, Chat, Opengraph } from "$lib/components";
   import type { GameServer, ModifiedServerData, User } from "$types";
-    import { GameStates } from "$types/GameStates";
+  import { GameStates } from "$types/GameStates";
 
   export let data: ModifiedServerData;
   $: currentServer = data.servers.find(
@@ -17,29 +17,35 @@
   $: gameStarted = currentServer.started;
   $: citizenChat = currentServer.citizenChat;
   $: mafiaChat = currentServer.mafiaChat;
-  $: gameState = '';
+  $: gameState = "";
   $: {
     switch (currentServer.state) {
-      case GameStates.Waiting: 
-        gameState = 'WAITING FOR PLAYERS';
+      case GameStates.Waiting:
+        gameState = "WAITING FOR PLAYERS";
+        break;
+
+      case GameStates.Ended:
+        gameState =
+          "THE GAME ENDED! YOU WILL BE REDIRECTED TO THE LOBBY SHORTLY<br>THANKS FOR PLAYING!";
         break;
 
       case GameStates.Day:
-        if (currentServer.players.length === currentServer.votingBetween.length
-          && currentServer.players.every((val, ind) => val === currentServer.votingBetween[ind]))
-          gameState = 'VOTE-KICK VOTING';
+        if (
+          currentServer.players.length === currentServer.votingBetween.length &&
+          currentServer.players.every(
+            (val, ind) => val === currentServer.votingBetween[ind]
+          )
+        )
+          gameState = "VOTE-KICK VOTING";
         break;
-
 
       case GameStates.Night:
         if (currentServer.specialStates.doctorAbility) {
-          gameState = 'DOCTOR IS CHOOSING WHOM TO KEEP ALIVE';
-        }
-        else if (currentServer.specialStates.sheriffAbility) {
-          gameState = 'SHERIFF IS CHOOSING WHOSE ROLE TO VIEW';
-        }
-        else {
-          gameState = 'MAFIA IS CHOOSING WHO TO KILL';
+          gameState = "DOCTOR IS CHOOSING WHOM TO KEEP ALIVE";
+        } else if (currentServer.specialStates.sheriffAbility) {
+          gameState = "SHERIFF IS CHOOSING WHOSE ROLE TO VIEW";
+        } else {
+          gameState = "MAFIA IS CHOOSING WHO TO KILL";
         }
         break;
 
@@ -306,7 +312,10 @@
           {/if}
         {/if}
         <h1 class="announcementText">
-          {currentServer.timer ? `${currentServer.timer} - ` : ""}
+          {currentServer.timer !== undefined &&
+          currentServer.totalTimerSeconds !== undefined
+            ? `${currentServer.timer}/${currentServer.totalTimerSeconds} - `
+            : ""}
           {@html currentServer.announcements[getCurrentUserRoleId()] ?? ""}
         </h1>
       </div>

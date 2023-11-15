@@ -146,6 +146,7 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
       citizens: [],
     },
 
+    totalTimerSeconds: undefined,
     timer: undefined,
   });
   _data.servers = _data.servers;

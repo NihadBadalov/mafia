@@ -67,6 +67,8 @@ export const POST: RequestHandler = async ({ request, params }) => {
       );
     }
 
+    // Start a timer
+    server.totalTimerSeconds = 30;
     for (let i = 30; i > -1; i--) {
       if (
         server.votes.citizens.length === server.players.length
@@ -78,6 +80,7 @@ export const POST: RequestHandler = async ({ request, params }) => {
       });
       await wait(1000);
     }
+    server.totalTimerSeconds = undefined;
     server.timer = undefined;
 
     server.whoCanVoteKick = [];
@@ -169,6 +172,8 @@ export const POST: RequestHandler = async ({ request, params }) => {
       );
     }
 
+    // Start a timer
+    server.totalTimerSeconds = 40;
     for (let i = 40; i > -1; i--) {
       if (
         server.votes.mafia.length + (+!!server.votes.don) === server.players.filter(p => isMafiaGameRole(getUserRoleInServer(p))).length
@@ -180,6 +185,7 @@ export const POST: RequestHandler = async ({ request, params }) => {
       });
       await wait(1000);
     }
+    server.totalTimerSeconds = undefined;
     server.timer = undefined;
 
     server.whoCanVoteKick = [];
