@@ -9,6 +9,7 @@
   import { PlayerCard, Chat, Opengraph } from "$lib/components";
   import type { GameServer, ModifiedServerData, User } from "$types";
   import { GameStates } from "$types/GameStates";
+  import { Header } from "$lib/components";
 
   export let data: ModifiedServerData;
   $: currentServer = data.servers.find(
@@ -254,6 +255,13 @@
       ast: data.ast,
     });
 
+  const leaveServer = () =>
+    sendMessage("leaveServer", {
+      serverId: data.currentServerId,
+      userId: data.currentUserId,
+      ast: data.ast,
+    });
+
   const currentUserIsMafia = () => {
     let role = currentServer.playerRoles.find(
       (pr) => pr.userId === data?.currentUserId
@@ -273,24 +281,21 @@
 <audio src="/audios/gong.mp3" id="gameSong" />
 
 <div class="wrapper">
-  <div class="header">
-    <div>
-      <h1 class="serif_font">
-        <a href="/" style="color: #fff; text-decoration: none;">
-          MAFIA — Online Card Game
-        </a>
-      </h1>
-    </div>
-    <nav>
-      <a class="nav_link" href="/">Home</a>
-      <a class="nav_link" href="/discordLink">Discord</a>
-    </nav>
-    <div class="header_actions">
-      <button class="btn" id="btn_account" on:click={() => goto("/account")}
-        >Account</button
-      >
-    </div>
-  </div>
+  <Header
+    links={{
+      Home: "/",
+      Discord: "/discordLink",
+    }}
+    buttons={{
+      Account: "/account",
+    }}
+    actionButtons={data.userIsInServer
+      ? {
+          Leave: leaveServer,
+        }
+      : undefined}
+  />
+
   <div class="main">
     {#if userDisplayName === null}
       <h2 style="color: #ff0000; margin: 1rem;">

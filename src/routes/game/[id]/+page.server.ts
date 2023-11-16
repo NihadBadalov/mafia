@@ -28,6 +28,7 @@ export const load: PageServerLoad = (async ({ fetch, params, cookies }) => {
     currentUserId,
     ast: cookies.get('ast'),
     fbs: cookies.get('fbs') ?? '',
+    userIsInServer: currentServer.players.indexOf(currentUserId!) !== -1,
   };
 });
 

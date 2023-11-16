@@ -22,8 +22,8 @@ export const POST: RequestHandler = async ({ request, params, url }) => {
   let server = _data.servers.find(s => s.id === serverId);
   if (!server) throw error(404, 'Couldn\'t find the server');
 
-  // Player in a server already
-  if (!_data.servers.find(s => s.players.find(pid => pid === userId)))
+  // Player isn't in the server
+  if (!server.players.find(s => s === Number(userId)))
     throw error(400, 'Player is not in the server');
 
   server.players.splice(server.players.indexOf(userId), 1);
