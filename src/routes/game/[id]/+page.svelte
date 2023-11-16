@@ -217,6 +217,7 @@
   });
 
   onDestroy(() => {
+    io.disconnect();
     // Left the session
     /**
         TODO: some inactivity system

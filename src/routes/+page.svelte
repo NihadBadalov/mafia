@@ -8,7 +8,7 @@
   $: ({ servers } = data);
 
   import { customIo, socketEndpoint } from "$lib/webSocketConnection.js";
-  import { onMount } from "svelte";
+  import { onDestroy, onMount } from "svelte";
   const io = customIo(`${socketEndpoint}/main`);
 
   onMount(() => {
@@ -17,6 +17,7 @@
       invalidateAll();
     });
   });
+  onDestroy(() => io.disconnect());
 </script>
 
 <div class="wrapper">

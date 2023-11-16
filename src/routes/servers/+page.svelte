@@ -8,14 +8,9 @@
 
   //import { customIo, socketEndpoint } from '$lib/webSocketConnection.js';
   import { customIo, socketEndpoint } from "$lib/webSocketConnection.js";
-  import { onMount } from "svelte";
+  import { onDestroy, onMount } from "svelte";
 
   const io = customIo(`${socketEndpoint}/servers`);
-
-  // Send message to server
-  function sendMessage(event: string, text: string) {
-    io.emit(event, { message: text, endpoint: data?.endpoint });
-  }
 
   onMount(() => {
     io.on("message", (message) => {
@@ -30,6 +25,8 @@
       invalidateAll();
     });
   });
+
+  onDestroy(() => io.disconnect());
 </script>
 
 <svelte:head>
