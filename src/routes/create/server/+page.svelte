@@ -108,11 +108,7 @@
       </div>
 
       <div class="menu_buttons">
-        <button
-          class="btn"
-          id="btn_join_random"
-          on:click={() => goto("/random")}
-        >
+        <button class="btn" on:click={() => goto("/random")}>
           Join a random game
         </button>
       </div>

@@ -35,24 +35,14 @@
     <div class="main_inner">
       <ServerList data={{ servers: servers }} />
       <div class="menu_buttons">
-        <button
-          class="btn"
-          id="btn_join_random"
-          on:click={() => goto("/random")}
-        >
+        <button class="btn" on:click={() => goto("/random")}>
           Join a random game
         </button>
-        <button
-          class="btn"
-          id="btn_join_random"
-          on:click={() => goto("/create/server")}>Create a game</button
+        <button class="btn" on:click={() => goto("/create/server")}
+          >Create a game</button
         >
-        <button class="btn" id="btn_servers" on:click={() => goto("/servers")}>
-          Servers
-        </button>
-        <button class="btn" id="btn_servers" on:click={() => goto("/guide")}>
-          Guide
-        </button>
+        <button class="btn" on:click={() => goto("/servers")}>Servers</button>
+        <button class="btn" on:click={() => goto("/guide")}>Guide</button>
       </div>
     </div>
 
