@@ -25,7 +25,7 @@
 	"type": "module",
 	"dependencies": {
 		"@firebase/auth": "^1.4.0",
-		"@sveltejs/adapter-vercel": "^3.0.3",
+		"@sveltejs/adapter-vercel": "^3.1.0",
 		"@sveltejs/kit": "^1.27.5",
 		"bufferutil": "^4.0.8",
 		"encoding": "^0.1.13",
