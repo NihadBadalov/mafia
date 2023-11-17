@@ -4,10 +4,10 @@ import type { GameServer, ModifiedServerData, User, UserId } from '$types';
 import { GameRoles } from '$types/GameRoles';
 import { io } from '$lib/webSocketConnection';
 // @ts-ignore
-const wash = import('washyourmouthoutwithsoap') as any;
+import washyourmouthwithsoap from 'washyourmouthoutwithsoap';
 
 export function hasCurseWords(s: string) {
-  return wash.check('en', s) || wash.check('ru', s);
+  return washyourmouthwithsoap.check('en', s) || washyourmouthwithsoap.check('ru', s);
 }
 
 function updateServer(serverId: number) {
