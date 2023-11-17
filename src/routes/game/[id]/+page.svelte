@@ -215,6 +215,13 @@
         userDisplayName = null;
       }
     });
+
+    sendMessage("joinServer", {
+      serverId: data.currentServerId,
+      userId: data.currentUserId,
+      ast: data.ast,
+      fbs: data?.fbs,
+    });
   });
 
   onDestroy(() => {
@@ -229,13 +236,6 @@
             ast: data.ast,
         });
         */
-  });
-
-  sendMessage("joinServer", {
-    serverId: data.currentServerId,
-    userId: data.currentUserId,
-    ast: data.ast,
-    fbs: data?.fbs,
   });
 
   function getPlayerNameById(pId: number): string {
