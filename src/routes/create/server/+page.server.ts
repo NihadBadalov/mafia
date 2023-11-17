@@ -1,3 +1,4 @@
+import { hasCurseWords } from '$lib';
 import { fail, redirect, type Actions } from '@sveltejs/kit';
 
 export const actions = {
@@ -13,6 +14,7 @@ export const actions = {
 
     if (!serverName) return fail(400, { serverName, missing: true });
     if (serverName.length < 3) return fail(400, { serverName, incorrect: true });
+    if (hasCurseWords(serverName)) return fail(400, { serverName, curseWords: true });
 
     if (!maxPlayerAmount) return fail(400, { maxPlayerAmount, missing: true });
     if (isNaN(maxPlayerAmount)) return fail(422, { maxPlayerAmount, incorrect: true });

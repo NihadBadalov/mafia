@@ -96,6 +96,11 @@
           <p style="color: #ff6060; font-weight: 600;">
             Server error: couldn't create a server.
           </p>
+        {:else if form?.curseWords}
+          <p style="color: #ff6060; font-weight: 600;">
+            Server name cannot contain curse words.
+          </p>
+
         {:else if form?.notLoggedIn}
           <p style="color: #ff6060; font-weight: 600; text-align: center;">
             You are not logged in!

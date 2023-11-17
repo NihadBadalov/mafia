@@ -36,6 +36,8 @@
         dateStyle: "short",
       })?.format(new Date(user?.metadata?.creationTime!))
     : null;
+
+  $: userHasProfilePicture = !!user!?.photoURL;
 </script>
 
 <div class="wrapper">
@@ -49,7 +51,7 @@
       Account: "/account",
     }}
     actionButtons={{
-      'Log Out': logOut,
+      "Log Out": logOut,
     }}
   />
 
@@ -59,7 +61,17 @@
         <div class="account">
           <h1>Your Account</h1>
           <div class="account_details">
-            <img src={user.photoURL} alt="Account" class="account__pfp" />
+            {#if userHasProfilePicture}
+              <img src={user.photoURL} alt="Account" class="account__pfp" />
+            {:else}
+              <div class="account__pfp">
+              <p>
+              {(user.displayName
+              ?? data?.currentUsername
+              ?? data.currentUser.name).split(/ +/).map(s => s[0]).join('')}
+              </p>
+              </div>
+            {/if}
 
             <div class="account__info">
               <div class="top">

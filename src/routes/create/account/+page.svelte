@@ -43,7 +43,9 @@
     formError = "One of the fields is missing!";
   } else if (form?.incorrect) {
     if (form?.username) {
-      formError = "Username is too short! (min. 5 characters)";
+      formError = form?.curseWords
+        ? "Username contains curse words"
+        : "Username is too short! (min. 5 characters)";
     } else if (form?.email) {
       formError = form?.zod
         ? "Email format is incorrect!"

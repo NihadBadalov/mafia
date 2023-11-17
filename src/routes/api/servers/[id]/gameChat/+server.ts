@@ -1,6 +1,6 @@
 import { json, error, type RequestHandler } from '@sveltejs/kit';
 import { _data } from '$api';
-import { getUserByAst, getUserRoleInServer } from '$lib';
+import { getUserByAst, getUserRoleInServer, hasCurseWords } from '$lib';
 import type { GameServer } from '$types';
 import { GameRoles } from '$types/GameRoles';
 import { GameStates } from '$types/GameStates';
@@ -9,6 +9,12 @@ import { io } from '$lib/webSocketConnection';
 export const POST: RequestHandler = async ({ request, params }) => {
   let { message, userId, ast } = await request.json();
   let user = getUserByAst(ast);
+
+  if (!message && !message?.trim()?.length)
+    throw error(400, 'Message can not be empty');
+
+  if (hasCurseWords(message))
+    throw error(418, 'Message cannot contain curse words');
 
   if (user?.id != userId)
     throw error(403, 'Not Authorized');
@@ -22,9 +28,6 @@ export const POST: RequestHandler = async ({ request, params }) => {
 
   if (!server.players.find(pid => pid === user?.id))
     throw error(403, 'Not Authorized');
-
-  if (!message && !message?.trim()?.length)
-    throw error(400, 'Message can not be empty');
 
   if (!server.playersCanChat)
     throw error(400, 'Players can\'t chat at the moment');

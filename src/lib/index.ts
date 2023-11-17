@@ -3,6 +3,12 @@ import { _data, _generateUserToken } from '$api';
 import type { GameServer, ModifiedServerData, User, UserId } from '$types';
 import { GameRoles } from '$types/GameRoles';
 import { io } from '$lib/webSocketConnection';
+// @ts-ignore
+const wash = await import('washyourmouthoutwithsoap') as any;
+
+export function hasCurseWords(s: string) {
+  return wash.check('en', s) || wash.check('ru', s);
+}
 
 function updateServer(serverId: number) {
   io.emit('serverEvent', {

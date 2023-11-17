@@ -1,4 +1,4 @@
-import { getUserByAst } from '$lib';
+import { getUserByAst, hasCurseWords } from '$lib';
 import { _data } from '$routes/api';
 import { authHandlers } from '$stores/auth';
 import { fail, type Actions } from '@sveltejs/kit';
@@ -17,10 +17,9 @@ export const actions = {
     const confirmPassword: string = data.get('confirmPassword') as string;
     const registering = confirmPassword !== null;
 
-
     if (!email) return fail(400, { email, missing: true });
     if (email.length < 6) return fail(400, { email, incorrect: true });
-    if (!emailSchema.safeParse(email)?.success) return fail(400, { email, incorrect: true, zod: true});
+    if (!emailSchema.safeParse(email)?.success) return fail(400, { email, incorrect: true, zod: true });
 
     if (!password) return fail(400, { password, missing: true });
     if (password.length < 8) return fail(400, { password, incorrect: true });
@@ -29,6 +28,7 @@ export const actions = {
       if (!confirmPassword) return fail(400, { confirmPassword, missing: true });
       if (password !== confirmPassword) return fail(400, { confirmPassword, incorrect: true });
       if (username?.length < 5) return fail(400, { username, incorrect: true });
+      if (hasCurseWords(username)) return fail(400, { username, incorrect: true, curseWords: true });
     }
 
 
