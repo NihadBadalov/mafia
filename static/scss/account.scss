@@ -59,13 +59,29 @@
                   padding: 2rem;
                   border-radius: 1em;
 
-                  .account__pfp {
+                  img.account__pfp {
                     place-self: center center;
                     grid-area: 1 / 1 / span 1 / span 1;
                     width: 75px;
                     aspect-ratio: 1/1;
                     border-radius: 1rem;
                   }
+                  div.account__pfp {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    background-color: #000;
+                    // TODO - the size.
+                    font-size: calc(5rem / 3);
+
+                    place-self: center center;
+                    grid-area: 1 / 1 / span 1 / span 1;
+                    width: 75px;
+                    aspect-ratio: 1/1;
+                    border-radius: 1rem;
+                    vertical-align: middle;
+                  }
+
                   .account__info {
                     grid-area: 1 / 2 / span 1 / span 1;
                     display: flex;

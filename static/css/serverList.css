@@ -32,6 +32,7 @@ body {
   /*font-family: 'Roboto Slab', serif;*/
   background: rgb(0, 88, 116);
   background: radial-gradient(circle, rgb(0, 88, 116) 0%, rgb(13, 35, 42) 50%, rgb(20, 75, 92) 100%);
+  overflow-x: hidden;
 }
 
 button.btn {

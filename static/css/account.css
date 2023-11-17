@@ -32,6 +32,7 @@ body {
   /*font-family: 'Roboto Slab', serif;*/
   background: rgb(0, 88, 116);
   background: radial-gradient(circle, rgb(0, 88, 116) 0%, rgb(13, 35, 42) 50%, rgb(20, 75, 92) 100%);
+  overflow-x: hidden;
 }
 
 button.btn {
@@ -221,12 +222,25 @@ LOADING SPINNER
   padding: 2rem;
   border-radius: 1em;
 }
-.wrapper .main .main_inner .account .account_details .account__pfp {
+.wrapper .main .main_inner .account .account_details img.account__pfp {
   place-self: center center;
   grid-area: 1/1/span 1/span 1;
   width: 75px;
   aspect-ratio: 1/1;
   border-radius: 1rem;
+}
+.wrapper .main .main_inner .account .account_details div.account__pfp {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #000;
+  font-size: 1.6666666667rem;
+  place-self: center center;
+  grid-area: 1/1/span 1/span 1;
+  width: 75px;
+  aspect-ratio: 1/1;
+  border-radius: 1rem;
+  vertical-align: middle;
 }
 .wrapper .main .main_inner .account .account_details .account__info {
   grid-area: 1/2/span 1/span 1;

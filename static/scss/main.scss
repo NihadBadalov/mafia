@@ -45,6 +45,7 @@ body {
     /*font-family: 'Roboto Slab', serif;*/
     background: $radial_background;
     background: $radial_background_gradient;
+    overflow-x: hidden;
 }
 
 button.btn {
