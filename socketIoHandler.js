@@ -16,8 +16,8 @@ function getFullEndpointUrl(endpointPath, currentLocationHref) {
   * @param io {Server}
   */
 function updateServers(io) {
-  io.of('/main').emit('serverEvent', 'updateServersOnClient');
-  io.of('/servers').emit('serverEvent', 'updateServersOnClient');
+  io.of('/main').emit('serverEvent', 'updateServers');
+  io.of('/servers').emit('serverEvent', 'updateServers');
 }
 
 
@@ -93,7 +93,7 @@ export default function injectSocketIO(server) {
       );
 
       if (response.ok) {
-        io.of(`/game/${serverId}`).emit('serverEvent', 'updateServer');
+        io.of(`/game/${serverId}`).emit('serverEvent', 'updateServerOnClient');
         socket.emit('serverEvent', 'refreshPage');
       }
     });
@@ -118,7 +118,7 @@ export default function injectSocketIO(server) {
       );
 
       if (response.ok) {
-        io.of(`/game/${serverId}`).emit('serverEvent', 'updateServer');
+        io.of(`/game/${serverId}`).emit('serverEvent', 'updateServerOnClient');
       }
     });
 
@@ -132,7 +132,7 @@ export default function injectSocketIO(server) {
 
         case 'updateServer':
           if (!args?.serverId) return;
-          io.of(`/game/${args?.serverId}`).emit('serverEvent', 'updateServer');
+          io.of(`/game/${args?.serverId}`).emit('serverEvent', 'updateServerOnClient');
           break;
 
         case 'indexSocketsFromServer':
@@ -220,7 +220,7 @@ export default function injectSocketIO(server) {
       const responseJson = await response.json();
       if (response.ok && responseJson) {
         //setTimeout(() => {
-        io.of(`/game/${serverId}`).emit('serverEvent', 'updateServer');
+        io.of(`/game/${serverId}`).emit('serverEvent', 'updateServerOnClient');
         //}, 2000);
       }
     });
