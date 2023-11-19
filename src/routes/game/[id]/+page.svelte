@@ -171,7 +171,7 @@
     io.on("serverEvent", async (message) => {
       // Message from server
       switch (message) {
-        case "updateServer":
+        case "updateServerOnClient":
           invalidateAll();
           break;
 

@@ -16,8 +16,8 @@ function getFullEndpointUrl(endpointPath, currentLocationHref) {
   * @param io {Server}
   */
 function updateServers(io) {
-  io.of('/main').emit('serverEvent', 'updateServers');
-  io.of('/servers').emit('serverEvent', 'updateServers');
+  io.of('/main').emit('serverEvent', 'updateServersOnClient');
+  io.of('/servers').emit('serverEvent', 'updateServersOnClient');
 }
 
 
