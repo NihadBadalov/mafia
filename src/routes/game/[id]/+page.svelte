@@ -175,7 +175,6 @@
           invalidateAll();
           break;
 
-        // TODO: check if joining a server works without refreshing afterwards
         case "refreshPage":
           invalidateAll();
           break;
