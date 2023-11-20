@@ -76,7 +76,7 @@ export const GET: RequestHandler = async ({ cookies, setHeaders, url }) => {
 }
 
 export const POST: RequestHandler = async ({ request, cookies }) => {
-  let { serverName, maxPlayerAmount, amountOfMafia } = await request.json();
+  let { serverName, maxPlayerAmount, amountOfMafia, fillWithBots } = await request.json();
 
   if (Number.isNaN(maxPlayerAmount) || Number.isNaN(amountOfMafia))
     return new Response(undefined, {
@@ -112,6 +112,9 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
     name: serverName,
     maxPlayerCount: maxPlayerAmount,
     mafiaCount: amountOfMafia,
+
+    fillWithBots: fillWithBots,
+    bots: [],
 
     players: [],
     initialPlayers: [],

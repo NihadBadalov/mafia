@@ -27,7 +27,7 @@ export async function handleUserSession(cookies: Cookies, fetch: any, endpoint: 
     const response = await fetch(getFullEndpointUrl('/api/user', endpoint), {
       method: 'POST',
       body: JSON.stringify({
-        event: 'createUser',
+        origin: _data.serverPassphrase,
         username: username,
       }),
       headers: {
