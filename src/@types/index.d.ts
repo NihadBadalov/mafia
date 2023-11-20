@@ -1,5 +1,8 @@
+import type { BaseRoleDerivative } from '$lib/server/ai/roles/BaseRole';
+import type BaseRole from '$lib/server/ai/roles/BaseRole';
 import type { GameRoles } from './GameRoles';
 import type { GameStates } from './GameStates';
+import type { Votes } from './Votes';
 
 export type UserId = number;
 
@@ -8,6 +11,9 @@ export interface GameServer {
   name: string;
   maxPlayerCount: number;
   mafiaCount: number;
+
+  fillWithBots: boolean;
+  bots: BaseRoleDerivative[],
 
   players: UserId[];
   initialPlayers: UserId[];
