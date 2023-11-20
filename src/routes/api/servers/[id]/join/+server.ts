@@ -37,6 +37,9 @@ export const POST: RequestHandler = async ({ request, params, url }) => {
   if (_data.servers.find(s => s.players.find(pid => pid === userId)))
     throw error(400, 'Player is already in a server');
 
+  if (server.started)
+    throw error(403, 'Cannot join - server is already started');
+
   if (server.playerBlacklist.indexOf(userId) !== -1)
     throw error(400, 'Player can not join - is a spectator');
 
