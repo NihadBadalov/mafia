@@ -48,6 +48,16 @@ export const POST: RequestHandler = async ({ request, params, url }) => {
   // Update servers to show correct player count
   sendMessage('serverEvent', 'updateServers', url?.href);
 
+  // Check if needs to be filled with bots
+  if (server.fillWithBots && server.players.length < server.maxPlayerCount) {
+    fetch(`/api/servers/${serverId}/fillWithBots`, {
+      method: 'POST',
+      body: JSON.stringify({
+        origin: _data.serverPassphrase
+      }),
+    });
+  }
+
   // @ts-ignore
   return json({}, { statusCode: 200 });
 }
