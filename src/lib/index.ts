@@ -6,6 +6,30 @@ import { io } from '$lib/webSocketConnection';
 // @ts-ignore
 import washyourmouthwithsoap from 'washyourmouthoutwithsoap';
 
+export function createBotUsername(): string {
+  return botUsernameAdjectives[Math.floor(Math.random() * botUsernameAdjectives.length)]
+    + botUsernameNouns[Math.floor(Math.random() * botUsernameNouns.length)];
+}
+
+export const botUsernameAdjectives = [
+  'Unseasoned',
+  'Foxy',
+  'Crazy',
+  'Rusty',
+  'Lord',
+  'Master',
+];
+
+export const botUsernameNouns = [
+  'Banzai',
+  'King',
+  'Frank',
+  'Cabbage',
+  'Apfel',
+  'Goblin',
+  'Po',
+];
+
 export function hasCurseWords(s: string) {
   return washyourmouthwithsoap.check('en', s) || washyourmouthwithsoap.check('ru', s);
 }
