@@ -7,6 +7,7 @@ export const actions = {
     const serverName: string = data.get('serverName') as string || '';
     let maxPlayerAmount = data.get('maxPlayerAmount') as unknown as number;
     let amountOfMafia = data.get('amountOfMafia') as unknown as number;
+    const fillWithBots = !!data.get('fillWithBots');
 
 
     if (!cookies.get('fbs'))
@@ -33,6 +34,7 @@ export const actions = {
         serverName,
         maxPlayerAmount,
         amountOfMafia,
+        fillWithBots,
       }),
       headers: {
         'Content-Type': 'application/json',
