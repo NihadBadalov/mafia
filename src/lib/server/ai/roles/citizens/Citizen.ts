@@ -1,12 +1,15 @@
 import { GameRoles } from "$types/GameRoles";
 import BaseRole from "../BaseRole";
 
-class Citizen extends BaseRole {
+export class Citizen extends BaseRole {
   readonly gameRole = GameRoles.Citizen;
   readonly isMafia = false;
 
-  constructor(userId: number) {
-    super(userId);
+  constructor(
+    userId: number,
+    username: string,
+  ) {
+    super(userId, username);
   }
 }
 
