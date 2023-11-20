@@ -224,6 +224,13 @@ LOADING SPINNER
   white-space: break-spaces;
   word-wrap: break-word;
 }
+.wrapper .main .main_inner .create_server .fill_with_bots {
+  display: flex;
+  justify-content: flex-start;
+  flex-flow: row wrap;
+  gap: 1rem;
+  width: 30%;
+}
 .wrapper .main .main_inner .menu_buttons {
   display: flex;
   justify-content: center;

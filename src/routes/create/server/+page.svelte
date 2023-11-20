@@ -6,7 +6,7 @@
   export let form: any;
 
   let _playerAmount = (form?.maxPlayerAmount as any as number) ?? 6;
-  $: _minMafiaAmount = Math.floor(_playerAmount / 4) - 1 || 1;
+  $: _minMafiaAmount = 1 ?? (Math.floor(_playerAmount / 4) - 1 || 1);
   $: _maxMafiaAmount = Math.ceil(_playerAmount / 3);
   $: _mafiaAmount = (form?.amountOfMafia as any as number) ?? _minMafiaAmount;
 
@@ -82,6 +82,11 @@
           required
         />
 
+        <!-- Input type checkbox to check if people want their servers to be filled with bots when there aren't enough players -->
+        <div class="fill_with_bots">
+          <p>Fill with bots?</p>
+          <input type="checkbox" name="fillWithBots" />
+        </div>
         <button class="btn" id="btn_create" type="submit">Create</button>
 
         {#if form?.missing}
@@ -100,7 +105,6 @@
           <p style="color: #ff6060; font-weight: 600;">
             Server name cannot contain curse words.
           </p>
-
         {:else if form?.notLoggedIn}
           <p style="color: #ff6060; font-weight: 600; text-align: center;">
             You are not logged in!

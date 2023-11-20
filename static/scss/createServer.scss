@@ -62,6 +62,14 @@
                     white-space: break-spaces;
                     word-wrap: break-word;
                 }
+
+                .fill_with_bots {
+                  display: flex;
+                  justify-content: flex-start;
+                  flex-flow: row wrap;
+                  gap: 1rem;
+                  width: 30%;
+                }
             }
 
             .menu_buttons {
