@@ -1,5 +1,7 @@
 <script lang="ts">
-  export let data: any;
+  import type { GameServer } from "$types";
+
+  export let data: { servers: GameServer[] };
   export let title: string = "";
 </script>
 
@@ -16,10 +18,10 @@
       <p class="server_mafia_count">MAFIA COUNT</p>
       <p class="server_name">SERVER NAME</p>
     </li>
-    {#each data.servers as { id, name, maxPlayerCount, mafiaCount, players }, i}
+    {#each data.servers as { id, name, maxPlayerCount, mafiaCount, players, bots }, i}
       <a class="server_{id}" href="/game/{id}">
         <p class="server_id">{id}</p>
-        <p class="server_players">{players.length}/{maxPlayerCount}</p>
+        <p class="server_players">{players.length - bots.length}/{maxPlayerCount}{bots.length ? ` (+${bots.length} BOTS)` : ''}</p>
         <p class="server_mafia_count">{mafiaCount}</p>
         <p class="server_name">{name}</p>
       </a>
