@@ -7,17 +7,25 @@ import { io } from '$lib/webSocketConnection';
 import washyourmouthwithsoap from 'washyourmouthoutwithsoap';
 
 export function createBotUsername(): string {
-  return botUsernameAdjectives[Math.floor(Math.random() * botUsernameAdjectives.length)]
+  return '[BOT] ' + botUsernameAdjectives[Math.floor(Math.random() * botUsernameAdjectives.length)]
     + ' ' + botUsernameNouns[Math.floor(Math.random() * botUsernameNouns.length)];
 }
 
 export const botUsernameAdjectives = [
-  'Unseasoned',
+  'Seasoned',
   'Foxy',
   'Crazy',
   'Rusty',
   'Lord',
   'Master',
+  'Big',
+  'Evil',
+  'Cute',
+  'Clever',
+  'Vicious',
+  'Quick',
+  'Unique',
+  'Proud',
 ];
 
 export const botUsernameNouns = [
@@ -28,6 +36,12 @@ export const botUsernameNouns = [
   'Apfel',
   'Goblin',
   'Po',
+  'Pig',
+  'Gum',
+  'Frog',
+  'Bunny',
+  'Candy',
+  'Bread',
 ];
 
 export function hasCurseWords(s: string) {
