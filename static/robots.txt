@@ -10,5 +10,5 @@ Disallow: /account
 Allow: /robots.txt
 Allow: /sitemap.xml
 
-Sitemap: https://www.mafia.xyz/sitemap.xml
+Sitemap: https://www.mafia.xyz/sitemap.xml/
 
