@@ -1,7 +1,7 @@
 import { json, error, type RequestHandler } from '@sveltejs/kit';
 import { _data } from '$api';
 import type { GameServer } from '$types';
-import { createBotUsername, updateServer } from '$lib';
+import { createBotUsername, updateServer, updateServers } from '$lib';
 import { setTimeout as wait } from 'timers/promises';
 import { Citizen } from '$lib/server/ai/roles/citizens/Citizen';
 import { io } from '$lib/webSocketConnection';
@@ -35,7 +35,8 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
     server.bots.push(new Citizen(id, username))
     server.players.push(id);
 
-    updateServer(io, serverId);
+    updateServer(serverId, io);
+    updateServers(io);
 
     await wait(500);
   }
