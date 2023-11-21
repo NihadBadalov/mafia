@@ -205,8 +205,8 @@
       authStore.update((curr) => {
         return { ...curr, isLoading: false, currentUser: user };
       });
-
-      userDisplayName = user?.displayName;
+      
+      userDisplayName = user?.displayName ?? undefined;
 
       if (!$authStore.currentUser && !$authStore.isLoading) {
         // Redirect user to account creation page if not logged in
