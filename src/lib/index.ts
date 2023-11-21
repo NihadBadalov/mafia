@@ -34,8 +34,8 @@ export function hasCurseWords(s: string) {
   return washyourmouthwithsoap.check('en', s) || washyourmouthwithsoap.check('ru', s);
 }
 
-function updateServer(serverId: number) {
-  io.emit('serverEvent', {
+function updateServer(_io: any = io, serverId: number) {
+  _io.emit('serverEvent', {
     message: 'updateServer',
     serverId: serverId,
   });
