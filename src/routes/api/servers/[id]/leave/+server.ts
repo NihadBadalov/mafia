@@ -1,15 +1,17 @@
 import { json, error } from '@sveltejs/kit';
 import { _data } from '$api';
 import type { RequestHandler } from '@sveltejs/kit';
-import { getUserByAst } from '$lib';
+import { getUserByAst, updateServer } from '$lib';
 import { io } from '$lib/webSocketConnection.js';
+import type { BaseRoleDerivative } from '$lib/server/ai/roles/BaseRole';
+import type { Citizen } from '$lib/server/ai/roles/citizens/Citizen';
 
 // Send message to server
 function sendMessage(event: string, text: string | object, ep: string) {
   io.emit(event, { message: text, endpoint: ep });
 }
 
-export const POST: RequestHandler = async ({ request, params, url }) => {
+export const POST: RequestHandler = async ({ request, params, url, fetch }) => {
   let { userId, ast } = await request.json();
 
   if (getUserByAst(ast)?.id != userId)
@@ -28,10 +30,32 @@ export const POST: RequestHandler = async ({ request, params, url }) => {
 
   server.players.splice(server.players.indexOf(userId), 1);
 
-  if (server.players.length === 0) {
+  if (server.players.length - server.bots.length === 0) {
     _data.servers.splice(_data.servers.indexOf(server), 1);
     sendMessage('serverEvent', 'updateServers', url?.href);
   }
+  else {
+    // Fill the server with bots if we have free space
+    if (server.fillWithBots
+      && server.players.length < server.maxPlayerCount) {
+      fetch(`/api/servers/${serverId}/fillWithBots`, {
+        method: 'POST',
+        body: JSON.stringify({
+          origin: _data.serverPassphrase
+        }),
+      });
+    }
+
+    // Find a new owner if the owner left
+    if (userId === Number(userId)) {
+      const serverBotUserIds = server.bots.map(b => (b as BaseRoleDerivative<Citizen>).userId);
+      server.ownerId = server.players.filter(
+        p => serverBotUserIds.indexOf(p) === -1
+      )[0]!;
+    }
+    updateServer(serverId, io);
+  }
+
 
   // @ts-ignore
   return json({}, { statusCode: 200 });
