@@ -48,11 +48,19 @@ export function hasCurseWords(s: string) {
   return washyourmouthwithsoap.check('en', s) || washyourmouthwithsoap.check('ru', s);
 }
 
-export function updateServer(_io: any = io, serverId: number) {
-  _io.emit('serverEvent', {
+export function updateServer(serverId: number, _io?: any) {
+  (_io ?? io)?.emit('serverEvent', {
     message: 'updateServer',
     serverId: serverId,
   });
+}
+
+export function updateServers(_io?: any) {
+  (_io ?? io)
+    .emit(
+      'serverEvent',
+      { message: 'updateServers' },
+    );
 }
 
 export const isMafiaGameRole = (a: number |
