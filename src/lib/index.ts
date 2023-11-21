@@ -8,7 +8,7 @@ import washyourmouthwithsoap from 'washyourmouthoutwithsoap';
 
 export function createBotUsername(): string {
   return botUsernameAdjectives[Math.floor(Math.random() * botUsernameAdjectives.length)]
-    + botUsernameNouns[Math.floor(Math.random() * botUsernameNouns.length)];
+    + ' ' + botUsernameNouns[Math.floor(Math.random() * botUsernameNouns.length)];
 }
 
 export const botUsernameAdjectives = [
@@ -34,7 +34,7 @@ export function hasCurseWords(s: string) {
   return washyourmouthwithsoap.check('en', s) || washyourmouthwithsoap.check('ru', s);
 }
 
-function updateServer(_io: any = io, serverId: number) {
+export function updateServer(_io: any = io, serverId: number) {
   _io.emit('serverEvent', {
     message: 'updateServer',
     serverId: serverId,
