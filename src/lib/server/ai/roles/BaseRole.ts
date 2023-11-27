@@ -1,5 +1,6 @@
+import { BotMentionRegex } from "$lib";
 import { _data } from "$routes/api";
-import type { UserId } from "$types";
+import type { GameServer, UserId } from "$types";
 import type { GameRoles } from "$types/GameRoles";
 
 export default abstract class BaseRole {
@@ -18,6 +19,23 @@ export default abstract class BaseRole {
   ) {
     this.userId = userId;
     this.username = username;
+  }
+
+  abstract handleChat(
+    server: GameServer,
+    messageContent: string,
+    authorName: string,
+    authorId: number,
+  ): void;
+
+  messageIsMention(messageContent: string): boolean {
+    return !!messageContent
+      .match(BotMentionRegex)
+      ?.[0]
+      ?.replaceAll('@', '')
+      ?.replaceAll(',', ' ')
+      ?.split(/ +/)
+      ?.includes('' + this.userId);
   }
 
   selfDestruct(): boolean {

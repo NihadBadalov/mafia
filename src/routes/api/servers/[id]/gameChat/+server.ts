@@ -1,10 +1,33 @@
 import { json, error, type RequestHandler } from '@sveltejs/kit';
 import { _data } from '$api';
-import { getUserByAst, getUserRoleInServer, hasCurseWords } from '$lib';
+import { getIncludedRolesForGameAnnouncement, getUserByAst, getUserRoleInServer, hasCurseWords } from '$lib';
 import type { GameServer } from '$types';
 import { GameRoles } from '$types/GameRoles';
 import { GameStates } from '$types/GameStates';
 import { io } from '$lib/webSocketConnection';
+import type { BaseRoleDerivative } from '$lib/server/ai/roles/BaseRole';
+import type BaseRole from '$lib/server/ai/roles/BaseRole';
+
+function notifyBots(
+  server: GameServer,
+  messageContent: string,
+  authorName: string,
+  authorId: number,
+  to: 2 | 1 | 0
+) {
+  const roles = getIncludedRolesForGameAnnouncement(
+    to === 2
+      ? 'all'
+      : to === 1
+        ? 'citizens'
+        : 'mafia'
+  );
+  for (let i = 0; i < server.bots.length; i++) {
+    const bot: BaseRoleDerivative<BaseRole> = server.bots[i];
+    if (!roles.includes(bot.gameRole)) continue;
+    bot.handleChat(server, messageContent, authorName, authorId);
+  }
+}
 
 export const POST: RequestHandler = async ({ request, params }) => {
   let { message, userId, ast } = await request.json();
@@ -16,7 +39,7 @@ export const POST: RequestHandler = async ({ request, params }) => {
   if (hasCurseWords(message))
     throw error(418, 'Message cannot contain curse words');
 
-  if (user?.id != userId)
+  if (!user || user?.id != userId)
     throw error(403, 'Not Authorized');
 
   if (!params?.id || isNaN(params?.id as any))
@@ -61,6 +84,7 @@ export const POST: RequestHandler = async ({ request, params }) => {
       soundName: 'beep',
       serverId: server?.id,
     });
+    notifyBots(server, message, user.name, user.id, 2);
 
     // updateServer(server?.id);
 
@@ -90,6 +114,7 @@ export const POST: RequestHandler = async ({ request, params }) => {
       soundName: 'beep',
       serverId: server?.id,
     });
+    notifyBots(server, message, user.name, user.id, 1);
   }
   else {
     server.mafiaChat.push({
@@ -108,6 +133,7 @@ export const POST: RequestHandler = async ({ request, params }) => {
       soundName: 'beep',
       serverId: server?.id,
     });
+    notifyBots(server, message, user.name, user.id, 0);
   }
 
   // updateServer(server?.id);
