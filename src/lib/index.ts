@@ -6,7 +6,7 @@ import { io } from '$lib/webSocketConnection';
 // @ts-ignore
 import washyourmouthwithsoap from 'washyourmouthoutwithsoap';
 
-export const BotMentionRegex = new RegExp(/^(@?\d(\s|,))+/);
+export const BotMentionRegex = new RegExp(/^(@?\d+(,\s|,|\s))+/);
 
 export function createBotUsername(): string {
   return '[BOT] ' + botUsernameAdjectives[Math.floor(Math.random() * botUsernameAdjectives.length)]
