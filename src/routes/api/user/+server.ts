@@ -2,7 +2,7 @@ import { error, json, type RequestHandler } from '@sveltejs/kit'
 import { _data } from '../index';
 
 export const POST: RequestHandler = async ({ request }) => {
-  let { origin, username } = await request.json();
+  let { origin, username, bot } = await request.json();
 
   if (origin !== _data.serverPassphrase)
     throw error(403, 'Not Authorized');
@@ -16,7 +16,9 @@ export const POST: RequestHandler = async ({ request }) => {
 
   _data.users.unshift({
     id: id,
-    name: username,
+    name: bot
+      ? `${id} - ${username}`
+      : username,
   });
 
   return json({ id, username }, { status: 200 });

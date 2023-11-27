@@ -28,6 +28,7 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
       body: JSON.stringify({
         origin: _data.serverPassphrase,
         username: createBotUsername(),
+        bot: true,
       }),
     }).catch(() => null);
 
