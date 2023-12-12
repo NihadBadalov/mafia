@@ -1,7 +1,36 @@
-import { BotMentionRegex } from "$lib";
+import { BotMentionRegex, getIncludedRolesForGameAnnouncement, updateServer } from "$lib";
 import { _data } from "$routes/api";
 import type { GameServer, UserId } from "$types";
 import type { GameRoles } from "$types/GameRoles";
+import { GameStates } from "$types/GameStates";
+import { io } from '$lib/webSocketConnection';
+
+const REPLIES = {
+  STARTED: {
+    WHO_IS_MAFIA: [
+      'Who is Mafia? I have no idea',
+      'No clue who the Mafia are',
+      'Wish I\'d known who\'s Mafia...',
+      'Who is Mafia? I wish I knew...',
+      'You forget a thousand things every day. Make sure this is one of them',
+      'Maybe I\'m not the only one who doesn\'t know who\'s Mafia',
+      'Maybe I\'m just a bot',
+      'Mafia? Who? I don\'t know',
+      'Yeah, who is Mafia?'
+    ],
+  },
+  NOT_STARTED: {
+    WHEN_STARTING: [
+      'Soon, I guess',
+      'When the server owner starts',
+      'When everyone joins',
+      'When the server is full',
+      'When we get enough people',
+      'Just wait until people join',
+      'Just wait until enough people are here',
+    ],
+  },
+};
 
 export default abstract class BaseRole {
   abstract gameRole: typeof GameRoles[keyof typeof GameRoles];
@@ -9,6 +38,8 @@ export default abstract class BaseRole {
 
   userId: number;
   username: string;
+  serverId: number;
+  replies = REPLIES;
 
   suspicionLevel: number = 0;
   isAlive: boolean = true;
@@ -16,9 +47,11 @@ export default abstract class BaseRole {
   constructor(
     userId: UserId,
     username: string,
+    serverId: number,
   ) {
     this.userId = userId;
     this.username = username;
+    this.serverId = serverId;
   }
 
   abstract handleChat(
@@ -28,6 +61,69 @@ export default abstract class BaseRole {
     authorId: number,
   ): void;
 
+  sendMessage(content: string): boolean {
+    // TODO: add messages in server.citizen/mafiaChat because they get deleted upon invalid./refresh.
+    const server = _data.servers.find(s => s.id === this.serverId);
+    if (!server) return false;
+
+    // Player can't chat
+    if (!this.isMafia && server.state === GameStates.Night)
+      return false;
+
+    // Send message & update chat & play sound
+    // Server hasn't started
+    if (!server.started) {
+      io.emit('serverEvent', {
+        message: 'chatMessageFromServerToServer',
+        to: 2,
+        serverId: server?.id,
+        userId: this.userId,
+        content: content,
+      });
+    } else {
+      // Server has started
+      if (this.isMafia)
+        io.emit('serverEvent', {
+          message: 'chatMessageFromServerToServer',
+          to: 0,
+          serverId: server?.id,
+          userId: this.userId,
+          content: content,
+        });
+      if (!this.isMafia || (this.isMafia && server.state === GameStates.Day))
+        io.emit('serverEvent', {
+          message: 'chatMessageFromServerToServer',
+          to: 1,
+          serverId: server?.id,
+          userId: this.userId,
+          content: content,
+        });
+    }
+
+    io.emit('serverEvent', {
+      message: 'playSound',
+      soundName: 'beep',
+      serverId: server?.id,
+    });
+    // TODO: fetching bots' ids in advance
+
+    // Propagate message to bots
+    const rolesToGetMentioned: number[] = getIncludedRolesForGameAnnouncement(
+      this.isMafia ?
+        server.state === GameStates.Day ?
+          'all'
+          : 'mafia'
+        : 'all'
+    );
+    for (let i = 0; i < server.bots.length; i++) {
+      const bot: BaseRoleDerivative<BaseRole> = server.bots[i];
+      if (!rolesToGetMentioned.includes(bot.gameRole)) continue;
+      bot.handleChat(server, content, this.username, this.userId);
+    }
+
+    return true;
+  }
+
   messageIsMention(messageContent: string): boolean {
     return !!messageContent
       .match(BotMentionRegex)
@@ -36,6 +132,37 @@ export default abstract class BaseRole {
       ?.replaceAll(',', ' ')
       ?.split(/ +/)
       ?.includes('' + this.userId);
+  }
+
+  messageContainsKeywords(messageContent: string, keywords: Array<string | string[]>): boolean {
+    let allHits = false;
+
+    for (let i = 0; i < keywords.length; i++) {
+      if (typeof keywords[i] === 'string') {
+        if (!messageContent.includes(keywords[i] as string)) {
+          allHits = false;
+          break;
+        } else {
+          allHits = true;
+          continue;
+        }
+      }
+
+      let someHit = false;
+      for (let j = 0; j < (keywords[i] as string[]).length; j++) {
+        if (messageContent.includes((keywords[i] as string[])[j])) {
+          someHit = true;
+          break;
+        }
+      }
+
+      if (!someHit) {
+        allHits = false;
+        break;
+      }
+    }
+
+    return allHits;
   }
 
   selfDestruct(): boolean {
