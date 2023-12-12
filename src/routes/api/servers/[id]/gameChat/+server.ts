@@ -15,7 +15,7 @@ function notifyBots(
   authorId: number,
   to: 2 | 1 | 0
 ) {
-  const roles = getIncludedRolesForGameAnnouncement(
+  const rolesToGetMentioned = getIncludedRolesForGameAnnouncement(
     to === 2
       ? 'all'
       : to === 1
@@ -24,7 +24,7 @@ function notifyBots(
   );
   for (let i = 0; i < server.bots.length; i++) {
     const bot: BaseRoleDerivative<BaseRole> = server.bots[i];
-    if (!roles.includes(bot.gameRole)) continue;
+    if (!rolesToGetMentioned.includes(bot.gameRole)) continue;
     bot.handleChat(server, messageContent, authorName, authorId);
   }
 }
