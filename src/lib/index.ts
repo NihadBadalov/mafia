@@ -8,6 +8,10 @@ import washyourmouthwithsoap from 'washyourmouthoutwithsoap';
 
 export const BotMentionRegex = new RegExp(/^(@?\d+(,\s|,|\s))+/);
 
+export function getGameServerById(id: number, data: ModifiedServerData = _data): GameServer | undefined {
+  return data.servers.find(s => s?.id === id);
+}
+
 export function createBotUsername(): string {
   return '[BOT] ' + botUsernameAdjectives[Math.floor(Math.random() * botUsernameAdjectives.length)]
     + ' ' + botUsernameNouns[Math.floor(Math.random() * botUsernameNouns.length)];
