@@ -156,11 +156,10 @@ export default function injectSocketIO(server) {
           break;
 
         case 'chatMessageFromServerToServer':
-          if (!args?.to
+          if (args?.to === undefined
             || !args?.serverId
             || !args?.userId
             || !args?.content) return;
-          //console.log('some message');
 
           let emitContent = {
             // iT being innerText
