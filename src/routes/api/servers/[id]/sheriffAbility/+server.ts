@@ -49,7 +49,7 @@ export const POST: RequestHandler = async ({ request, params }) => {
     serverId,
   );
 
-  await wait(3_000);
+  await wait(6_000);
 
 
   // @ts-ignore
