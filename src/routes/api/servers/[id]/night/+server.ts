@@ -61,6 +61,10 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
     }
     server.totalTimerSeconds = undefined;
     server.timer = undefined;
+
+    for (let i = 0; i < server.bots.length; i++) {
+      server.bots[i].gameStarted();
+    }
   }
   else {
     // Not the first night

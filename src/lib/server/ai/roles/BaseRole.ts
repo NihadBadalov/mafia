@@ -1,4 +1,4 @@
-import { BotMentionRegex, getIncludedRolesForGameAnnouncement, updateServer } from "$lib";
+import { BotMentionRegex, getIncludedRolesForGameAnnouncement } from "$lib";
 import { _data } from "$routes/api";
 import type { GameServer, UserId } from "$types";
 import type { GameRoles } from "$types/GameRoles";
@@ -30,6 +30,20 @@ const REPLIES = {
       'Just wait until enough people are here',
     ],
   },
+  STARTING: [
+    'Hell yeah',
+    'ok lets go',
+    'finally',
+    'good luck',
+    'glhf',
+    'gl',
+    'gg to yall',
+    'alrighttt',
+    'Starting... NOW!!',
+    'nice',
+    'Epic',
+    'I hope we\'ll win',
+  ],
 };
 
 export default abstract class BaseRole {
@@ -62,7 +76,6 @@ export default abstract class BaseRole {
   ): void;
 
   sendMessage(content: string): boolean {
-    // TODO: add messages in server.citizen/mafiaChat because they get deleted upon invalid./refresh.
     const server = _data.servers.find(s => s.id === this.serverId);
     if (!server) return false;
 
@@ -73,6 +86,15 @@ export default abstract class BaseRole {
     // Send message & update chat & play sound
     // Server hasn't started
     if (!server.started) {
+      server.citizenChat.push({
+        userId: this.userId,
+        content: content,
+      });
+      server.mafiaChat.push({
+        userId: this.userId,
+        content: content,
+      });
+
       io.emit('serverEvent', {
         message: 'chatMessageFromServerToServer',
         to: 2,
@@ -82,7 +104,12 @@ export default abstract class BaseRole {
       });
     } else {
       // Server has started
-      if (this.isMafia)
+      if (this.isMafia) {
+        server.mafiaChat.push({
+          userId: this.userId,
+          content: content,
+        });
+
         io.emit('serverEvent', {
           message: 'chatMessageFromServerToServer',
           to: 0,
@@ -90,7 +117,13 @@ export default abstract class BaseRole {
           userId: this.userId,
           content: content,
         });
-      if (!this.isMafia || (this.isMafia && server.state === GameStates.Day))
+      }
+      if (!this.isMafia || (this.isMafia && server.state === GameStates.Day)) {
+        server.citizenChat.push({
+          userId: this.userId,
+          content: content,
+        });
+
         io.emit('serverEvent', {
           message: 'chatMessageFromServerToServer',
           to: 1,
@@ -98,6 +131,7 @@ export default abstract class BaseRole {
           userId: this.userId,
           content: content,
         });
+      }
     }
 
     io.emit('serverEvent', {
@@ -105,7 +139,6 @@ export default abstract class BaseRole {
       soundName: 'beep',
       serverId: server?.id,
     });
-    // TODO: fetching bots' ids in advance
 
     // Propagate message to bots
     const rolesToGetMentioned: number[] = getIncludedRolesForGameAnnouncement(
@@ -116,7 +149,7 @@ export default abstract class BaseRole {
         : 'all'
     );
     for (let i = 0; i < server.bots.length; i++) {
-      const bot: BaseRoleDerivative<BaseRole> = server.bots[i];
+      const bot = server.bots[i];
       if (!rolesToGetMentioned.includes(bot.gameRole)) continue;
       bot.handleChat(server, content, this.username, this.userId);
     }
@@ -163,6 +196,13 @@ export default abstract class BaseRole {
     }
 
     return allHits;
+  }
+
+  gameStarted(): void {
+    setTimeout(() =>
+      this.sendMessage(REPLIES.STARTING[Math.floor(Math.random() * REPLIES.STARTING.length)]),
+      Math.floor(Math.random() * 4000) + 1000
+    );
   }
 
   selfDestruct(): boolean {

@@ -17,20 +17,11 @@ export class Citizen extends BaseRole {
       const server = getGameServerById(this.serverId);
       if (!server) return;
 
-      /*
-        * TODO:
-      * 1. Handle "when is the game starting" - This message could be handled by checking if the server has a start time set and if it's not already started. If
-        so, the AI could reply with an estimated start time based on the server's current time.
-      * 2. Handle "who is playing" - This message could be handled by querying the server for a list of players and their roles, and then replying with that 
-        information.
-      * 3. Handle "what is the goal" - This message could be handled by checking if the server has a goal set, and if so, replying with the goal's text.
-      * 4. Handle "where is the objective" - This message could be handled by querying the server for the objective location and then replying with that 
-        information.
-      * 5. Handle "who is the mafia" - This message could be handled by querying the server for the list of mafia members and their roles, and then replying 
-        with that information.
-      * 10. Handle "who is the last to act" - This message could be handled by querying the server for the last player to act, and then replying with that 
-        information
-      */
+      // What is the goal/objective?
+      if (this.messageContainsKeywords(messageContent, ['what', ['goal', 'objective']])) {
+        this.sendMessage('The goal/objective for Citizens is to find and kick all the Mafias; and for the Mafias it is to kill all the citizens.');
+      }
+
       if (server?.started) {
         /* Server has started yet */
         // What is the current action?
@@ -56,7 +47,6 @@ export class Citizen extends BaseRole {
 
         // Who are we voting for/between?
         if (this.messageContainsKeywords(messageContent, ['who', 'voting', ['for', 'between']])) {
-          // Who is the voting for?
           this.sendMessage(`Voting for ${server.votingBetween.map(uid => getUserById(uid)?.name || 'Unnamed user').join(', ') || 'no one'}`);
         }
 
