@@ -4,6 +4,8 @@ import { arrayShuffle, getUserByAst, randomEnumValue } from '$lib';
 import type { GameServer } from '$types';
 import { GameRoles } from '$types/GameRoles';
 import { io } from '$lib/webSocketConnection';
+import type { BaseRoleDerivative } from '$lib/server/ai/roles/BaseRole';
+import type BaseRole from '$lib/server/ai/roles/BaseRole';
 
 
 export const POST: RequestHandler = async ({ request, params, fetch }) => {

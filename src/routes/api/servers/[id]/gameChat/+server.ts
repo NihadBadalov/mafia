@@ -5,8 +5,6 @@ import type { GameServer } from '$types';
 import { GameRoles } from '$types/GameRoles';
 import { GameStates } from '$types/GameStates';
 import { io } from '$lib/webSocketConnection';
-import type { BaseRoleDerivative } from '$lib/server/ai/roles/BaseRole';
-import type BaseRole from '$lib/server/ai/roles/BaseRole';
 
 function notifyBots(
   server: GameServer,
@@ -23,7 +21,7 @@ function notifyBots(
         : 'mafia'
   );
   for (let i = 0; i < server.bots.length; i++) {
-    const bot: BaseRoleDerivative<BaseRole> = server.bots[i];
+    const bot = server.bots[i];
     if (!rolesToGetMentioned.includes(bot.gameRole)) continue;
     bot.handleChat(server, messageContent, authorName, authorId);
   }

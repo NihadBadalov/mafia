@@ -13,7 +13,7 @@
 
   export let data: ModifiedServerData;
   $: currentServer = data.servers.find(
-    (s: any) => s.id === data.currentServerId
+    (s: any) => s.id === data.currentServerId,
   ) as GameServer;
   $: gameStarted = currentServer.started;
   $: citizenChat = currentServer.citizenChat;
@@ -34,7 +34,7 @@
         if (
           currentServer.players.length === currentServer.votingBetween.length &&
           currentServer.players.every(
-            (val, ind) => val === currentServer.votingBetween[ind]
+            (val, ind) => val === currentServer.votingBetween[ind],
           )
         )
           gameState = "VOTE-KICK VOTING";
@@ -111,37 +111,16 @@
       /*
       Quick summary on why we cannot use sounds for in-game messages:
 
-      Actually, scrap everything below. The reason is
+      The reason is
       that svelte reactivity updates faster than the WS (idk how and why)
       which is why it cannot play an audio
-
-      - "chatMessageToClient" WS Event is only for messages written
-      during GameStates.Waiting 
-
-      Since:
-
-      - Updating in-game messages is done through svelte's reactivity;
-      this happens due to consistent updateServer WS Events happening
-      throughout the whole gameplay. For example, the timers (which are
-      also consistent)
-
-      But there are no frequent updateServer WSEs during the Waiting state
-      hence why the message updating during Waiting is done through WSEs.
-      This means that we are able to emit the event of incoming messages
-      with the "chatMessageToClient" WSE, but not the in-game ones, as
-      the updating is made using svelte's reactivity.
-
-      A possible workaround would be to not use "$:" for chat messages
-      and instead use currentServer.mafia/citizenChat after checking
-      whether or not the current player is a Mafia.
-      And after that you simply start debugging the WS part of
-      real-time messages
       */
       let chat = document.querySelector(
-        ".game_chat > .game_chat__contents > .game_chat__inner__message_holder"
+        ".game_chat > .game_chat__contents > .game_chat__inner__message_holder",
       );
       if (!chat) return;
 
+      console.log(`clientmsg: ${iT1} ${iT2} ${iT3} ${userId}`);
       let p = document.createElement("p");
 
       function fetchUser(uid: number) {
@@ -192,7 +171,7 @@
               serverStarted: currentServer?.started,
               successful: !!currentServer?.started,
               role: currentServer.playerRoles.find(
-                (pr) => pr?.userId === data?.currentUserId
+                (pr) => pr?.userId === data?.currentUserId,
               )?.role,
             });
           }, 1000);
@@ -207,7 +186,7 @@
       authStore.update((curr) => {
         return { ...curr, isLoading: false, currentUser: user };
       });
-      
+
       userDisplayName = user?.displayName ?? undefined;
 
       if (!$authStore.currentUser && !$authStore.isLoading) {
@@ -265,7 +244,7 @@
 
   const currentUserIsMafia = () => {
     let role = currentServer.playerRoles.find(
-      (pr) => pr.userId === data?.currentUserId
+      (pr) => pr.userId === data?.currentUserId,
     )?.role;
     return role === GameRoles.Mafia || role === GameRoles.Don;
   };
@@ -343,7 +322,7 @@
               {playerId}
               playerName={getPlayerNameById(playerId)}
               playerRole={currentServer.playerRoles.find(
-                (pr) => pr.userId === playerId
+                (pr) => pr.userId === playerId,
               )?.role}
               ownCard
               ownUserId={data?.currentUserId}
@@ -356,7 +335,7 @@
               {playerId}
               playerName={getPlayerNameById(playerId)}
               playerRole={currentServer.playerRoles.find(
-                (pr) => pr.userId === playerId
+                (pr) => pr.userId === playerId,
               )?.role}
               ownUserId={data?.currentUserId}
               ast={data?.ast}
