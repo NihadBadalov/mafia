@@ -13,7 +13,7 @@ export interface GameServer {
   mafiaCount: number;
 
   fillWithBots: boolean;
-  bots: BaseRoleDerivative[],
+  bots: BaseRoleDerivative<BaseRole>[],
 
   players: UserId[];
   initialPlayers: UserId[];
