@@ -121,6 +121,9 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
         serverId,
       );
 
+      let sheriffBot = server.bots.find(bot => bot.gameRole === GameRoles.Sheriff);
+      if (sheriffBot) sheriffBot.night!(server);
+
       // Start a timer
       server.totalTimerSeconds = 30;
       for (let i = 30; i > -1; i--) {
@@ -196,6 +199,9 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
     if (killText?.endsWith(' WAS KILLED')) {
       server.playerBlacklist.push(killedPersonId);
       server.players = server.players.filter(pid => pid !== killedPersonId);
+      if (server.bots.find(b => b.userId === killedPersonId)) {
+        server.bots.find(b => b.userId === killedPersonId)?.selfDestruct();
+      }
     }
 
     await gameAnnounce(
@@ -214,6 +220,9 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
   if (endVotePlayerRoles.filter(e => e).length === 0
     || endVotePlayerRoles.filter(e => e).length >= endVotePlayerRoles.filter(e => !e).length) {
     // Mafias >= citizens
+    for (let i = 0; i < server.bots.length; i++) {
+      server.bots[i].selfDestruct();
+    }
     fetch(`/api/servers/${server.id}/gameEnd`, {
       method: 'POST',
       body: JSON.stringify({

@@ -1,12 +1,12 @@
 import { json, error, type RequestHandler } from '@sveltejs/kit';
 import { _data } from '$api';
-import { arrayShuffle, getUserByAst, randomEnumValue } from '$lib';
+import { arrayShuffle, createBotUsername, getUserByAst, randomEnumValue } from '$lib';
 import type { GameServer } from '$types';
 import { GameRoles } from '$types/GameRoles';
 import { io } from '$lib/webSocketConnection';
-import type { BaseRoleDerivative } from '$lib/server/ai/roles/BaseRole';
-import type BaseRole from '$lib/server/ai/roles/BaseRole';
-
+import { Mafia } from '$lib/server/ai/roles/mafia/Mafia';
+import { Doctor } from '$lib/server/ai/roles/citizens/Doctor';
+import { Sheriff } from '$lib/server/ai/roles/citizens/Sheriff';
 
 export const POST: RequestHandler = async ({ request, params, fetch }) => {
   let { userId, ast } = await request.json();
@@ -64,6 +64,33 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
 
     playersToAssign[role as typeof GameRoles[keyof typeof GameRoles]] -= 1;
     server.playerRoles = [...server.playerRoles, { userId: playerIds[i], role: role }];
+
+    // The user, whom we assigned the roles to, is a bot
+    // Convert the bots' role from Citizen to the needed Role
+    if (server.bots.find(b => b.userId === playerIds[i]) && role !== GameRoles.Citizen) {
+      const removedCitizenBotUsername = server.bots.splice(server.bots.findIndex(b => b.userId === playerIds[i]), 1)[0].username;
+
+      switch (role) {
+        case GameRoles.Mafia:
+          server.bots.push(new Mafia(playerIds[i], removedCitizenBotUsername));
+          break;
+
+        case GameRoles.Don:
+          server.bots.push(new Mafia(playerIds[i], removedCitizenBotUsername));
+          break;
+
+        case GameRoles.Doctor:
+          server.bots.push(new Doctor(playerIds[i], removedCitizenBotUsername));
+          break;
+
+        case GameRoles.Sheriff:
+          server.bots.push(new Sheriff(playerIds[i], removedCitizenBotUsername, server?.id));
+          break;
+
+        default:
+          break;
+      }
+    }
   }
 
   server.initialPlayers = [...server.players];

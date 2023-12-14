@@ -18,6 +18,13 @@ const REPLIES = {
       'Mafia? Who? I don\'t know',
       'Yeah, who is Mafia?'
     ],
+    NOT_MUCH: [
+      'So...',
+      'So, what\'s up?',
+      'What we doing?',
+      'Anyone got suspicions?',
+      'Noice.',
+    ],
   },
   NOT_STARTED: {
     WHEN_STARTING: [
@@ -47,8 +54,8 @@ const REPLIES = {
 };
 
 export default abstract class BaseRole {
-  abstract gameRole: typeof GameRoles[keyof typeof GameRoles];
-  abstract isMafia: boolean;
+  readonly abstract gameRole: typeof GameRoles[keyof typeof GameRoles];
+  readonly abstract isMafia: boolean;
 
   userId: number;
   username: string;
@@ -70,10 +77,13 @@ export default abstract class BaseRole {
 
   abstract handleChat(
     server: GameServer,
-    messageContent: string,
+    msgContent: string,
     authorName: string,
     authorId: number,
   ): void;
+
+  async night?(server: GameServer): Promise<void>;
+  async day?(server: GameServer): Promise<void>;
 
   sendMessage(content: string): boolean {
     const server = _data.servers.find(s => s.id === this.serverId);
@@ -208,6 +218,12 @@ export default abstract class BaseRole {
   selfDestruct(): boolean {
     if (_data.users.find(u => u.id === this.userId)) return false;
     _data.users.splice(_data.users.findIndex(u => u.id === this.userId), 1);
+
+    let server = _data.servers.find(s => s.id === this.serverId);
+    if (server) {
+      server.bots.splice(server.bots.findIndex(b => b.userId === this.userId), 1);
+    }
+
     return true;
   }
 }

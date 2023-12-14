@@ -33,7 +33,7 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
     }).catch(() => null);
 
     const { id, username } = await request?.json().catch(() => null);
-    server.bots.push(new Citizen(id, username, serverId))
+    server.bots.push(new Citizen(id, username, serverId));
     server.players.push(id);
 
     updateServer(serverId, io);

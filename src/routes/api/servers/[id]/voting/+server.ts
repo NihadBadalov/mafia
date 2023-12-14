@@ -5,6 +5,7 @@ import { GameStates } from '$types/GameStates';
 import { setTimeout as wait } from 'node:timers/promises';
 import { gameAnnounce, getUserById, getUserRoleInServer, isMafiaGameRole } from '$lib';
 import { io } from '$lib/webSocketConnection';
+import { GameRoles } from '$types/GameRoles';
 
 
 export const POST: RequestHandler = async ({ request, params }) => {
@@ -67,9 +68,12 @@ export const POST: RequestHandler = async ({ request, params }) => {
       );
     }
 
+    let sheriffBot = server.bots.find(bot => bot.gameRole === GameRoles.Sheriff);
+    if (sheriffBot) sheriffBot.day!(server);
+
     // Start a timer
-    server.totalTimerSeconds = 30;
-    for (let i = 30; i > -1; i--) {
+    server.totalTimerSeconds = 60;
+    for (let i = 60; i > -1; i--) {
       if (
         server.votes.citizens.length === server.players.length
       ) break;

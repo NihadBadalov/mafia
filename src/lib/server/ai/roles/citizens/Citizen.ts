@@ -8,7 +8,20 @@ export class Citizen extends BaseRole {
   readonly gameRole = GameRoles.Citizen;
   readonly isMafia = false;
 
-  handleChat(server: GameServer, msgContent: string, authorName: string, authorId: number): void {
+  constructor(
+    userId: number,
+    username: string,
+    gameId: number,
+  ) {
+    super(userId, username, gameId);
+  }
+
+  handleChat(
+    server: GameServer,
+    msgContent: string,
+    authorName: string,
+    authorId: number
+  ): void {
     const messageContent = msgContent
       .toLowerCase()
       .replaceAll('\'', '');
@@ -65,14 +78,6 @@ export class Citizen extends BaseRole {
         }
       }
     }
-  }
-
-  constructor(
-    userId: number,
-    username: string,
-    gameId: number,
-  ) {
-    super(userId, username, gameId);
   }
 }
 
