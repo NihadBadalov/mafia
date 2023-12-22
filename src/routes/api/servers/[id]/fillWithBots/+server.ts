@@ -1,12 +1,12 @@
 import { json, error, type RequestHandler } from '@sveltejs/kit';
-import { _data } from '$api';
+import { _data, _generateUserToken } from '$api';
 import type { GameServer } from '$types';
 import { createBotUsername, updateServer, updateServers } from '$lib';
 import { setTimeout as wait } from 'timers/promises';
 import { Citizen } from '$lib/server/ai/roles/citizens/Citizen';
 import { io } from '$lib/webSocketConnection';
 
-export const POST: RequestHandler = async ({ request, params, fetch }) => {
+export const POST: RequestHandler = async ({ request, params, fetch, url }) => {
   let { origin } = await request.json();
 
   if (origin !== _data.serverPassphrase)
@@ -33,7 +33,13 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
     }).catch(() => null);
 
     const { id, username } = await request?.json().catch(() => null);
-    server.bots.push(new Citizen(id, username, serverId));
+    const ast = _generateUserToken(64);
+
+    _data?.userAsts?.push({
+      id: id,
+      token: ast,
+    });
+    server.bots.push(new Citizen(ast, id, username, serverId, url.origin));
     server.players.push(id);
 
     updateServer(serverId, io);

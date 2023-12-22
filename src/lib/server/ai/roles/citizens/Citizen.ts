@@ -1,38 +1,59 @@
-import { getGameServerById, getUserById } from "$lib";
+import { SheriffProposalToKick, getGameServerById, getUserById } from "$lib";
 import type { GameServer } from "$types";
 import { GameRoles } from "$types/GameRoles";
 import { GameStates } from "$types/GameStates";
 import BaseRole from "../BaseRole";
+import { setTimeout as wait } from 'timers/promises';
 
 export class Citizen extends BaseRole {
-  readonly gameRole = GameRoles.Citizen;
-  readonly isMafia = false;
+  gameRole: Exclude<GameRoles, GameRoles.Unknown> = GameRoles.Citizen;
+  isMafia = false;
+  possibleSheriffPlayerIds: number[] = [];
 
   constructor(
+    ast: string,
     userId: number,
     username: string,
     gameId: number,
+    urlOrigin: URL['origin'],
   ) {
-    super(userId, username, gameId);
+    super(ast, userId, username, gameId, urlOrigin);
   }
 
-  handleChat(
+  async handleChat(
     server: GameServer,
     msgContent: string,
     authorName: string,
     authorId: number
-  ): void {
+  ): Promise<void> {
     const messageContent = msgContent
       .toLowerCase()
       .replaceAll('\'', '');
 
+    // Sheriff: proposal to kick mafia
+    if (server.state === GameStates.Day) {
+      const author = getUserById(authorId);
+
+      if (!author) return;
+
+      const sheriffProposalMatches = messageContent.match(SheriffProposalToKick);
+      if (sheriffProposalMatches?.[1] && !Number.isNaN(sheriffProposalMatches?.[1])) {
+        await wait(1_000 + Math.floor(Math.random() * 5_000));
+        await this.sendMessage(this.replies.STARTED.ROGER[Math.floor(Math.random() * this.replies.STARTED.ROGER.length)]);
+
+        await wait(1_000 + Math.floor(Math.random() * 1_500));
+        await this.vote(+sheriffProposalMatches[1]);
+      }
+    }
+
+    // The bot has been mentioned
     if (this.messageIsMention(messageContent)) {
       const server = getGameServerById(this.serverId);
       if (!server) return;
 
       // What is the goal/objective?
       if (this.messageContainsKeywords(messageContent, ['what', ['goal', 'objective']])) {
-        this.sendMessage('The goal/objective for Citizens is to find and kick all the Mafias; and for the Mafias it is to kill all the citizens.');
+        await this.sendMessage('The goal/objective for Citizens is to find and kick all the Mafias; and for the Mafias it is to kill all the citizens.');
       }
 
       if (server?.started) {
@@ -55,12 +76,12 @@ export class Citizen extends BaseRole {
             }
           })();
 
-          this.sendMessage(currentActionText);
+          await this.sendMessage(currentActionText);
         }
 
         // Who are we voting for/between?
         if (this.messageContainsKeywords(messageContent, ['who', 'voting', ['for', 'between']])) {
-          this.sendMessage(`Voting for ${server.votingBetween.map(uid => getUserById(uid)?.name || 'Unnamed user').join(', ') || 'no one'}`);
+          await this.sendMessage(`Voting for ${server.votingBetween.map(uid => getUserById(uid)?.name || 'Unnamed user').join(', ') || 'no one'}`);
         }
 
         // Who is/are mafia(-s)?
@@ -68,13 +89,13 @@ export class Citizen extends BaseRole {
           || this.messageContainsKeywords(messageContent, ['whos', 'mafia'])
         ) {
           // Who is the voting for?
-          this.sendMessage(this.replies.STARTED.WHO_IS_MAFIA[Math.floor(Math.random() * this.replies.STARTED.WHO_IS_MAFIA.length)]);
+          await this.sendMessage(this.replies.STARTED.WHO_IS_MAFIA[Math.floor(Math.random() * this.replies.STARTED.WHO_IS_MAFIA.length)]);
         }
       } else {
         /* Server hasn't started yet */
         // When is the server starting?
         if (this.messageContainsKeywords(messageContent, ['when', 'start'])) {
-          this.sendMessage(this.replies.NOT_STARTED.WHEN_STARTING[Math.floor(Math.random() * this.replies.NOT_STARTED.WHEN_STARTING.length)]);
+          await this.sendMessage(this.replies.NOT_STARTED.WHEN_STARTING[Math.floor(Math.random() * this.replies.NOT_STARTED.WHEN_STARTING.length)]);
         }
       }
     }

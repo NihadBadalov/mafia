@@ -112,7 +112,7 @@ export const POST: RequestHandler = async ({ request, params }) => {
       soundName: 'beep',
       serverId: server?.id,
     });
-    notifyBots(server, message, user.name, user.id, 1);
+    notifyBots(server, message, user.name, user.id, 2);
   }
   else {
     server.mafiaChat.push({

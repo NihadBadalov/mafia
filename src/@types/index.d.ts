@@ -2,7 +2,6 @@ import type { BaseRoleDerivative } from '$lib/server/ai/roles/BaseRole';
 import type BaseRole from '$lib/server/ai/roles/BaseRole';
 import type { GameRoles } from './GameRoles';
 import type { GameStates } from './GameStates';
-import type { Votes } from './Votes';
 
 export type UserId = number;
 

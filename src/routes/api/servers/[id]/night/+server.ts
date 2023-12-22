@@ -61,10 +61,6 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
     }
     server.totalTimerSeconds = undefined;
     server.timer = undefined;
-
-    for (let i = 0; i < server.bots.length; i++) {
-      server.bots[i].gameStarted();
-    }
   }
   else {
     // Not the first night
@@ -141,6 +137,11 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
       server.timer = undefined;
 
       server.specialStates.sheriffAbility = false;
+
+      // Because we can't put the wait in the sherifAbility,
+      // since the waiting loop ends,
+      // we will put it here
+      await wait(6_000);
     }
 
     // Doctor
@@ -158,6 +159,9 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
         [GameRoles.Doctor],
         serverId,
       );
+
+      let doctorBot = server.bots.find(bot => bot.gameRole === GameRoles.Doctor);
+      if (doctorBot) doctorBot.night!(server);
 
       // Start a timer
       server.totalTimerSeconds = 30;
@@ -178,6 +182,8 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
       server.specialStates.doctorAbility = false;
       doctorChoice = server.votes.doctor;
       server.votes.doctor = undefined;
+
+      await wait(3_000);
     }
 
     // Announcing and near-end

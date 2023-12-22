@@ -123,6 +123,14 @@ span.color_red {
   color: #ff0000;
 }
 
+span.color_yellow {
+  color: #ffff00;
+}
+
+span.italic {
+  font-style: italic;
+}
+
 /*
 LOADING SPINNER
 */

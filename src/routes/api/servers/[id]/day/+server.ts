@@ -34,6 +34,10 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
       serverId,
     );
 
+    for (let i = 0; i < server.bots.length; i++) {
+      server.bots[i].gameStarted();
+    }
+
     // Start a timer
     server.totalTimerSeconds = 45;
     for (let i = 45; i > -1; i--) {

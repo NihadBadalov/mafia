@@ -1,6 +1,6 @@
 import { json, error, type RequestHandler } from '@sveltejs/kit';
 import { _data } from '$api';
-import { arrayShuffle, createBotUsername, getUserByAst, randomEnumValue } from '$lib';
+import { arrayShuffle, getUserByAst, randomEnumValue } from '$lib';
 import type { GameServer } from '$types';
 import { GameRoles } from '$types/GameRoles';
 import { io } from '$lib/webSocketConnection';
@@ -68,23 +68,43 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
     // The user, whom we assigned the roles to, is a bot
     // Convert the bots' role from Citizen to the needed Role
     if (server.bots.find(b => b.userId === playerIds[i]) && role !== GameRoles.Citizen) {
-      const removedCitizenBotUsername = server.bots.splice(server.bots.findIndex(b => b.userId === playerIds[i]), 1)[0].username;
+      const removedCitizenBot = server.bots.splice(server.bots.findIndex(b => b.userId === playerIds[i]), 1)[0];
 
       switch (role) {
         case GameRoles.Mafia:
-          server.bots.push(new Mafia(playerIds[i], removedCitizenBotUsername));
+          server.bots.push(new Mafia(removedCitizenBot?.ast,
+            playerIds[i],
+            removedCitizenBot?.username,
+            server?.id,
+            removedCitizenBot.urlOrigin,
+          ));
           break;
 
         case GameRoles.Don:
-          server.bots.push(new Mafia(playerIds[i], removedCitizenBotUsername));
+          server.bots.push(new Mafia(removedCitizenBot?.ast,
+            playerIds[i],
+            removedCitizenBot?.username,
+            server?.id,
+            removedCitizenBot.urlOrigin,
+          ));
           break;
 
         case GameRoles.Doctor:
-          server.bots.push(new Doctor(playerIds[i], removedCitizenBotUsername));
+          server.bots.push(new Doctor(removedCitizenBot?.ast,
+            playerIds[i],
+            removedCitizenBot?.username,
+            server?.id,
+            removedCitizenBot.urlOrigin,
+          ));
           break;
 
         case GameRoles.Sheriff:
-          server.bots.push(new Sheriff(playerIds[i], removedCitizenBotUsername, server?.id));
+          server.bots.push(new Sheriff(removedCitizenBot?.ast,
+            playerIds[i],
+            removedCitizenBot?.username,
+            server?.id,
+            removedCitizenBot.urlOrigin,
+          ));
           break;
 
         default:

@@ -1,9 +1,8 @@
-import { BotMentionRegex, getIncludedRolesForGameAnnouncement } from "$lib";
+import { BotMentionRegex } from "$lib";
 import { _data } from "$routes/api";
 import type { GameServer, UserId } from "$types";
-import type { GameRoles } from "$types/GameRoles";
-import { GameStates } from "$types/GameStates";
-import { io } from '$lib/webSocketConnection';
+import { GameRoles } from "$types/GameRoles";
+import { setTimeout as wait } from "timers/promises";
 
 const REPLIES = {
   STARTED: {
@@ -25,6 +24,81 @@ const REPLIES = {
       'Anyone got suspicions?',
       'Noice.',
     ],
+    ROGER: [
+      'Roger-dodger, dispatch!',
+      'Copy that', 'copy that',
+      'understood', 'Understood',
+      'Got it', 'Gotcha',
+      'Gotcha, gotcha',
+      'Good call!', 'Alright',
+      'A\'ighty!', 'okey-dokey',
+      'ok', 'Ok', 'Alr', 'alr', 'Sure',
+      'let\'s gooooo', 'i\'m fine with that',
+      'I hear you', 'i hear you',
+      'hm ok', 'Hmmmm. Alr',
+      'Mkay', 'Okay', 'Ok', 'Mk.',
+    ],
+    ROLE: {
+      [GameRoles.Mafia]: [
+        'I\'m the Sheriff',
+        'Sheriff',
+        'I\'m INNOCENT. Haha. Kidding, civilian.',
+        'I am the mafia. Just kidding lol',
+        'Civ',
+        'civ',
+        'civilian',
+        'Civilian',
+        'Civilian, I guess',
+        'I\'m new but I think I\'m a civ',
+        'I\'m new but I think I\'m a civilian',
+        'I\'m new but I think I\'m civ',
+        'I\'m new but I think I\'m civilian',
+      ],
+      [GameRoles.Don]: [
+        'I\'m the Sheriff',
+        'Sheriff',
+        'I\'m INNOCENT. Haha. Kidding, civilian.',
+        'I am the mafia. Just kidding lol',
+        'Civ',
+        'civ',
+        'civilian',
+        'Civilian',
+        'Civilian, I guess',
+        'I\'m new but I think I\'m a civ',
+        'I\'m new but I think I\'m a civilian',
+      ],
+      [GameRoles.Citizen]: [
+        'I\'m INNOCENT. Haha. Kidding, civilian.',
+        'Civ',
+        'civ',
+        'civilian',
+        'Civilian',
+        'Civilian, I guess',
+        'I\'m new but I think I\'m a civ',
+        'I\'m new but I think I\'m a civilian',
+      ],
+      [GameRoles.Doctor]: [
+        'Doctor',
+        'Doc',
+        'I\'m a civilian, who\'s the doctor?',
+        'I\'m a civilian; doctor, can you heal me at night, please?',
+        'I\'m INNOCENT. Haha. Kidding, civilian.',
+        'Civ',
+        'civ',
+        'civilian',
+        'Civilian',
+        'Civilian, I guess',
+        'I\'m new but I think I\'m a civ',
+        'I\'m new but I think I\'m a civilian',
+      ],
+      [GameRoles.Sheriff]: [
+        'I\'m the Sheriff',
+        'Sheriff',
+        'I\'m the Sheriff; Doctor, heal me at night',
+        'Sheriff. WHOEVER IS DOCTOR, you should heal me at night',
+        'Civilian. Doctor, heal me at night',
+      ],
+    },
   },
   NOT_STARTED: {
     WHEN_STARTING: [
@@ -54,25 +128,31 @@ const REPLIES = {
 };
 
 export default abstract class BaseRole {
-  readonly abstract gameRole: typeof GameRoles[keyof typeof GameRoles];
-  readonly abstract isMafia: boolean;
+  abstract gameRole: Exclude<GameRoles, GameRoles.Unknown>;
+  abstract isMafia: boolean;
 
+  ast: string;
   userId: number;
   username: string;
   serverId: number;
-  replies = REPLIES;
+  urlOrigin: URL['origin'];
 
+  replies = REPLIES;
   suspicionLevel: number = 0;
   isAlive: boolean = true;
 
   constructor(
+    ast: string,
     userId: UserId,
     username: string,
     serverId: number,
+    urlOrigin: URL['origin'],
   ) {
+    this.ast = ast;
     this.userId = userId;
     this.username = username;
     this.serverId = serverId;
+    this.urlOrigin = urlOrigin;
   }
 
   abstract handleChat(
@@ -85,86 +165,45 @@ export default abstract class BaseRole {
   async night?(server: GameServer): Promise<void>;
   async day?(server: GameServer): Promise<void>;
 
-  sendMessage(content: string): boolean {
+  async vote(userId: number) {
     const server = _data.servers.find(s => s.id === this.serverId);
-    if (!server) return false;
+    const voteEndpoint = server
+      ?.specialStates?.sheriffAbility
+      ? "sheriffAbility"
+      : server?.specialStates
+        ?.doctorAbility
+        ? "doctorAbility"
+        : "vote";
 
-    // Player can't chat
-    if (!this.isMafia && server.state === GameStates.Night)
-      return false;
-
-    // Send message & update chat & play sound
-    // Server hasn't started
-    if (!server.started) {
-      server.citizenChat.push({
+    await fetch(`${this.urlOrigin}/api/servers/${this.serverId}/${voteEndpoint}`, {
+      method: "POST",
+      body: JSON.stringify({
+        targetUserId: userId,
         userId: this.userId,
-        content: content,
-      });
-      server.mafiaChat.push({
+        ast: this.ast,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    } as RequestInit)
+      .then(() => true)
+      .catch(() => false);
+  }
+
+  async sendMessage(content: string): Promise<boolean> {
+    return fetch(`${this.urlOrigin}/api/servers/${this.serverId}/gameChat`, {
+      method: "POST",
+      body: JSON.stringify({
+        message: content,
         userId: this.userId,
-        content: content,
-      });
-
-      io.emit('serverEvent', {
-        message: 'chatMessageFromServerToServer',
-        to: 2,
-        serverId: server?.id,
-        userId: this.userId,
-        content: content,
-      });
-    } else {
-      // Server has started
-      if (this.isMafia) {
-        server.mafiaChat.push({
-          userId: this.userId,
-          content: content,
-        });
-
-        io.emit('serverEvent', {
-          message: 'chatMessageFromServerToServer',
-          to: 0,
-          serverId: server?.id,
-          userId: this.userId,
-          content: content,
-        });
-      }
-      if (!this.isMafia || (this.isMafia && server.state === GameStates.Day)) {
-        server.citizenChat.push({
-          userId: this.userId,
-          content: content,
-        });
-
-        io.emit('serverEvent', {
-          message: 'chatMessageFromServerToServer',
-          to: 1,
-          serverId: server?.id,
-          userId: this.userId,
-          content: content,
-        });
-      }
-    }
-
-    io.emit('serverEvent', {
-      message: 'playSound',
-      soundName: 'beep',
-      serverId: server?.id,
-    });
-
-    // Propagate message to bots
-    const rolesToGetMentioned: number[] = getIncludedRolesForGameAnnouncement(
-      this.isMafia ?
-        server.state === GameStates.Day ?
-          'all'
-          : 'mafia'
-        : 'all'
-    );
-    for (let i = 0; i < server.bots.length; i++) {
-      const bot = server.bots[i];
-      if (!rolesToGetMentioned.includes(bot.gameRole)) continue;
-      bot.handleChat(server, content, this.username, this.userId);
-    }
-
-    return true;
+        ast: this.ast,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    } as RequestInit)
+      .then(() => true)
+      .catch(() => false);
   }
 
   messageIsMention(messageContent: string): boolean {
@@ -208,18 +247,19 @@ export default abstract class BaseRole {
     return allHits;
   }
 
-  gameStarted(): void {
-    setTimeout(() =>
-      this.sendMessage(REPLIES.STARTING[Math.floor(Math.random() * REPLIES.STARTING.length)]),
-      Math.floor(Math.random() * 4000) + 1000
-    );
+  async gameStarted(): Promise<void> {
+    await wait(Math.floor(Math.random() * 4_000) + 1_000);
+    await this.sendMessage(REPLIES.STARTING[Math.floor(Math.random() * REPLIES.STARTING.length)]);
+
+    await wait(Math.floor(Math.random() * 4_000) + 2_500);
+    await this.sendMessage(REPLIES.STARTED.ROLE[this.gameRole][Math.floor(Math.random() * REPLIES.STARTED.ROLE[this.gameRole].length)]);
   }
 
   selfDestruct(): boolean {
     if (_data.users.find(u => u.id === this.userId)) return false;
     _data.users.splice(_data.users.findIndex(u => u.id === this.userId), 1);
 
-    let server = _data.servers.find(s => s.id === this.serverId);
+    const server = _data.servers.find(s => s.id === this.serverId);
     if (server) {
       server.bots.splice(server.bots.findIndex(b => b.userId === this.userId), 1);
     }

@@ -6,79 +6,86 @@ import BaseRole from "../BaseRole";
 import { setTimeout as wait } from 'timers/promises';
 
 export class Sheriff extends BaseRole {
-  readonly gameRole = GameRoles.Sheriff;
-  readonly isMafia = false;
+  gameRole: Exclude<GameRoles, GameRoles.Unknown> = GameRoles.Sheriff;
+  isMafia = false;
   roleGuesses: {
     [key: number]: typeof GameRoles[keyof typeof GameRoles] | undefined;
   } = {}
   playerIdRoleGuessedLastNight: number = -1;
 
   constructor(
+    ast: string,
     userId: number,
     username: string,
     gameId: number,
+    urlOrigin: URL['origin'],
   ) {
-    super(userId, username, gameId);
+    super(ast, userId, username, gameId, urlOrigin);
   }
 
+  /*
+  * @param server GameServer
+  * Custom Sheriff ability user.
+  * Cannot use super's vote() (it works for voting + abilities),
+  * because we need to keep user info and not throw it away
+  */
   async night(
     server: GameServer,
   ): Promise<void> {
     const playerIds = server.players.filter(p => !this.roleGuesses[p] && p !== this.userId);
     const chosenPlayerId = playerIds[Math.floor(Math.random() * playerIds.length)];
-    // TODO: if undefined, return
+    if (playerIds.length === 0 || chosenPlayerId === undefined) return;
 
     await wait(1000 + Math.floor(Math.random() * 5000));
 
     this.roleGuesses[chosenPlayerId] = server.playerRoles.find(pr => pr.userId === chosenPlayerId)?.role;
     this.playerIdRoleGuessedLastNight = chosenPlayerId;
 
-    console.log('checked player:', chosenPlayerId, 'with role:', this.roleGuesses[chosenPlayerId], this.roleGuesses);
-
     server.specialStates.sheriffAbility = false;
   }
 
   async day(server: GameServer): Promise<void> {
-    // TODO: check why this function isn't getting called
     await wait(1000 + Math.floor(Math.random() * 3000));
 
     const player = getUserById(this.playerIdRoleGuessedLastNight);
 
-    console.log(!player
-      || server.players.indexOf(this.playerIdRoleGuessedLastNight) === -1
-      || this.playerIdRoleGuessedLastNight !== -1);
     if (!player
       || server.players.indexOf(this.playerIdRoleGuessedLastNight) === -1
-      || this.playerIdRoleGuessedLastNight !== -1) {
+      || this.playerIdRoleGuessedLastNight === -1) {
       if (Math.floor(Math.random() * 10) > 4)
-        this.sendMessage(this.replies.STARTED.NOT_MUCH[Math.floor(Math.random() * this.replies.STARTED.NOT_MUCH.length)]);;
+        await this.sendMessage(this.replies.STARTED.NOT_MUCH[Math.floor(Math.random() * this.replies.STARTED.NOT_MUCH.length)]);;
       return;
     }
 
-    console.log('outside');
     if (isMafiaGameRole(this.roleGuesses[this.playerIdRoleGuessedLastNight])) {
-      console.log('inside');
-      this.sendMessage(`I'm the Sheriff. I checked ${player?.name} and his role is ${this.roleGuesses[this.playerIdRoleGuessedLastNight]}`);
+      await this.sendMessage(`I'm the Sheriff. I checked ${player?.name} and his role is ${GameRoles[this.roleGuesses[this.playerIdRoleGuessedLastNight]!]}. Vote for him! (his ID is ${player?.id})`);
+      await this.vote(this.playerIdRoleGuessedLastNight);
     }
   }
 
-  handleChat(
+  async handleChat(
     _server: GameServer,
     msgContent: string,
-    _authorName: string,
-    _authorId: number
-  ): void {
+    authorName: string,
+    authorId: number
+  ): Promise<void> {
     const messageContent = msgContent
       .toLowerCase()
       .replaceAll('\'', '');
 
+    if (this.userId !== authorId && this.messageContainsKeywords(messageContent, ['i', ['im', 'am'], 'sheriff'])) {
+      // Someone is impersonating us
+      await this.sendMessage(`@${authorId} ${authorName} is not the Sheriff. I am the Sheriff. He is lying. Let's kick him.`);
+    }
+
+    // The bot has been mentioned
     if (this.messageIsMention(messageContent)) {
       const server = getGameServerById(this.serverId);
       if (!server) return;
 
       // What is the goal/objective?
       if (this.messageContainsKeywords(messageContent, ['what', ['goal', 'objective']])) {
-        this.sendMessage('The goal/objective for Citizens is to find and kick all the Mafias; and for the Mafias it is to kill all the citizens.');
+        await this.sendMessage('The goal/objective for Citizens is to find and kick all the Mafias; and for the Mafias it is to kill all the citizens.');
       }
 
       if (server?.started) {
@@ -101,12 +108,12 @@ export class Sheriff extends BaseRole {
             }
           })();
 
-          this.sendMessage(currentActionText);
+          await this.sendMessage(currentActionText);
         }
 
         // Who are we voting for/between?
         if (this.messageContainsKeywords(messageContent, ['who', 'voting', ['for', 'between']])) {
-          this.sendMessage(`Voting for ${server.votingBetween.map(uid => getUserById(uid)?.name || 'Unnamed user').join(', ') || 'no one'}`);
+          await this.sendMessage(`Voting for ${server.votingBetween.map(uid => getUserById(uid)?.name || 'Unnamed user').join(', ') || 'no one'}`);
         }
 
         // Who is/are mafia(-s)?
@@ -114,13 +121,13 @@ export class Sheriff extends BaseRole {
           || this.messageContainsKeywords(messageContent, ['whos', 'mafia'])
         ) {
           // Who is the voting for?
-          this.sendMessage(this.replies.STARTED.WHO_IS_MAFIA[Math.floor(Math.random() * this.replies.STARTED.WHO_IS_MAFIA.length)]);
+          await this.sendMessage(this.replies.STARTED.WHO_IS_MAFIA[Math.floor(Math.random() * this.replies.STARTED.WHO_IS_MAFIA.length)]);
         }
       } else {
         /* Server hasn't started yet */
         // When is the server starting?
         if (this.messageContainsKeywords(messageContent, ['when', 'start'])) {
-          this.sendMessage(this.replies.NOT_STARTED.WHEN_STARTING[Math.floor(Math.random() * this.replies.NOT_STARTED.WHEN_STARTING.length)]);
+          await this.sendMessage(this.replies.NOT_STARTED.WHEN_STARTING[Math.floor(Math.random() * this.replies.NOT_STARTED.WHEN_STARTING.length)]);
         }
       }
     }

@@ -8,7 +8,7 @@
   import { onMount } from "svelte";
 
   export let form: any;
-  export let data: { ast: UserAccessToken };
+  export let data: { ast: UserAccessToken, ref: string|undefined };
 
   onMount(async () => {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
@@ -25,7 +25,8 @@
       });
 
       if ($authStore.currentUser) {
-        await goto("/account");
+        if (data?.ref?.length && data?.ref?.length > 0) await goto(data.ref);
+        else await goto("/account");
       }
     });
   });

@@ -58,7 +58,9 @@
   });
 
   // User ids and names
-  const cache: { [key: string]: string } = {};
+  const cache: { [key: string]: string } = {
+    [-1]: '<span class="color_yellow">[SYSTEM]</span>',
+  };
 
   function fetchUser(uid: number) {
     cache[uid] =
@@ -89,7 +91,7 @@
     fetchUser(
       _server?.players.length
         ? _server.players[i]
-        : (messages[i]?.userId as any)
+        : (messages[i]?.userId as any),
     );
   }
 </script>
@@ -120,8 +122,18 @@
     <div class="game_chat__inner__message_holder">
       {#each messages as message}
         <p class="chatMessage {userId === message.userId ? 'ownMessage' : ''}">
-          {@html cache[message?.userId]}:
-          {message.content}
+          {#if message.userId === -1}
+            <!-- System message -->
+            <span class="italic">
+              {@html cache[message?.userId]}:
+              {@html message.content}
+            </span>
+
+          {:else}
+            <!-- Normal message -->
+            {@html cache[message?.userId]}:
+            {message.content}
+          {/if}
         </p>
       {/each}
     </div>

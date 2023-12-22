@@ -176,6 +176,11 @@ export const POST: RequestHandler = async ({ request, params }) => {
       );
     }
 
+    const mafiaBots = server.bots.filter(bot => bot.gameRole === GameRoles.Mafia || bot.gameRole === GameRoles.Don);
+    for (let i = 0; i < mafiaBots.length; i++) {
+      mafiaBots[i].night!(server);
+    }
+
     // Start a timer
     server.totalTimerSeconds = 40;
     for (let i = 40; i > -1; i--) {

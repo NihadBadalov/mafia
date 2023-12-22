@@ -69,9 +69,10 @@ export const actions = {
   },
 } satisfies Actions;
 
-export const load: PageServerLoad = (async ({ cookies }) => {
+export const load: PageServerLoad = (async ({ cookies, url }) => {
   return {
     ast: cookies.get('ast'),
+    ref: url.searchParams.get('ref'),
   };
 });
 

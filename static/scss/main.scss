@@ -29,6 +29,7 @@ $radial_background_gradient: radial-gradient(circle, rgba(0,88,116,1) 0%, rgba(1
 
 $color_names-by-colors: (
     "red": #ff0000,
+    "yellow": #ffff00,
 );
 
 
@@ -137,6 +138,9 @@ SPANS
     span.color_#{$name} {
         color: $colr;
     }
+}
+span.italic {
+  font-style: italic;
 }
 
 /*

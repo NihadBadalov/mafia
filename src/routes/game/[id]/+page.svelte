@@ -191,7 +191,10 @@
 
       if (!$authStore.currentUser && !$authStore.isLoading) {
         // Redirect user to account creation page if not logged in
-        // await goto("/create/account");
+        // and is the one creating the server
+        if (currentServer.players.length === 0) {
+          await goto(`/create/account?ref=/game/${currentServer.id}`);
+        }
         userDisplayName = null;
       }
     });
@@ -273,7 +276,7 @@
       ? {
           Leave: leaveServer,
         }
-      : undefined}
+      : {}}
   />
 
   <div class="main">
@@ -282,7 +285,7 @@
         YOU CANNOT PLAY IN THIS SERVER BECAUSE YOU ARE NOT LOGGED IN
       </h2>
     {/if}
-    <h2 class="gameStateText">{gameState}</h2>
+    <h2 class="gameStateText">{@html gameState}</h2>
     <div class="main_inner">
       <div class="top">
         {#if !gameStarted}

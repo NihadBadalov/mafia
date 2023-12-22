@@ -53,6 +53,15 @@ export const POST: RequestHandler = async ({ request, params }) => {
       by: userId,
     });
 
+    server.citizenChat.push({
+      userId: -1,
+      content: `${user.name} (${user.id}) voted for ${targetUser.name} (${targetUser.id})`
+    });
+    server.mafiaChat.push({
+      userId: -1,
+      content: `${user.name} (${user.id}) voted for ${targetUser.name} (${targetUser.id})`
+    });
+
     server.whoCanVoteKick = server.whoCanVoteKick.filter(e => e !== user?.id);
   }
   else {
@@ -68,6 +77,11 @@ export const POST: RequestHandler = async ({ request, params }) => {
     else server.votes.mafia.push({
       for: targetUserId,
       by: userId,
+    });
+
+    server.mafiaChat.push({
+      userId: -1,
+      content: `<i>${user.name} (${user.id}) voted for ${targetUser.name} (${targetUser.id})</i>`
     });
 
     server.whoCanVoteKick = server.whoCanVoteKick.filter(e => e !== user?.id);
