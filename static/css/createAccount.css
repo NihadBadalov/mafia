@@ -291,4 +291,16 @@ LOADING SPINNER
   color: #fff;
 }
 
+@media only screen and (max-width: 550px) {
+  body {
+    min-width: 100%;
+  }
+  .main_inner {
+    padding: 0.5em 3dvw !important;
+  }
+  .create_account > * {
+    width: 90% !important;
+  }
+}
+
 /*# sourceMappingURL=createAccount.css.map */

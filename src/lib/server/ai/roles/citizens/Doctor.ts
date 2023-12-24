@@ -1,4 +1,4 @@
-import { SheriffProposalToKick, getGameServerById, getUserById } from "$lib";
+import { SheriffProposalToKick, getGameServerById, getUserById, getUserRoleInServer, isMafiaGameRole } from "$lib";
 import type { GameServer } from "$types";
 import { GameRoles } from "$types/GameRoles";
 import { GameStates } from "$types/GameStates";
@@ -49,13 +49,9 @@ export class Doctor extends BaseRole {
       .toLowerCase()
       .replaceAll('\'', '');
 
-    if (this.userId !== authorId && this.messageContainsKeywords(messageContent, ['i', ['im', 'am'], 'doctor'])) {
-      // Someone is impersonating us
-      await this.sendMessage(`@${authorId} ${authorName} is not the Doctor. I am the Doctor. He is lying. Let's kick him.`);
-    }
 
-    // Sheriff: proposal to kick mafia
     if (server.state === GameStates.Day) {
+      // Sheriff: proposal to kick mafia
       const author = getUserById(authorId);
 
       if (!author) return;
@@ -69,6 +65,23 @@ export class Doctor extends BaseRole {
 
         await wait(1_000 + Math.floor(Math.random() * 1_500));
         await this.vote(+sheriffProposalMatches[1]);
+      }
+
+      // Sheriff: Sheriff saying he needs to get healed at night
+      if (messageContent === 'sheriff. whoever is doctor, you should heal me at night') {
+        const roleHealChance = isMafiaGameRole(getUserRoleInServer(authorId))
+        ? 0.1
+        : 0.95;
+        const willHeal = Math.floor(Math.random() * 100) / 100 <= roleHealChance;
+        if (willHeal) this.possibleSheriffPlayerIds.push(authorId);
+      }
+      else if (this.messageContainsKeywords(messageContent, ['not the sheriff', 'i am the sheriff'])) {
+        this.possibleSheriffPlayerIds.unshift(authorId);
+      }
+
+      // Someone is impersonating us
+      if (this.userId !== authorId && this.messageContainsKeywords(messageContent, ['i', ['im', 'am'], 'doctor']) && !messageContent.includes('heal me')) {
+        await this.sendMessage(`@${authorId} ${authorName} is not the Doctor. I am the Doctor. He is lying. Let's kick him.`);
       }
     }
 

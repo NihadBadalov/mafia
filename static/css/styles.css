@@ -174,7 +174,9 @@ LOADING SPINNER
     transform: rotate(360deg);
   }
 }
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -185,7 +187,9 @@ LOADING SPINNER
   outline-color: #fff;
 }
 
-html, body, .wrapper {
+html,
+body,
+.wrapper {
   height: 100%;
 }
 
@@ -220,7 +224,9 @@ button.btn {
   cursor: pointer;
 }
 
-button.btn:hover, button.btn:active, button.btn:focus {
+button.btn:hover,
+button.btn:active,
+button.btn:focus {
   background-color: #00536e;
 }
 
@@ -252,7 +258,7 @@ button.btn:hover, button.btn:active, button.btn:focus {
   gap: 10dvw;
 }
 .wrapper .main .main_inner .server_list {
-  min-width: 40dvw !important;
+  min-width: 40dvw;
 }
 .wrapper .main .main_inner .menu_buttons {
   display: flex;
@@ -281,6 +287,41 @@ button.btn:hover, button.btn:active, button.btn:focus {
 }
 .wrapper footer a {
   color: #fff;
+}
+
+@media only screen and (max-width: 800px) {
+  .menu_buttons > button {
+    padding: 1rem !important;
+    font-size: 1.6rem !important;
+  }
+}
+@media only screen and (max-width: 550px) {
+  .main {
+    padding-top: 1em;
+    padding-bottom: 1em;
+  }
+  .main_inner {
+    flex-direction: column;
+    gap: 1em !important;
+  }
+  .server_list {
+    min-width: 95dvw !important;
+  }
+  .menu_buttons {
+    min-width: 95dvw !important;
+    margin: 0 auto;
+    gap: 1rem !important;
+    align-content: center;
+  }
+  .menu_buttons > button {
+    min-width: 100% !important;
+    flex-grow: 1 !important;
+    width: 3em !important;
+    min-height: 3em !important;
+  }
+  footer {
+    margin-top: 1em !important;
+  }
 }
 
 /*# sourceMappingURL=styles.css.map */

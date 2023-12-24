@@ -44,7 +44,8 @@ export const actions = {
     const responseJson = await response.json();
 
     if (responseJson?.success === true) {
-      throw redirect(303, `/game/${responseJson.serverId}`);
+      // throw redirect(303, `/game/${responseJson.serverId}`);
+      throw redirect(303, `/queue?s=${responseJson.serverId}`);
     }
     else {
       return fail(500, { serverError: true });

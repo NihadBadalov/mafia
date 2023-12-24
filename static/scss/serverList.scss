@@ -57,3 +57,34 @@
     }
 }
 
+@media only screen and (max-width: 550px) {
+  .main {
+    padding-top: 1em;
+    padding-bottom: 1em;
+  }
+
+  .main_inner {
+    width: 100vw !important;
+    padding: 0 !important;
+  }
+
+  .server_list {
+    min-width: 95dvw !important;
+    max-width: 95dvw !important;
+    margin: 0 auto;
+  }
+
+  .menu_buttons {
+    min-width: 95dvw !important;
+    margin: 0 auto;
+    gap: 1rem !important;
+    align-content: center;
+
+    &>button {
+      min-width: 100% !important;
+      flex-grow: 1 !important;
+      width: 3em !important;
+      min-height: 3em !important;
+    }
+  }
+}

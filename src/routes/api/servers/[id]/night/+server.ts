@@ -190,16 +190,17 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
     const killedPersonId = typeof ((voting as any)?.killedPerson) === 'number'
       ? ((voting as any)?.killedPerson === doctorChoice ? [] : (voting as any)?.killedPerson)
       : ((voting as any)?.killedPerson as number[]).filter(n => n !== doctorChoice);
-    const killText = (() => {
+    let killText = (() => {
       if (typeof (killedPersonId) === 'number') {
         let u = getUserById(killedPersonId);
         if (!u) return 'NO PLAYERS WERE KILLED';
         return `${u.name} WAS KILLED`;
       }
       if (!Array.isArray(killedPersonId)) return 'NO PLAYERS WERE KILLED';
+      killedPersonId
       return 'NO PLAYERS WERE KILLED';
     })();
-
+    const killedPersonIdByDon = ((voting as any)?.donChoice || 0) === doctorChoice ? 0 : ((voting as any)?.donChoice || 0);
 
     // Kill player, if there is one to kill
     if (killText?.endsWith(' WAS KILLED')) {
@@ -207,6 +208,24 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
       server.players = server.players.filter(pid => pid !== killedPersonId);
       if (server.bots.find(b => b.userId === killedPersonId)) {
         server.bots.find(b => b.userId === killedPersonId)?.selfDestruct();
+      }
+    }
+    // Don's choice
+    if (killedPersonIdByDon) {
+      server.playerBlacklist.push(killedPersonIdByDon);
+      server.players = server.players.filter(pid => pid !== killedPersonIdByDon);
+      if (server.bots.find(b => b.userId === killedPersonIdByDon)) {
+        server.bots.find(b => b.userId === killedPersonIdByDon)?.selfDestruct();
+      }
+    }
+
+
+    // Change announcement text if both Mafia and Don killed someone
+    if (killedPersonId && killText?.endsWith(' WAS KILLED')) {
+      const u = getUserById(killedPersonIdByDon);
+      if (u) {
+        killText = killText.replace('WAS', 'WERE');
+        killText = `${u.name} AND ${killText}`;
       }
     }
 

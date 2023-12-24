@@ -48,7 +48,7 @@ export const POST: RequestHandler = async ({ request, params }) => {
     );
   }
 
-  await wait(3_000);
+  await wait(20_000);
 
   _data.servers = _data.servers.filter(s => s.id !== serverId);
 

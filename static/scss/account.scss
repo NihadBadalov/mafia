@@ -176,3 +176,19 @@
     }
 }
 
+
+@media only screen and (max-width: 550px) {
+    body {
+        min-width: 100%;
+        font-size: 1.4rem !important;
+    }
+
+    .main_inner {
+      padding: 0.5em 3dvw !important;
+    }
+
+    .account_details {
+      width: 100% !important;
+      margin: 0 0.25em !important;
+    }
+}

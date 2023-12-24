@@ -320,8 +320,51 @@
       </div>
 
       <div class="cards">
-        {#each currentServer.players as playerId}
-          {#if playerId === data?.currentUserId}
+        {#if currentServer.state != GameStates.Ended}
+          {#each currentServer.players as playerId}
+            {#if playerId === data?.currentUserId}
+              <PlayerCard
+                {data}
+                {playerId}
+                playerName={getPlayerNameById(playerId)}
+                playerRole={currentServer.playerRoles.find(
+                  (pr) => pr.userId === playerId,
+                )?.role}
+                ownCard
+                ownUserId={data?.currentUserId}
+                ast={data?.ast}
+                serverId={data?.currentServerId}
+              />
+            {:else if (currentServer.playerRoles.find((pr) => pr.userId === data?.currentUserId)?.role === GameRoles.Mafia || currentServer.playerRoles.find((pr) => pr.userId === data?.currentUserId)?.role === GameRoles.Don) && (currentServer.playerRoles.find((pr) => pr.userId === playerId)?.role === GameRoles.Mafia || currentServer.playerRoles.find((pr) => pr.userId === playerId)?.role === GameRoles.Don)}
+              <PlayerCard
+                {data}
+                {playerId}
+                playerName={getPlayerNameById(playerId)}
+                playerRole={currentServer.playerRoles.find(
+                  (pr) => pr.userId === playerId,
+                )?.role}
+                ownUserId={data?.currentUserId}
+                ast={data?.ast}
+                serverId={data?.currentServerId}
+              />
+            {:else}
+              <PlayerCard
+                {data}
+                {playerId}
+                playerRole={currentServer.playerRoles.find(
+                  (pr) => pr.userId === playerId,
+                )?.role}
+                playerName={getPlayerNameById(playerId)}
+                ownUserId={data?.currentUserId}
+                ast={data?.ast}
+                serverId={data?.currentServerId}
+              />
+            {/if}
+          {/each}
+
+        {:else}
+          <!-- Game ended -->
+          {#each currentServer.initialPlayers as playerId}
             <PlayerCard
               {data}
               {playerId}
@@ -329,34 +372,12 @@
               playerRole={currentServer.playerRoles.find(
                 (pr) => pr.userId === playerId,
               )?.role}
-              ownCard
               ownUserId={data?.currentUserId}
               ast={data?.ast}
               serverId={data?.currentServerId}
             />
-          {:else if (currentServer.playerRoles.find((pr) => pr.userId === data?.currentUserId)?.role === GameRoles.Mafia || currentServer.playerRoles.find((pr) => pr.userId === data?.currentUserId)?.role === GameRoles.Don) && (currentServer.playerRoles.find((pr) => pr.userId === playerId)?.role === GameRoles.Mafia || currentServer.playerRoles.find((pr) => pr.userId === playerId)?.role === GameRoles.Don)}
-            <PlayerCard
-              {data}
-              {playerId}
-              playerName={getPlayerNameById(playerId)}
-              playerRole={currentServer.playerRoles.find(
-                (pr) => pr.userId === playerId,
-              )?.role}
-              ownUserId={data?.currentUserId}
-              ast={data?.ast}
-              serverId={data?.currentServerId}
-            />
-          {:else}
-            <PlayerCard
-              {data}
-              {playerId}
-              playerName={getPlayerNameById(playerId)}
-              ownUserId={data?.currentUserId}
-              ast={data?.ast}
-              serverId={data?.currentServerId}
-            />
-          {/if}
-        {/each}
+          {/each}
+        {/if}
       </div>
 
       <div class="bottom">

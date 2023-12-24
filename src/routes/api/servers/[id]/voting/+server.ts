@@ -1,11 +1,10 @@
-import { json, error, type RequestHandler } from '@sveltejs/kit';
+import { error, type RequestHandler } from '@sveltejs/kit';
 import { _data } from '$api';
-import type { GameServer, User } from '$types';
+import type { GameServer } from '$types';
 import { GameStates } from '$types/GameStates';
-import { setTimeout as wait } from 'node:timers/promises';
-import { gameAnnounce, getUserById, getUserRoleInServer, isMafiaGameRole } from '$lib';
 import { io } from '$lib/webSocketConnection';
-import { GameRoles } from '$types/GameRoles';
+import { day } from './day';
+import { night } from './night';
 
 
 export const POST: RequestHandler = async ({ request, params }) => {
@@ -27,219 +26,19 @@ export const POST: RequestHandler = async ({ request, params }) => {
 
 
   if (server.state === GameStates.Day) {
-    // Day
-    server.playersCanChat = true;
-    server.whoCanVoteKick = structuredClone(server.players);
-    server.votingBetween = votingBetween
-      ?? (server?.votingBetween?.length ? server?.votingBetween : undefined)
-      ?? structuredClone(server.players);
-
-    io.emit('serverEvent', {
-      message: 'playSong',
-      songName: 'voting',
-      serverId: server?.id,
-    });
-
-    if (server.votingBetween.length === 2) {
-      // Anounce that we are voting between 2 players
-      const votingBetweenUsers: User[] = [];
-      for (let i = 0; i < server.votingBetween.length; i++) {
-        let u = getUserById(server.votingBetween[i]);
-        if (u) votingBetweenUsers.push(u);
-      }
-
-      if (!votingBetweenUsers.length) {
-        // @ts-ignore
-        return json({ complete: true, kickedPerson: [] }, { statusCode: 200 });
-      }
-      else {
-        await gameAnnounce(
-          `CHOOSE TO VOTE-KICK BETWEEN ${votingBetweenUsers[0].name} AND ${votingBetweenUsers[1].name}`,
-          'all',
-          serverId,
-        );
-      }
-    }
-    else {
-      await gameAnnounce(
-        'DISCUSS WHO TO <span class="color_red">KICK</span><br>(vote for yourselves to skip)',
-        'all',
-        serverId,
-      );
-    }
-
-    let sheriffBot = server.bots.find(bot => bot.gameRole === GameRoles.Sheriff);
-    if (sheriffBot) sheriffBot.day!(server);
-
-    // Start a timer
-    server.totalTimerSeconds = 60;
-    for (let i = 60; i > -1; i--) {
-      if (
-        server.votes.citizens.length === server.players.length
-      ) break;
-      server.timer = i;
-      io.emit('serverEvent', {
-        message: 'updateServer',
-        serverId: serverId,
-      });
-      await wait(1000);
-    }
-    server.totalTimerSeconds = undefined;
-    server.timer = undefined;
-
-    server.whoCanVoteKick = [];
-
-    let chosenPlayerIds: number[] = [];
-    for (const kickInfo of server.votes.citizens) {
-      chosenPlayerIds.push(kickInfo.for);
-    }
-
-    const chosenPlayerId = (() => {
-      const voteCounts: Record<number, number> = {};
-
-      chosenPlayerIds.forEach((playerId) => {
-        if (voteCounts[playerId] === undefined) {
-          voteCounts[playerId] = 1;
-        } else {
-          voteCounts[playerId]++;
-        }
-      });
-
-      const maxVotes = Math.max(...Object.values(voteCounts));
-      const maxVotePlayers = Object.keys(voteCounts).filter(
-        (playerId) => voteCounts[playerId as any] === maxVotes
-      );
-
-      if (maxVotePlayers.length === 1) {
-        return parseInt(maxVotePlayers[0]);
-      } else if (maxVotePlayers.length === 2) {
-        return maxVotePlayers.map((playerId) => parseInt(playerId));
-      } else {
-        return [];
-      }
-    })();
-
-    server.votes.citizens = [];
-    server.votingBetween = [];
-
-    if (typeof (chosenPlayerId) === 'number') {
-      // @ts-ignore
-      return json({ complete: true, kickedPerson: chosenPlayerId }, { statusCode: 200 });
-    }
-
-    // @ts-ignore
-    return json({ complete: false, kickedPerson: chosenPlayerId }, { statusCode: 200 });
+    return await day(
+      server,
+      io,
+      votingBetween
+    );
   }
-
   else {
-    // Night
-    server.playersCanChat = true;
-    server.whoCanVoteKick = structuredClone(server.players)
-      .filter(p => isMafiaGameRole(getUserRoleInServer(p)));
-    server.votingBetween = votingBetween
-      ?? (server?.votingBetween.length ? server?.votingBetween : undefined)
-      ?? structuredClone(server.players);
-    server.votingBetween = server.votingBetween
-      .filter(p => !isMafiaGameRole(getUserRoleInServer(p)));
-
-    io.emit('serverEvent', {
-      message: 'playSong',
-      songName: 'voting',
-      serverId: server?.id,
-    });
-
-    if (server.votingBetween.length === 2) {
-      // Anounce that we are voting between 2 players
-      const votingBetweenUsers: User[] = [];
-      for (let i = 0; i < server.votingBetween.length; i++) {
-        let u = getUserById(server.votingBetween[i]);
-        if (u) votingBetweenUsers.push(u);
-      }
-
-      if (!votingBetweenUsers.length) {
-        // @ts-ignore
-        return json({ complete: true, killedPerson: [] }, { statusCode: 200 });
-      }
-      else {
-        await gameAnnounce(
-          `CHOOSE TO <span class="color_red">KILL</span> BETWEEN ${votingBetweenUsers[0].name} AND ${votingBetweenUsers[1].name}`,
-          'mafia',
-          serverId,
-        );
-      }
-    }
-    else {
-      await gameAnnounce(
-        'DISCUSS WHO TO <span class="color_red">KILL</span>',
-        'mafia',
-        serverId,
-      );
-    }
-
-    const mafiaBots = server.bots.filter(bot => bot.gameRole === GameRoles.Mafia || bot.gameRole === GameRoles.Don);
-    for (let i = 0; i < mafiaBots.length; i++) {
-      mafiaBots[i].night!(server);
-    }
-
-    // Start a timer
-    server.totalTimerSeconds = 40;
-    for (let i = 40; i > -1; i--) {
-      if (
-        server.votes.mafia.length + (+!!server.votes.don) === server.players.filter(p => isMafiaGameRole(getUserRoleInServer(p))).length
-      ) break;
-      server.timer = i;
-      io.emit('serverEvent', {
-        message: 'updateServer',
-        serverId: serverId,
-      });
-      await wait(1000);
-    }
-    server.totalTimerSeconds = undefined;
-    server.timer = undefined;
-
-    server.whoCanVoteKick = [];
-
-    let chosenPlayerIds: number[] = [];
-    for (const kickInfo of server.votes.mafia) {
-      chosenPlayerIds.push(kickInfo.for);
-    }
-
-    const chosenPlayerId = (() => {
-      const voteCounts: Record<number, number> = {};
-
-      chosenPlayerIds.forEach((playerId) => {
-        if (voteCounts[playerId] === undefined) {
-          voteCounts[playerId] = 1;
-        } else {
-          voteCounts[playerId]++;
-        }
-      });
-
-      const maxVotes = Math.max(...Object.values(voteCounts));
-      const maxVotePlayers = Object.keys(voteCounts).filter(
-        (playerId) => voteCounts[playerId as any] === maxVotes
-      );
-
-      if (maxVotePlayers.length === 1) {
-        return parseInt(maxVotePlayers[0]);
-      } else if (maxVotePlayers.length === 2) {
-        return maxVotePlayers.map((playerId) => parseInt(playerId));
-      } else {
-        return [];
-      }
-    })();
-
-    let donChoice = passedDonChoice ?? server.votes.don;
-    server.votes.mafia = [];
-    server.votes.don = undefined;
-    server.votingBetween = [];
-
-    return json({
-      complete: typeof (chosenPlayerId) === 'number',
-      killedPerson: chosenPlayerId,
-      donChoice: donChoice,
-      // @ts-ignore
-    }, { statusCode: 200 });
+    return await night(
+      server,
+      io,
+      votingBetween,
+      passedDonChoice
+    );
   }
 }
 

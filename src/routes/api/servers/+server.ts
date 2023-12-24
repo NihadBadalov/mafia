@@ -22,11 +22,15 @@ export const GET: RequestHandler = async ({ cookies, setHeaders, url }) => {
   delete dc.serverPassphrase;
 
   for (const server of dc.servers) {
+    if (server.state === GameStates.Ended) continue;
     if (!server.playerRoles?.length) continue;
     if (!server.started) continue;
 
     // "Outer-sessional" data hiding - hide everything
-    if (!user || !userServer || (typeof (userServer?.id) === 'number' && userServer?.id !== server.id)) {
+    // Except when the game is over
+    if (!user
+      || !userServer
+      || (typeof (userServer?.id) === 'number' && userServer?.id !== server.id)) {
       // Idea: Literally reset the properties to their primitive values,
       // such as [] or {} instead of iterating thru them
       for (let j = 0; j < server.playerRoles?.length; j++) {
@@ -38,6 +42,7 @@ export const GET: RequestHandler = async ({ cookies, setHeaders, url }) => {
       }
       continue;
     }
+
 
     // "Inner-sessional" data hiding
     const userServerRoleId = getUserRoleInServer(user?.id);
