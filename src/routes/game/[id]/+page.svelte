@@ -77,7 +77,7 @@
     } catch (e) {
       // Just ignore because it floods the console
       // Because it simply errors on sound interrupt
-      //console.log(e);
+      // console.log(e);
     }
   }
 
@@ -90,7 +90,9 @@
     try {
       audioElement.play();
     } catch (e) {
-      console.log(e);
+      // Just ignore because it floods the console
+      // Because it simply errors on sound interrupt
+      // console.log(e);
     }
   }
 

@@ -45,7 +45,7 @@
   async function keyboardVote(
     e: KeyboardEvent & {
       currentTarget: EventTarget & HTMLDivElement;
-    }
+    },
   ) {
     if (e.key !== "Enter" && e.key !== "Space") return;
     await vote();
@@ -60,7 +60,9 @@
     try {
       audioElement.play();
     } catch (e) {
-      console.log(e);
+      // Just ignore because it floods the console
+      // Because it simply errors on sound interrupt
+      // console.log(e);
     }
   }
 
@@ -70,9 +72,9 @@
       ?.specialStates?.sheriffAbility
       ? "sheriffAbility"
       : data.servers.find((s) => s.id === serverId)?.specialStates
-          ?.doctorAbility
-      ? "doctorAbility"
-      : "vote";
+            ?.doctorAbility
+        ? "doctorAbility"
+        : "vote";
 
     const response = await fetch(`/api/servers/${serverId}/${voteEndpoint}`, {
       method: "POST",

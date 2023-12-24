@@ -1,22 +1,18 @@
 <script lang="ts">
-  import type { PageData } from "./$types";
   import { goto } from "$app/navigation";
   import { Header, ServerList } from "$lib/components";
   import { invalidateAll } from "$app/navigation";
 
-  export let data: PageData;
+  export let data: ModifiedServerData;
 
   //import { customIo, socketEndpoint } from '$lib/webSocketConnection.js';
   import { customIo, socketEndpoint } from "$lib/webSocketConnection.js";
   import { onDestroy, onMount } from "svelte";
+    import type { ModifiedServerData } from "$types";
 
   const io = customIo(`${socketEndpoint}/servers`);
 
   onMount(() => {
-    io.on("message", (message) => {
-      // Message from server
-      console.log("Message from server", message);
-    });
     io.on("serverEvent", async (message) => {
       // Message from server
       if (message !== "updateServers") return;

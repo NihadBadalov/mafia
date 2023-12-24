@@ -19,6 +19,21 @@ export function createBotUsername(): string {
     + ' ' + botUsernameNouns[Math.floor(Math.random() * botUsernameNouns.length)];
 }
 
+export const queueLoadingStates = [
+  'Loading server list...',
+  'Fetching server data...',
+  'Connecting to the server...',
+];
+
+export const gameTips = [
+  'Remember to be respectful and join the Discord server',
+  'Bots can also communicate with each other and with you',
+  'If you are Sheriff, you make the Doctor bot<br>heal you by saying "I\'m the Sheriff"',
+  'As a Citizen, you can vote for yourself<br>and your team members',
+  'If you have any questions, ask the <a href="https://discord.gg/s823fUb7VB" target="_blank">Discord server</a>',
+  'It\'s better to play with your friends and real humans',
+];
+
 export const botUsernameAdjectives = [
   'Seasoned',
   'Foxy',

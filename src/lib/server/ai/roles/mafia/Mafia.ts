@@ -95,9 +95,7 @@ export class Mafia extends BaseRole {
     else {
       // Sheriff: proposal to kick somebody
       const sheriffProposalMatches = messageContent.match(SheriffProposalToKick);
-      console.log('sheriff proposal, handling by mafia');
       if (sheriffProposalMatches?.[1] && !Number.isNaN(sheriffProposalMatches?.[1])) {
-        console.log('inside');
         await wait(3_000 + Math.floor(Math.random() * 6_000));
 
         const votes: { [key: number]: number } = {};
@@ -115,7 +113,15 @@ export class Mafia extends BaseRole {
           }
         }
 
-        await this.vote(mostVoted[0]);
+
+        if (mostVoted[0] === 0) {
+          // No one to vote for
+          const votingBetweenCitizens = server.votingBetween.filter(p => !isMafiaGameRole(getUserRoleInServer(p)));
+          await this.vote(votingBetweenCitizens[Math.floor(Math.random() * votingBetweenCitizens.length)]);
+        }
+        else {
+          await this.vote(mostVoted[0]);
+        }
       }
 
       // Someone says they're a Sheriff or a Doctor
