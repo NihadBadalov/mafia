@@ -41,6 +41,12 @@ export async function night(
     }
     else {
       await gameAnnounce(
+        'TWO PEOPLE HAVE THE SAME AMOUNT OF VOTES',
+        'all',
+        server.id,
+      );
+      await wait(2_500);
+      await gameAnnounce(
         `CHOOSE TO <span class="color_red">KILL</span> BETWEEN ${votingBetweenUsers[0].name} AND ${votingBetweenUsers[1].name}`,
         'mafia',
         server.id,
@@ -48,6 +54,12 @@ export async function night(
     }
   }
   else {
+    await gameAnnounce(
+      'KILLING TIME!',
+      'all',
+      server.id,
+    );
+    await wait(1_000);
     await gameAnnounce(
       'DISCUSS WHO TO <span class="color_red">KILL</span>',
       'mafia',
@@ -62,7 +74,7 @@ export async function night(
 
   // Start a timer
   server.totalTimerSeconds = 40;
-  for (let i = 40; i > -1; i--) {
+  for (let i = 40; i > 0; i--) {
     if (
       server.votes.mafia.length + (+!!server.votes.don) === server.players.filter(p => isMafiaGameRole(getUserRoleInServer(p))).length
     ) break;

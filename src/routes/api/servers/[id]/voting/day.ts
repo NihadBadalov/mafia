@@ -37,6 +37,12 @@ export async function day(
     }
     else {
       await gameAnnounce(
+        'TWO PEOPLE HAVE THE SAME AMOUNT OF VOTES',
+        'all',
+        server.id,
+      );
+      await wait(2_500);
+      await gameAnnounce(
         `CHOOSE TO VOTE-KICK BETWEEN ${votingBetweenUsers[0].name} AND ${votingBetweenUsers[1].name}`,
         'all',
         server.id,
@@ -44,6 +50,12 @@ export async function day(
     }
   }
   else {
+    await gameAnnounce(
+      'VOTE-KICK TIME!',
+      'all',
+      server.id,
+    );
+    await wait(1_000);
     await gameAnnounce(
       'DISCUSS WHO TO <span class="color_red">KICK</span><br>(vote for yourselves to skip)',
       'all',
@@ -56,7 +68,7 @@ export async function day(
 
   // Start a timer
   server.totalTimerSeconds = 60;
-  for (let i = 60; i > -1; i--) {
+  for (let i = 60; i > 0; i--) {
     if (
       server.votes.citizens.length === server.players.length
     ) break;

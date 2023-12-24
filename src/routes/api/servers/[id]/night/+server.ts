@@ -40,7 +40,14 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
   });
 
   await gameAnnounce(
-    '<span class="color_red">CITIZENS</span> GO TO SLEEP, <span class="color_red">MAFIA</span> WAKE UP',
+    'NIGHT FALLS, THE VILLAGE GOES TO SLEEP...',
+    'all',
+    serverId,
+  );
+  await wait(2_500);
+
+  await gameAnnounce(
+    'THE <span class="color_red">MAFIA</span> WAKE UP',
     'citizens',
     serverId,
   );
@@ -51,7 +58,7 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
 
     // Start a timer
     server.totalTimerSeconds = 30;
-    for (let i = 30; i > -1; i--) {
+    for (let i = 30; i > 0; i--) {
       server.timer = i;
       io.emit('serverEvent', {
         message: 'updateServer',
@@ -102,15 +109,29 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
       voting = await voting.json();
     }
 
+    await gameAnnounce(
+      'THE MAFIA HAVE CHOSEN WHOM TO KILL',
+      'all',
+      serverId,
+    );
+    await wait(6_000);
+
     // Sheriff
     if (server.players.some(pid => getUserRoleInServer(pid) === GameRoles.Sheriff)) {
       server.specialStates.sheriffAbility = true;
 
       await gameAnnounce(
-        '<span class="color_red">MAFIA</span> GOES TO SLEEP,<br>THE <span class="color_red">SHERIFF</span> WAKES UP',
+        'MAFIA GOES TO SLEEP',
         'all',
         serverId,
       );
+      await wait(1_500);
+      await gameAnnounce(
+        '<br>THE <span class="color_red">SHERIFF</span> WAKES UP',
+        'all',
+        serverId,
+      );
+      await wait(1_500);
       await gameAnnounce(
         'CLICK ON SOMEONE<br>TO <span class="color_red">VIEW</span> THEIR <span class="color_red">ROLE</span>',
         [GameRoles.Sheriff],
@@ -122,7 +143,7 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
 
       // Start a timer
       server.totalTimerSeconds = 30;
-      for (let i = 30; i > -1; i--) {
+      for (let i = 30; i > 0; i--) {
         if (
           (server.specialStates.sheriffAbility as boolean) === false
         ) break;
@@ -138,6 +159,12 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
 
       server.specialStates.sheriffAbility = false;
 
+      await gameAnnounce(
+        'THE SHERIFF HAS VIEWED A PLAYER\'S ROLE',
+        'all',
+        serverId,
+      );
+
       // Because we can't put the wait in the sherifAbility,
       // since the waiting loop ends,
       // we will put it here
@@ -150,10 +177,17 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
       server.specialStates.doctorAbility = true;
 
       await gameAnnounce(
+        'SHERIFF GOES TO SLEEP',
+        'all',
+        serverId,
+      );
+      await wait(1_500);
+      await gameAnnounce(
         '<span class="color_red">SHERIFF</span> GOES TO SLEEP,<br>THE <span class="color_red">DOCTOR</span> WAKES UP',
         'all',
         serverId,
       );
+      await wait(1_500);
       await gameAnnounce(
         'CLICK ON SOMEONE TO<br><span class="color_red">SAVE</span> THEM FOR THE <span class="color_red">NIGHT</span>',
         [GameRoles.Doctor],
@@ -165,7 +199,7 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
 
       // Start a timer
       server.totalTimerSeconds = 30;
-      for (let i = 30; i > -1; i--) {
+      for (let i = 30; i > 0; i--) {
         if (
           (server.specialStates.doctorAbility as boolean) === false
         ) break;
@@ -183,7 +217,12 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
       doctorChoice = server.votes.doctor;
       server.votes.doctor = undefined;
 
-      await wait(3_000);
+      await gameAnnounce(
+        'THE DOCTOR HAS HEALED A PLAYER',
+        'all',
+        serverId,
+      );
+      await wait(6_000);
     }
 
     // Announcing and near-end
@@ -228,6 +267,13 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
         killText = `${u.name} AND ${killText}`;
       }
     }
+
+    await gameAnnounce(
+      'THE VILLAGE WAKES UP...',
+      'all',
+      server?.id,
+    );
+    await wait(3_000);
 
     await gameAnnounce(
       killText,

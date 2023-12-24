@@ -40,7 +40,7 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
 
     // Start a timer
     server.totalTimerSeconds = 45;
-    for (let i = 45; i > -1; i--) {
+    for (let i = 45; i > 0; i--) {
       if (
         server.votes.citizens.length === server.players.length
       ) break;
@@ -59,12 +59,6 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
 
   else {
     // Not the first day
-    await gameAnnounce(
-      '<span class="color_red">CITIZENS</span> WAKE UP',
-      'all',
-      serverId,
-    );
-
     let voting = await fetch(`/api/servers/${server.id}/voting`, {
       method: 'POST',
       body: JSON.stringify({
@@ -123,6 +117,12 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
       });
     }
 
+    await gameAnnounce(
+      'AFTER A VOTE-KICK...',
+      'all',
+      server?.id,
+    );
+    await wait(2_000);
     await gameAnnounce(
       kickText,
       'all',
