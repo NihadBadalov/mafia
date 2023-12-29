@@ -81,6 +81,21 @@
     }
   }
 
+  function playEffect(soundName: string) {
+    const audioElement: HTMLAudioElement | null =
+      document.querySelector("#gameEffect");
+    if (!audioElement) return;
+    audioElement.volume = 0.02;
+    audioElement.src = `/audios/${soundName}.mp3`;
+    try {
+      audioElement.play();
+    } catch (e) {
+      // Just ignore because it floods the console
+      // Because it simply errors on sound interrupt
+      // console.log(e);
+    }
+  }
+
   function playSong(songName: string) {
     const audioElement: HTMLAudioElement | null =
       document.querySelector("#gameSong");
@@ -97,6 +112,12 @@
   }
 
   onMount(() => {
+    if (currentServer?.playingSong) {
+      setTimeout(() => {
+        playSong(currentServer.playingSong as string);
+      }, 2_000);
+    }
+
     io.on("fallbackEvent", (message) => {
       sendMessage("fallbackEvent", message);
     });
@@ -107,6 +128,10 @@
 
     io.on("playSong", (songName) => {
       playSong(songName);
+    });
+
+    io.on("playEffect", (songName) => {
+      playEffect(songName);
     });
 
     io.on("chatMessageToClient", ({ iT1, iT2, iT3, userId }) => {
@@ -123,7 +148,8 @@
       if (!chat) return;
 
       console.log(`clientmsg: ${iT1} ${iT2} ${iT3} ${userId}`);
-      let p = document.createElement("p");
+      let p = null;
+      p = document.createElement("p");
 
       function fetchUser(uid: number) {
         cache[uid] =
@@ -264,6 +290,7 @@
 
 <audio src="/audios/gong.mp3" id="gameSound" />
 <audio src="/audios/gong.mp3" id="gameSong" />
+<audio src="/audios/gong.mp3" id="gameEffect" />
 
 <div class="wrapper">
   <Header
@@ -361,7 +388,6 @@
               />
             {/if}
           {/each}
-
         {:else}
           <!-- Game ended -->
           {#each currentServer.initialPlayers as playerId}

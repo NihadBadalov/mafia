@@ -117,6 +117,7 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
     name: serverName,
     maxPlayerCount: maxPlayerAmount,
     mafiaCount: amountOfMafia,
+    playingSong: undefined,
 
     fillWithBots: fillWithBots,
     bots: [],

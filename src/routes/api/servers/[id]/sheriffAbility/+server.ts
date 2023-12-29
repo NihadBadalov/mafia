@@ -3,6 +3,7 @@ import { _data } from '$api';
 import { gameAnnounce, getUserByAst, getUserById, getUserRoleInServer } from '$lib';
 import type { GameServer } from '$types';
 import { GameRoles } from '$types/GameRoles';
+import { setTimeout as wait } from 'timers/promises';
 
 export const POST: RequestHandler = async ({ request, params }) => {
   let { targetUserId, userId, ast } = await request.json();
@@ -46,7 +47,6 @@ export const POST: RequestHandler = async ({ request, params }) => {
     [GameRoles.Sheriff],
     serverId,
   );
-
 
   // @ts-ignore
   return json({}, { statusCode: 200 });

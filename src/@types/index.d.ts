@@ -10,6 +10,7 @@ export interface GameServer {
   name: string;
   maxPlayerCount: number;
   mafiaCount: number;
+  playingSong: string | undefined;
 
   fillWithBots: boolean;
   bots: BaseRoleDerivative<BaseRole>[],

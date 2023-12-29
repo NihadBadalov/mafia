@@ -33,6 +33,7 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
     songName: 'night',
     serverId: serverId,
   });
+  server.playingSong = 'night';
 
   io.emit('serverEvent', {
     message: 'updateServer',
@@ -111,7 +112,12 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
 
     await gameAnnounce(
       'THE MAFIA HAVE CHOSEN WHOM TO KILL',
-      'all',
+        [
+          GameRoles.Unknown,
+          GameRoles.Citizen,
+          GameRoles.Sheriff,
+          GameRoles.Doctor,
+        ],
       serverId,
     );
     await wait(6_000);
@@ -161,7 +167,13 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
 
       await gameAnnounce(
         'THE SHERIFF HAS VIEWED A PLAYER\'S ROLE',
-        'all',
+        [
+          GameRoles.Unknown,
+          GameRoles.Mafia,
+          GameRoles.Don,
+          GameRoles.Citizen,
+          GameRoles.Doctor,
+        ],
         serverId,
       );
 
@@ -219,7 +231,13 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
 
       await gameAnnounce(
         'THE DOCTOR HAS HEALED A PLAYER',
-        'all',
+        [
+          GameRoles.Unknown,
+          GameRoles.Mafia,
+          GameRoles.Don,
+          GameRoles.Citizen,
+          GameRoles.Sheriff,
+        ],
         serverId,
       );
       await wait(6_000);

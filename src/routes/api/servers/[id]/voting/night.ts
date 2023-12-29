@@ -26,6 +26,7 @@ export async function night(
     songName: 'voting',
     serverId: server?.id,
   });
+  server.playingSong = 'voting';
 
   if (server.votingBetween.length === 2) {
     // Anounce that we are voting between 2 players

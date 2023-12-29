@@ -117,7 +117,7 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
   server.started = true;
 
   io.emit('serverEvent', {
-    message: 'playSound',
+    message: 'playEffect',
     soundName: 'gong',
     serverId: serverId,
   });
