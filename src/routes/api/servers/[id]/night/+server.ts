@@ -110,6 +110,12 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
       voting = await voting.json();
     }
 
+
+    io.emit('serverEvent', {
+      message: 'playEffect',
+      soundName: 'gunshot',
+      serverId: server?.id,
+    });
     await gameAnnounce(
       'THE MAFIA HAVE CHOSEN WHOM TO KILL',
         [
