@@ -8,7 +8,7 @@
   //import { customIo, socketEndpoint } from '$lib/webSocketConnection.js';
   import { customIo, socketEndpoint } from "$lib/webSocketConnection.js";
   import { onDestroy, onMount } from "svelte";
-    import type { ModifiedServerData } from "$types";
+  import type { ModifiedServerData } from "$types";
 
   const io = customIo(`${socketEndpoint}/servers`);
 
@@ -24,18 +24,6 @@
 
   onDestroy(() => io.disconnect());
 </script>
-
-<svelte:head>
-  <title>Servers - Mafia</title>
-  <link rel="stylesheet" href="/css/servers.css" />
-  <link rel="stylesheet" href="/css/serverList.css" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100;200;300;400;500;600;700;800;900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
-    rel="stylesheet"
-  />
-</svelte:head>
 
 <div class="wrapper">
   <Header
@@ -69,3 +57,16 @@
     </footer>
   </div>
 </div>
+
+<svelte:head>
+  <title>Servers - Mafia</title>
+  <link rel="stylesheet" href="/css/servers.css" />
+  <link rel="stylesheet" href="/css/serverList.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100;200;300;400;500;600;700;800;900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="canonical" href="https://www.themafia.xyz/servers" />
+</svelte:head>
