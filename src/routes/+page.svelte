@@ -66,4 +66,5 @@
     rel="stylesheet"
   />
   <Opengraph />
+  <link rel="canonical" href="https://www.themafia.xyz/" />
 </svelte:head>
