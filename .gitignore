@@ -11,4 +11,5 @@ vite.config.ts.timestamp-*
 workflowStart.bat
 ngrok.exe
 .vercel
+bun.lockb
 
