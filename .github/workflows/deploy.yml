@@ -13,12 +13,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Install dependencies
+      - name: Setup Bun
         uses: oven-sh/setup-bun@v1
+
+      - name: Install dependencies
         run: bun install
 
       - name: Build
-        uses: oven-sh/setup-bun@v1
         run: bun run build
         env:
           VITE_APIKEY: ${{ secrets.VITE_APIKEY }}
