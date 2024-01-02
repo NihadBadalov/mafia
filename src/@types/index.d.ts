@@ -43,6 +43,7 @@ export interface GameServer {
     mafia: Votes[];
     citizens: Votes[];
   };
+  sheriffHasChecked: UserId[];
 
   totalTimerSeconds: number | undefined;
   timer: number | undefined;

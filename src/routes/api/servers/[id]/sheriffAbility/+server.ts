@@ -48,6 +48,8 @@ export const POST: RequestHandler = async ({ request, params }) => {
     serverId,
   );
 
+  server.sheriffHasChecked.unshift(targetUser?.id);
+
   // @ts-ignore
   return json({}, { statusCode: 200 });
 }

@@ -154,6 +154,7 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
       mafia: [],
       citizens: [],
     },
+    sheriffHasChecked: [],
 
     totalTimerSeconds: undefined,
     timer: undefined,

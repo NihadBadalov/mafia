@@ -23,8 +23,8 @@ export class Sheriff extends BaseRole {
     super(ast, userId, username, gameId, urlOrigin);
   }
 
-  /*
-  * @param server GameServer
+  /**
+  * @param {GameServer} server 
   * Custom Sheriff ability user.
   * Cannot use super's vote() (it works for voting + abilities),
   * because we need to keep user info and not throw it away

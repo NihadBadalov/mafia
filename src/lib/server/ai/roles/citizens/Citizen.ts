@@ -1,4 +1,4 @@
-import { SheriffProposalToKick, getGameServerById, getUserById } from "$lib";
+import { ChatVoteSystemMessage, SheriffProposalToKick, getGameServerById, getUserById, getUserRoleInServer, isMafiaGameRole } from "$lib";
 import type { GameServer } from "$types";
 import { GameRoles } from "$types/GameRoles";
 import { GameStates } from "$types/GameStates";
@@ -9,6 +9,7 @@ export class Citizen extends BaseRole {
   gameRole: Exclude<GameRoles, GameRoles.Unknown> = GameRoles.Citizen;
   isMafia = false;
   possibleSheriffPlayerIds: number[] = [];
+  realSheriffId: number | undefined;
 
   constructor(
     ast: string,
@@ -18,12 +19,15 @@ export class Citizen extends BaseRole {
     urlOrigin: URL['origin'],
   ) {
     super(ast, userId, username, gameId, urlOrigin);
+
+    const dataServer = getGameServerById(gameId);
+    this.realSheriffId = dataServer?.playerRoles.find(pr => getUserRoleInServer(pr.userId) === GameRoles.Sheriff)?.userId;
   }
 
   async handleChat(
     server: GameServer,
     msgContent: string,
-    authorName: string,
+    _authorName: string,
     authorId: number
   ): Promise<void> {
     const messageContent = msgContent
@@ -36,6 +40,7 @@ export class Citizen extends BaseRole {
 
       if (!author) return;
 
+      // Sheriff: porposal to kick
       const sheriffProposalMatches = messageContent.match(SheriffProposalToKick);
       if (sheriffProposalMatches?.[1] && !Number.isNaN(sheriffProposalMatches?.[1])) {
         await wait(1_000 + Math.floor(Math.random() * 5_000));
@@ -43,6 +48,29 @@ export class Citizen extends BaseRole {
 
         await wait(1_000 + Math.floor(Math.random() * 1_500));
         await this.vote(+sheriffProposalMatches[1]);
+      }
+
+      // Sheriff (100% sheriff through _data):
+      // voting for someone
+      const sheriffHiddenProposalMatches = messageContent.match(ChatVoteSystemMessage);
+      if (
+        sheriffHiddenProposalMatches?.[1] && !Number.isNaN(sheriffHiddenProposalMatches?.[1])
+        && sheriffHiddenProposalMatches?.[2] && !Number.isNaN(sheriffHiddenProposalMatches?.[2])
+        // The real sheriff (from _data)
+        && +sheriffHiddenProposalMatches[2] === this.realSheriffId
+      ) {
+        const dataServer = getGameServerById(server.id);
+
+        if (
+          server.sheriffHasChecked.includes(+sheriffHiddenProposalMatches[2])
+          && isMafiaGameRole(dataServer?.playerRoles?.find(pr => pr.userId === +sheriffHiddenProposalMatches[2])?.role)
+        ) {
+          await this.vote(+sheriffHiddenProposalMatches[2]);
+          await wait(1_000 + Math.floor(Math.random() * 2_500));
+
+          const targetUser = getUserById(+sheriffHiddenProposalMatches[2]);
+          if (targetUser) await this.sendMessage(`I'm going to vote for ${targetUser.name} (${targetUser.id}), too!`);
+        }
       }
     }
 

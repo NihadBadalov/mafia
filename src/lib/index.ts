@@ -9,6 +9,7 @@ import washyourmouthwithsoap from 'washyourmouthoutwithsoap';
 export const BotMentionRegex = new RegExp(/^(@?\d+(,\s|,|\s))+/);
 export const MafiaProposalToKill= new RegExp(/lets vote for id (\d+)\. thats the guy with username \w*/);
 export const SheriffProposalToKick = new RegExp(/im the sheriff. i checked .+ and his role is mafia. vote for him! \(his id is (\d+)\)/);
+export const ChatVoteSystemMessage = new RegExp(/.+ \((\d+)\) voted for .+ \((\d+)\)/);
 
 export function getGameServerById(id: number, data: ModifiedServerData = _data): GameServer | undefined {
   return data.servers.find(s => s?.id === id);
