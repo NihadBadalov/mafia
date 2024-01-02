@@ -44,5 +44,5 @@ jobs:
           script: |
             source ~/.bashrc
             cd ~/mafia
-            git pull origin main && bun install && bun run build && pm2 restart mafia
+            git pull origin main && ~/.bun/bin/bun install && ~/.bun/bin/bun run build && pm2 restart mafia
 
