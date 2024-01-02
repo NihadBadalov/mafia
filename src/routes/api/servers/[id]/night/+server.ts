@@ -273,7 +273,7 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
         server.bots.find(b => b.userId === killedPersonId)?.selfDestruct();
       }
     }
-    // Don's choice
+    // Don's choice, he has killed somebody
     if (killedPersonIdByDon) {
       server.playerBlacklist.push(killedPersonIdByDon);
       server.players = server.players.filter(pid => pid !== killedPersonIdByDon);
@@ -284,11 +284,17 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
 
 
     // Change announcement text if both Mafia and Don killed someone
-    if (killedPersonId && killText?.endsWith(' WAS KILLED')) {
+    if (killedPersonIdByDon) {
       const u = getUserById(killedPersonIdByDon);
-      if (u) {
-        killText = killText.replace('WAS', 'WERE');
-        killText = `${u.name} AND ${killText}`;
+
+      if (killText?.endsWith(' WAS KILLED')) {
+        if (u) {
+          killText = killText.replace('WAS', 'WERE');
+          killText = `${u.name} AND ${killText}`;
+        }
+      }
+      else if (killText?.endsWith(' WERE KILLED')) {
+        killText = `${u?.name} WAS KILLED`;
       }
     }
 
