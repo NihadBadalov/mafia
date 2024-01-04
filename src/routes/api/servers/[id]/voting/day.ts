@@ -64,8 +64,11 @@ export async function day(
     );
   }
 
-  let sheriffBot = server.bots.find(bot => bot.gameRole === GameRoles.Sheriff);
-  if (sheriffBot) sheriffBot.day!(server);
+  // Trigger bot day start
+  for (let i = 0; i < server.bots.length; i++) {
+    const bot = server.bots[i];
+    bot.day!(server);
+  }
 
   // Start a timer
   server.totalTimerSeconds = 60;
