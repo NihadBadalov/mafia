@@ -68,6 +68,12 @@ export class Mafia extends BaseRole {
     }
   }
 
+  async day(): Promise<void> {
+    setTimeout(async () => {
+      await this.sendMessage(this.replies.STARTED.NOT_MUCH[Math.floor(Math.random() * this.replies.STARTED.NOT_MUCH.length)]);
+    }, 500 + Math.floor(Math.random() * 1000));
+  }
+
   async handleChat(
     server: GameServer,
     msgContent: string,

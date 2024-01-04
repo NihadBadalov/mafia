@@ -24,6 +24,12 @@ export class Citizen extends BaseRole {
     this.realSheriffId = dataServer?.playerRoles.find(pr => getUserRoleInServer(pr.userId) === GameRoles.Sheriff)?.userId;
   }
 
+  async day(): Promise<void> {
+    setTimeout(async () => {
+      await this.sendMessage(this.replies.STARTED.NOT_MUCH[Math.floor(Math.random() * this.replies.STARTED.NOT_MUCH.length)]);
+    }, 500 + Math.floor(Math.random() * 1000));
+  }
+
   async handleChat(
     server: GameServer,
     msgContent: string,
