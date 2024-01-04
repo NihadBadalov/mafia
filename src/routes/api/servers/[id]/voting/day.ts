@@ -1,6 +1,5 @@
 import { gameAnnounce, getUserById } from "$lib";
 import type { GameServer, User } from "$types";
-import { GameRoles } from "$types/GameRoles";
 import { json } from "@sveltejs/kit";
 import type { Socket } from "socket.io-client";
 import type { DefaultEventsMap } from "socket.io/dist/typed-events";
