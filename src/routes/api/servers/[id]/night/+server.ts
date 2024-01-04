@@ -139,7 +139,7 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
       );
       await wait(1_500);
       await gameAnnounce(
-        '<br>THE <span class="color_red">SHERIFF</span> WAKES UP',
+        'THE <span class="color_red">SHERIFF</span> WAKES UP',
         'all',
         serverId,
       );
@@ -201,7 +201,7 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
       );
       await wait(1_500);
       await gameAnnounce(
-        '<span class="color_red">SHERIFF</span> GOES TO SLEEP,<br>THE <span class="color_red">DOCTOR</span> WAKES UP',
+        'THE <span class="color_red">DOCTOR</span> WAKES UP',
         'all',
         serverId,
       );
