@@ -175,7 +175,7 @@ export default abstract class BaseRole {
         ? "doctorAbility"
         : "vote";
 
-    await fetch(`${this.urlOrigin}/api/servers/${this.serverId}/${voteEndpoint}`, {
+    return fetch(`${this.urlOrigin}/api/servers/${this.serverId}/${voteEndpoint}`, {
       method: "POST",
       body: JSON.stringify({
         targetUserId: userId,
