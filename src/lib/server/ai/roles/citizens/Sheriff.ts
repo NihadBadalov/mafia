@@ -12,6 +12,7 @@ export class Sheriff extends BaseRole {
     [key: number]: typeof GameRoles[keyof typeof GameRoles] | undefined;
   } = {}
   playerIdRoleGuessedLastNight: number = -1;
+  impersonators: number[] = [];
 
   constructor(
     ast: string,
@@ -44,23 +45,42 @@ export class Sheriff extends BaseRole {
     server.specialStates.sheriffAbility = false;
   }
 
+  /**
+   * Voting
+   * @param server - server
+   */
   async day(server: GameServer): Promise<void> {
-    await wait(1000 + Math.floor(Math.random() * 3000));
+    setTimeout(async () => {
+      await this.sendMessage(this.replies.STARTED.NOT_MUCH[Math.floor(Math.random() * this.replies.STARTED.NOT_MUCH.length)]);
+    }, 500 + Math.floor(Math.random() * 1000));
 
+    await wait(1000 + Math.floor(Math.random() * 3_000));
+
+    // Someone guessed last night
     const player = getUserById(this.playerIdRoleGuessedLastNight);
 
     if (!player
       || server.players.indexOf(this.playerIdRoleGuessedLastNight) === -1
-      || this.playerIdRoleGuessedLastNight === -1) {
-      if (Math.floor(Math.random() * 10) > 4)
-        await this.sendMessage(this.replies.STARTED.NOT_MUCH[Math.floor(Math.random() * this.replies.STARTED.NOT_MUCH.length)]);;
+      || this.playerIdRoleGuessedLastNight === -1
+      || !isMafiaGameRole(this.roleGuesses[this.playerIdRoleGuessedLastNight])) {
+      if (this.impersonators.length) {
+        // We have an impersonator
+        const impersonator = getUserById(this.impersonators[0]);
+        await this.sendMessage(`Let's kick ${impersonator?.name} (ID @${impersonator?.id})! Remember he said he was the Sheriff? He lied, so, he is probably Mafia.`);
+
+        await wait(500);
+        await this.vote(this.impersonators[0]);
+        this.impersonators.shift();
+      }
+      else if (Math.floor(Math.random() * 10) > 2) {
+        // No impersonators, send a random message sometimes
+        await this.sendMessage(this.replies.STARTED.NOT_MUCH[Math.floor(Math.random() * this.replies.STARTED.NOT_MUCH.length)]);
+      }
       return;
     }
 
-    if (isMafiaGameRole(this.roleGuesses[this.playerIdRoleGuessedLastNight])) {
-      await this.sendMessage(`I'm the Sheriff. I checked ${player?.name} and his role is ${GameRoles[this.roleGuesses[this.playerIdRoleGuessedLastNight]!]}. Vote for him! (his ID is ${player?.id})`);
-      await this.vote(this.playerIdRoleGuessedLastNight);
-    }
+    await this.sendMessage(`I'm the Sheriff. I checked ${player?.name} and his role is ${GameRoles[this.roleGuesses[this.playerIdRoleGuessedLastNight]!]}. Vote for him! (his ID is ${player?.id})`);
+    await this.vote(this.playerIdRoleGuessedLastNight);
   }
 
   async handleChat(
@@ -76,6 +96,7 @@ export class Sheriff extends BaseRole {
     if (this.userId !== authorId && this.messageContainsKeywords(messageContent, ['i', ['im', 'am'], 'sheriff'])) {
       // Someone is impersonating us
       await this.sendMessage(`@${authorId} ${authorName} is not the Sheriff. I am the Sheriff. He is lying. Let's kick him.`);
+      this.impersonators.unshift(authorId);
     }
 
     // The bot has been mentioned

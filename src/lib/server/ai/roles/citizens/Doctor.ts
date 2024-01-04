@@ -1,4 +1,4 @@
-import { ChatVoteSystemMessage, SheriffProposalToKick, getGameServerById, getUserById, getUserRoleInServer, isMafiaGameRole } from "$lib";
+import { ChatVoteSystemMessage, SheriffCondemnationMessage, SheriffProposalToKick, getGameServerById, getUserById, getUserRoleInServer, isMafiaGameRole } from "$lib";
 import type { GameServer } from "$types";
 import { GameRoles } from "$types/GameRoles";
 import { GameStates } from "$types/GameStates";
@@ -10,6 +10,7 @@ export class Doctor extends BaseRole {
   isMafia = false;
   possibleSheriffPlayerIds: number[] = [];
   realSheriffId: number | undefined;
+  impersonators: number[] = [];
 
   constructor(
     ast: string,
@@ -22,6 +23,17 @@ export class Doctor extends BaseRole {
 
     const dataServer = getGameServerById(gameId);
     this.realSheriffId = dataServer?.playerRoles.find(pr => getUserRoleInServer(pr.userId) === GameRoles.Sheriff)?.userId;
+  }
+
+  override async gameStarted(): Promise<void> {
+    await wait(Math.floor(Math.random() * 4_000) + 1_000);
+    await this.sendMessage(this.replies.STARTING[Math.floor(Math.random() * this.replies.STARTING.length)]);
+
+    await wait(Math.floor(Math.random() * 2_000) + 6_500);
+    if (!this.possibleSheriffPlayerIds.length)
+      await this.sendMessage(this.replies.STARTED.ROLE[this.gameRole][Math.floor(Math.random() * this.replies.STARTED.ROLE[this.gameRole].length)]);
+    else
+      await this.sendMessage(this.replies.STARTED.ROLE[this.gameRole][Math.floor(Math.random() * this.replies.STARTED.ROLE[this.gameRole].length)]);
   }
 
   async night(server: GameServer): Promise<void> {
@@ -43,6 +55,28 @@ export class Doctor extends BaseRole {
     await this.vote(this.userId);
   }
 
+  /**
+   * Voting
+   * @param server - server
+   */
+  async day(): Promise<void> {
+    setTimeout(async () => {
+      await this.sendMessage(this.replies.STARTED.NOT_MUCH[Math.floor(Math.random() * this.replies.STARTED.NOT_MUCH.length)]);
+    }, 500 + Math.floor(Math.random() * 1000));
+
+    await wait(4_000 + Math.floor(Math.random() * 2_000));
+
+    if (!this.impersonators.length) return;
+
+    const impersonator = getUserById(this.impersonators.shift());
+    if (!impersonator) return;
+
+    const couldVote = await this.vote(impersonator.id);
+    if (!couldVote) return;
+
+    await this.sendMessage(`I voted for ${impersonator.name} (@${impersonator.id}) because he said he was the doctor. I am the real Doctor.`);
+  }
+
   async handleChat(
     server: GameServer,
     msgContent: string,
@@ -60,6 +94,13 @@ export class Doctor extends BaseRole {
 
       if (!author) return;
 
+      // Sheriff: condemnation message
+      const sheriffCondemnationMatches = messageContent.match(SheriffCondemnationMessage);
+      if (sheriffCondemnationMatches?.[1] && !Number.isNaN(sheriffCondemnationMatches?.[1])) {
+        this.possibleSheriffPlayerIds = [];
+        this.realSheriffId = authorId;
+      }
+
       // Sheriff: proposal to kick
       const sheriffProposalMatches = messageContent.match(SheriffProposalToKick);
       if (sheriffProposalMatches?.[1] && !Number.isNaN(sheriffProposalMatches?.[1])) {
@@ -75,8 +116,8 @@ export class Doctor extends BaseRole {
       // Sheriff: Sheriff saying he needs to get healed at night
       if (messageContent === 'sheriff. whoever is doctor, you should heal me at night') {
         const roleHealChance = isMafiaGameRole(getUserRoleInServer(authorId))
-        ? 0.1
-        : 0.95;
+          ? 0.1
+          : 0.95;
         const willHeal = Math.floor(Math.random() * 100) / 100 <= roleHealChance;
         if (willHeal) this.possibleSheriffPlayerIds.push(authorId);
       }
@@ -87,6 +128,7 @@ export class Doctor extends BaseRole {
       // Someone is impersonating us
       if (this.userId !== authorId && this.messageContainsKeywords(messageContent, ['i', ['im', 'am'], 'doctor']) && !messageContent.includes('heal me')) {
         await this.sendMessage(`@${authorId} ${authorName} is not the Doctor. I am the Doctor. He is lying. Let's kick him.`);
+        this.impersonators.unshift(authorId);
       }
 
       // Sheriff (100% sheriff through _data):
