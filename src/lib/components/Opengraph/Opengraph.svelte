@@ -1,6 +1,6 @@
 <script>
-  export let title = 'Mafia - the Classic Card Game';
-  export let description = 'Mafia, the classic card game, but online. Play as a Mafia, Doctor, or even a Sheriff! Your objective is to stay alive, win and outlive everyone. It\'s very easy to learn how to play, so come on and play!';
+  export let title = 'Mafia - the Classic Online Card Game';
+  export let description = 'Mafia, the classic online card game, but online. Play as a Mafia, Doctor, or even a Sheriff! Your objective is to stay alive, win and outlive everyone. It\'s very easy to learn how to play, so come on and play!';
 </script>
 <!-- HTML Meta Tags -->
 <meta name="description" content="{description}">

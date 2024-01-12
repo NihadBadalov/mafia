@@ -56,7 +56,7 @@
 </div>
 
 <svelte:head>
-  <title>Mafia - the Classic Card Game</title>
+  <title>Mafia - the Classic Online Card Game</title>
   <link rel="stylesheet" href="/css/styles.css" />
   <link rel="stylesheet" href="/css/serverList.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -67,4 +67,5 @@
   />
   <Opengraph />
   <link rel="canonical" href="https://www.themafia.xyz/" />
+  <meta name='robots' content="index, follow">
 </svelte:head>
