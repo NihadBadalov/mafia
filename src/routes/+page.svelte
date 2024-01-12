@@ -56,7 +56,7 @@
 </div>
 
 <svelte:head>
-  <title>Main - Mafia</title>
+  <title>Mafia - the Classic Card Game</title>
   <link rel="stylesheet" href="/css/styles.css" />
   <link rel="stylesheet" href="/css/serverList.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
