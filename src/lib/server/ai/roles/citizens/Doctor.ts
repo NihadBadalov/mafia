@@ -1,9 +1,9 @@
-import { ChatVoteSystemMessage, SheriffCondemnationMessage, SheriffProposalToKick, getGameServerById, getUserById, getUserRoleInServer, isMafiaGameRole } from "$lib";
+import { ChatVoteSystemMessage, SheriffCondemnationMessage, SheriffProposalToKick, SuspicionMessage, getGameServerById, getUserById, getUserRoleInServer, isMafiaGameRole } from "$lib";
 import type GameServer from "$lib/server/GameServer";
 import { GameRoles } from "$types/GameRoles";
 import { GameStates } from "$types/GameStates";
 import BaseRole from "../BaseRole";
-import { setTimeout as wait } from 'timers/promises';
+import { setTimeout as sleep } from 'timers/promises';
 
 export class Doctor extends BaseRole {
   gameRole: Exclude<GameRoles, GameRoles.Unknown> = GameRoles.Doctor;
@@ -26,10 +26,10 @@ export class Doctor extends BaseRole {
   }
 
   override async gameStarted(): Promise<void> {
-    await wait(Math.floor(Math.random() * 4_000) + 1_000);
+    await sleep(Math.floor(Math.random() * 4_000) + 1_000);
     await this.sendMessage(this.replies.STARTING[Math.floor(Math.random() * this.replies.STARTING.length)]);
 
-    await wait(Math.floor(Math.random() * 2_000) + 6_500);
+    await sleep(Math.floor(Math.random() * 2_000) + 6_500);
     if (!this.possibleSheriffPlayerIds.length)
       await this.sendMessage(this.replies.STARTED.ROLE[this.gameRole][Math.floor(Math.random() * this.replies.STARTED.ROLE[this.gameRole].length)]);
     else
@@ -64,7 +64,7 @@ export class Doctor extends BaseRole {
       await this.sendMessage(this.replies.STARTED.NOT_MUCH[Math.floor(Math.random() * this.replies.STARTED.NOT_MUCH.length)]);
     }, 500 + Math.floor(Math.random() * 1000));
 
-    await wait(4_000 + Math.floor(Math.random() * 2_000));
+    await sleep(4_000 + Math.floor(Math.random() * 2_000));
 
     if (!this.impersonators.length) return;
 
@@ -89,9 +89,7 @@ export class Doctor extends BaseRole {
 
 
     if (server.state === GameStates.Day) {
-      // Sheriff: proposal to kick mafia
       const author = getUserById(authorId);
-
       if (!author) return;
 
       // Sheriff: condemnation message
@@ -106,10 +104,10 @@ export class Doctor extends BaseRole {
       if (sheriffProposalMatches?.[1] && !Number.isNaN(sheriffProposalMatches?.[1])) {
         this.possibleSheriffPlayerIds.push(authorId);
 
-        await wait(1_000 + Math.floor(Math.random() * 5_000));
+        await sleep(1_000 + Math.floor(Math.random() * 5_000));
         await this.sendMessage(this.replies.STARTED.ROGER[Math.floor(Math.random() * this.replies.STARTED.ROGER.length)]);
 
-        await wait(1_000 + Math.floor(Math.random() * 1_500));
+        await sleep(1_000 + Math.floor(Math.random() * 1_500));
         await this.vote(+sheriffProposalMatches[1]);
       }
 
@@ -147,11 +145,21 @@ export class Doctor extends BaseRole {
           && isMafiaGameRole(dataServer?.playerRoles?.find(pr => pr.userId === +sheriffHiddenProposalMatches[2])?.role)
         ) {
           await this.vote(+sheriffHiddenProposalMatches[2]);
-          await wait(1_000 + Math.floor(Math.random() * 2_500));
+          await sleep(1_000 + Math.floor(Math.random() * 2_500));
 
           const targetUser = getUserById(+sheriffHiddenProposalMatches[2]);
           if (targetUser) await this.sendMessage(`I'm going to vote for ${targetUser.name} (${targetUser.id}), too!`);
         }
+      }
+
+      // Random player suspicions
+      const suspicionMatches = messageContent.match(SuspicionMessage);
+      if (
+        suspicionMatches?.[1]
+        && !Number.isNaN(suspicionMatches?.[1])
+        && await this.vote(+suspicionMatches[1])
+      ) {
+        await this.sendMessage(`Alright. Voting for ${suspicionMatches[1]}, too.`);
       }
     }
 

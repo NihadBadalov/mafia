@@ -5,7 +5,7 @@ import { GameRoles } from "$types/GameRoles";
 import { json } from "@sveltejs/kit";
 import type { Socket } from "socket.io-client";
 import type { DefaultEventsMap } from "socket.io/dist/typed-events";
-import { setTimeout as wait } from "timers/promises";
+import { setTimeout as sleep } from "timers/promises";
 
 export async function night(
   server: GameServer,
@@ -47,7 +47,7 @@ export async function night(
         'all',
         server.id,
       );
-      await wait(2_500);
+      await sleep(2_500);
       await gameAnnounce(
         `CHOOSE TO <span class="color_red">KILL</span> BETWEEN ${votingBetweenUsers[0].name} AND ${votingBetweenUsers[1].name}`,
         'mafia',
@@ -61,7 +61,7 @@ export async function night(
       'all',
       server.id,
     );
-    await wait(1_000);
+    await sleep(1_000);
     await gameAnnounce(
       'DISCUSS WHO TO <span class="color_red">KILL</span>',
       'mafia',
@@ -85,7 +85,7 @@ export async function night(
       message: 'updateServer',
       serverId: server.id,
     });
-    await wait(1000);
+    await sleep(1000);
   }
   server.totalTimerSeconds = undefined;
   server.timer = undefined;

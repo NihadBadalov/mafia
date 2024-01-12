@@ -1,9 +1,9 @@
-import { getGameServerById, getUserById, isMafiaGameRole } from "$lib";
+import { SuspicionMessage, getGameServerById, getUserById, isMafiaGameRole } from "$lib";
 import type GameServer from "$lib/server/GameServer";
 import { GameRoles } from "$types/GameRoles";
 import { GameStates } from "$types/GameStates";
 import BaseRole from "../BaseRole";
-import { setTimeout as wait } from 'timers/promises';
+import { setTimeout as sleep } from 'timers/promises';
 
 export class Sheriff extends BaseRole {
   gameRole: Exclude<GameRoles, GameRoles.Unknown> = GameRoles.Sheriff;
@@ -37,7 +37,7 @@ export class Sheriff extends BaseRole {
     const chosenPlayerId = playerIds[Math.floor(Math.random() * playerIds.length)];
     if (playerIds.length === 0 || chosenPlayerId === undefined) return;
 
-    await wait(1000 + Math.floor(Math.random() * 5000));
+    await sleep(1000 + Math.floor(Math.random() * 5000));
 
     this.roleGuesses[chosenPlayerId] = server.playerRoles.find(pr => pr.userId === chosenPlayerId)?.role;
     this.playerIdRoleGuessedLastNight = chosenPlayerId;
@@ -54,7 +54,7 @@ export class Sheriff extends BaseRole {
       await this.sendMessage(this.replies.STARTED.NOT_MUCH[Math.floor(Math.random() * this.replies.STARTED.NOT_MUCH.length)]);
     }, 500 + Math.floor(Math.random() * 1000));
 
-    await wait(1000 + Math.floor(Math.random() * 3_000));
+    await sleep(1000 + Math.floor(Math.random() * 3_000));
 
     // Someone guessed last night
     const player = getUserById(this.playerIdRoleGuessedLastNight);
@@ -68,7 +68,7 @@ export class Sheriff extends BaseRole {
         const impersonator = getUserById(this.impersonators[0]);
         await this.sendMessage(`Let's kick ${impersonator?.name} (ID @${impersonator?.id})! Remember he said he was the Sheriff? He lied, so, he is probably Mafia.`);
 
-        await wait(500);
+        await sleep(500);
         await this.vote(this.impersonators[0]);
         this.impersonators.shift();
       }
@@ -84,7 +84,7 @@ export class Sheriff extends BaseRole {
   }
 
   async handleChat(
-    _server: GameServer,
+    server: GameServer,
     msgContent: string,
     authorName: string,
     authorId: number
@@ -93,10 +93,22 @@ export class Sheriff extends BaseRole {
       .toLowerCase()
       .replaceAll('\'', '');
 
-    if (this.userId !== authorId && this.messageContainsKeywords(messageContent, ['i', ['im', 'am'], 'sheriff'])) {
-      // Someone is impersonating us
-      await this.sendMessage(`@${authorId} ${authorName} is not the Sheriff. I am the Sheriff. He is lying. Let's kick him.`);
-      this.impersonators.unshift(authorId);
+    if (server.state === GameStates.Day) {
+      if (this.userId !== authorId && this.messageContainsKeywords(messageContent, ['i', ['im', 'am'], 'sheriff'])) {
+        // Someone is impersonating us
+        await this.sendMessage(`@${authorId} ${authorName} is not the Sheriff. I am the Sheriff. He is lying. Let's kick him.`);
+        this.impersonators.unshift(authorId);
+      }
+
+      // Random player suspicions
+      const suspicionMatches = messageContent.match(SuspicionMessage);
+      if (
+        suspicionMatches?.[1]
+        && !Number.isNaN(suspicionMatches?.[1])
+        && await this.vote(+suspicionMatches[1])
+      ) {
+        await this.sendMessage(`Alright. Voting for ${suspicionMatches[1]}, too.`);
+      }
     }
 
     // The bot has been mentioned

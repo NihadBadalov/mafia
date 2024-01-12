@@ -3,7 +3,7 @@ import { _data } from '$api';
 import { gameAnnounce, getUserByAst, getUserById, getUserRoleInServer } from '$lib';
 import type GameServer from "$lib/server/GameServer";
 import { GameRoles } from '$types/GameRoles';
-import { setTimeout as wait } from 'timers/promises';
+import { setTimeout as sleep } from 'timers/promises';
 
 
 export const POST: RequestHandler = async ({ request, params }) => {
@@ -45,7 +45,7 @@ export const POST: RequestHandler = async ({ request, params }) => {
     serverId,
   );
 
-  await wait(3_000);
+  await sleep(3_000);
 
   server.specialStates.sheriffAbility = false;
 

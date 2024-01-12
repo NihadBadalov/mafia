@@ -10,8 +10,8 @@
   $: _maxMafiaAmount = Math.ceil(_playerAmount / 3);
   $: _mafiaAmount = (form?.amountOfMafia as any as number) ?? _minMafiaAmount;
 
-  $: if (_playerAmount < 6 || _playerAmount > 16) {
-    _playerAmount = _playerAmount < 6 ? _playerAmount : 16;
+  $: if (_playerAmount < 6 || _playerAmount > 26) {
+    _playerAmount = _playerAmount < 6 ? _playerAmount : 26;
   }
   $: if (_mafiaAmount < _minMafiaAmount || _mafiaAmount > _maxMafiaAmount) {
     _mafiaAmount =
@@ -51,16 +51,16 @@
         />
 
         <p style="width: 30%; text-align: left; margin-bottom: -1em;">
-          Amount of Players (6-16)
+          Amount of Players (6-26)
         </p>
         <input
           bind:value={_playerAmount}
           name="maxPlayerAmount"
           type="number"
           autocomplete="off"
-          placeholder="Amount of Players (6-16)"
+          placeholder="Amount of Players (6-26)"
           min="6"
-          max="16"
+          max="26"
           required
         />
 

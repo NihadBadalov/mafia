@@ -4,7 +4,7 @@ import type GameServer from "$lib/server/GameServer";
 import { json } from "@sveltejs/kit";
 import type { Socket } from "socket.io-client";
 import type { DefaultEventsMap } from "socket.io/dist/typed-events";
-import { setTimeout as wait } from "timers/promises";
+import { setTimeout as sleep } from "timers/promises";
 
 export async function day(
   server: GameServer,
@@ -42,7 +42,7 @@ export async function day(
         'all',
         server.id,
       );
-      await wait(2_500);
+      await sleep(2_500);
       await gameAnnounce(
         `CHOOSE TO VOTE-KICK BETWEEN ${votingBetweenUsers[0].name} AND ${votingBetweenUsers[1].name}`,
         'all',
@@ -56,7 +56,7 @@ export async function day(
       'all',
       server.id,
     );
-    await wait(1_000);
+    await sleep(1_000);
     await gameAnnounce(
       'DISCUSS WHO TO <span class="color_red">KICK</span><br>(vote for yourselves to skip)',
       'all',
@@ -81,7 +81,7 @@ export async function day(
       message: 'updateServer',
       serverId: server.id,
     });
-    await wait(1000);
+    await sleep(1000);
   }
   server.totalTimerSeconds = undefined;
   server.timer = undefined;

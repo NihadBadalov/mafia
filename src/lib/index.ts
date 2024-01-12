@@ -12,6 +12,7 @@ export const MafiaProposalToKill= new RegExp(/lets vote for id (\d+)\. thats the
 export const SheriffProposalToKick = new RegExp(/im the sheriff. i checked .+ and his role is mafia. vote for him! \(his id is (\d+)\)/);
 export const ChatVoteSystemMessage = new RegExp(/.+ \((\d+)\) voted for .+ \((\d+)\)/);
 export const SheriffCondemnationMessage = new RegExp(/@(\d+) .+ is not the sheriff. i am the sheriff. he is lying. lets kick him. in all lowercase without quotes/);
+export const SuspicionMessage = new RegExp(/i suspect .+ @(\d+). lets kick him out/);
 
 export function getGameServerById(id: number, data: ModifiedServerData = _data): GameServer | undefined {
   return data.servers.find(s => s?.id === id);

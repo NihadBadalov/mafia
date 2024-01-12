@@ -8,7 +8,6 @@ export class Don extends Mafia {
   // TODO: override
   // override async night(server: GameServer): Promise<void> {
   // }
-
   constructor(
     ast: string,
     userId: number,

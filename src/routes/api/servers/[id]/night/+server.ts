@@ -2,7 +2,7 @@ import { json, error, type RequestHandler } from '@sveltejs/kit';
 import { _data } from '$api';
 import type GameServer from "$lib/server/GameServer";
 import { GameStates } from '$types/GameStates';
-import { setTimeout as wait } from 'node:timers/promises';
+import { setTimeout as sleep } from 'node:timers/promises';
 import { io } from '$lib/webSocketConnection';
 import { gameAnnounce, getUserById, getUserRoleInServer, isMafiaGameRole } from '$lib';
 import { GameRoles } from '$types/GameRoles';
@@ -45,7 +45,7 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
     'all',
     serverId,
   );
-  await wait(2_500);
+  await sleep(2_500);
 
   await gameAnnounce(
     'THE <span class="color_red">MAFIA</span> WAKE UP',
@@ -65,7 +65,7 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
         message: 'updateServer',
         serverId: serverId,
       });
-      await wait(1000);
+      await sleep(1000);
     }
     server.totalTimerSeconds = undefined;
     server.timer = undefined;
@@ -126,7 +126,7 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
         ],
       serverId,
     );
-    await wait(6_000);
+    await sleep(6_000);
 
     // Sheriff
     if (server.players.some(pid => getUserRoleInServer(pid) === GameRoles.Sheriff)) {
@@ -137,13 +137,13 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
         'all',
         serverId,
       );
-      await wait(1_500);
+      await sleep(1_500);
       await gameAnnounce(
         'THE <span class="color_red">SHERIFF</span> WAKES UP',
         'all',
         serverId,
       );
-      await wait(1_500);
+      await sleep(1_500);
       await gameAnnounce(
         'CLICK ON SOMEONE<br>TO <span class="color_red">VIEW</span> THEIR <span class="color_red">ROLE</span>',
         [GameRoles.Sheriff],
@@ -164,7 +164,7 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
           message: 'updateServer',
           serverId: serverId,
         });
-        await wait(1000);
+        await sleep(1000);
       }
       server.totalTimerSeconds = undefined;
       server.timer = undefined;
@@ -186,7 +186,7 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
       // Because we can't put the wait in the sherifAbility,
       // since the waiting loop ends,
       // we will put it here
-      await wait(6_000);
+      await sleep(6_000);
     }
 
     // Doctor
@@ -199,13 +199,13 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
         'all',
         serverId,
       );
-      await wait(1_500);
+      await sleep(1_500);
       await gameAnnounce(
         'THE <span class="color_red">DOCTOR</span> WAKES UP',
         'all',
         serverId,
       );
-      await wait(1_500);
+      await sleep(1_500);
       await gameAnnounce(
         'CLICK ON SOMEONE TO<br><span class="color_red">SAVE</span> THEM FOR THE <span class="color_red">NIGHT</span>',
         [GameRoles.Doctor],
@@ -226,7 +226,7 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
           message: 'updateServer',
           serverId: serverId,
         });
-        await wait(1000);
+        await sleep(1000);
       }
       server.totalTimerSeconds = undefined;
       server.timer = undefined;
@@ -246,7 +246,7 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
         ],
         serverId,
       );
-      await wait(6_000);
+      await sleep(6_000);
     }
 
     // Announcing and near-end
@@ -303,7 +303,7 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
       'all',
       server?.id,
     );
-    await wait(3_000);
+    await sleep(3_000);
 
     await gameAnnounce(
       killText,
@@ -311,11 +311,11 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
       server?.id,
     );
 
-    await wait(4_000);
+    await sleep(4_000);
   }
 
 
-  await wait(3_000);
+  await sleep(3_000);
 
   const endVotePlayerRoles = server.players.map(pid => isMafiaGameRole(getUserRoleInServer(pid)));
   if (endVotePlayerRoles.filter(e => e).length === 0

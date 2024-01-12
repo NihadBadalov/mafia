@@ -4,7 +4,7 @@ import { _data } from "$routes/api";
 import type GameServer from "$lib/server/GameServer";
 import { GameStates } from "$types/GameStates";
 import { error, json, type RequestHandler } from "@sveltejs/kit";
-import { setTimeout as wait } from 'timers/promises';
+import { setTimeout as sleep } from 'timers/promises';
 
 export const POST: RequestHandler = async ({ request, params }) => {
   let { origin } = await request.json();
@@ -48,7 +48,7 @@ export const POST: RequestHandler = async ({ request, params }) => {
     );
   }
 
-  await wait(20_000);
+  await sleep(20_000);
 
   _data.servers = _data.servers.filter(s => s.id !== serverId);
 

@@ -2,7 +2,7 @@ import { json, error, type RequestHandler } from '@sveltejs/kit';
 import { _data } from '$api';
 import type GameServer from "$lib/server/GameServer";
 import { GameStates } from '$types/GameStates';
-import { setTimeout as wait } from 'node:timers/promises';
+import { setTimeout as sleep } from 'node:timers/promises';
 import { gameAnnounce, getUserById, getUserRoleInServer, isMafiaGameRole } from '$lib';
 import { io } from '$lib/webSocketConnection';
 
@@ -49,12 +49,12 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
         message: 'updateServer',
         serverId: serverId,
       });
-      await wait(1000);
+      await sleep(1000);
     }
     server.totalTimerSeconds = undefined;
     server.timer = undefined;
 
-    await wait(3_000);
+    await sleep(3_000);
   }
 
   else {
@@ -77,7 +77,7 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
       // Pending between 2 people
       server.votingBetween = (voting as any)?.kickedPerson;
 
-      await wait(3_000);
+      await sleep(3_000);
 
       voting = await fetch(`/api/servers/${server.id}/voting`, {
         method: 'POST',
@@ -122,14 +122,14 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
       'all',
       server?.id,
     );
-    await wait(2_000);
+    await sleep(2_000);
     await gameAnnounce(
       kickText,
       'all',
       server?.id,
     );
 
-    await wait(7_000);
+    await sleep(7_000);
   }
 
   const endVotePlayerRoles = server.players.map(pid => isMafiaGameRole(getUserRoleInServer(pid)));

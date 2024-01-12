@@ -3,7 +3,7 @@ import type GameServer from "$lib/server/GameServer";
 import { _data } from "$routes/api";
 import type { UserId } from "$types";
 import { GameRoles } from "$types/GameRoles";
-import { setTimeout as wait } from "timers/promises";
+import { setTimeout as sleep } from "timers/promises";
 
 const REPLIES = {
   STARTED: {
@@ -139,7 +139,6 @@ export default abstract class BaseRole {
   urlOrigin: URL['origin'];
 
   replies = REPLIES;
-  suspicionLevel: number = 0;
   isAlive: boolean = true;
 
   constructor(
@@ -249,10 +248,10 @@ export default abstract class BaseRole {
   }
 
   async gameStarted(): Promise<void> {
-    await wait(Math.floor(Math.random() * 4_000) + 1_000);
+    await sleep(Math.floor(Math.random() * 4_000) + 1_000);
     await this.sendMessage(REPLIES.STARTING[Math.floor(Math.random() * REPLIES.STARTING.length)]);
 
-    await wait(Math.floor(Math.random() * 4_000) + 2_500);
+    await sleep(Math.floor(Math.random() * 4_000) + 2_500);
     await this.sendMessage(REPLIES.STARTED.ROLE[this.gameRole][Math.floor(Math.random() * REPLIES.STARTED.ROLE[this.gameRole].length)]);
   }
 
@@ -269,11 +268,10 @@ export default abstract class BaseRole {
   }
 
   async suspect(userId: UserId) {
-    // TODO: this.
     const user = _data.users.find(u => u.id === userId);
     if (!user) return;
 
-    await wait(Math.floor(Math.random() * 5_000) + 1_000);
+    await sleep(Math.floor(Math.random() * 5_000) + 1_000);
     await this.sendMessage(`I suspect ${user.name} (@${user.id}). Let's kick him out`);
   }
 }

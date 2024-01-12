@@ -1,9 +1,9 @@
-import { MafiaProposalToKill, SheriffProposalToKick, arrayShuffle, getGameServerById, getUserById, getUserRoleInServer, isMafiaGameRole } from "$lib";
+import { MafiaProposalToKill, SheriffProposalToKick, SuspicionMessage, arrayShuffle, getGameServerById, getUserById, getUserRoleInServer, isMafiaGameRole } from "$lib";
 import type GameServer from "$lib/server/GameServer";
 import { GameRoles } from "$types/GameRoles";
 import { GameStates } from "$types/GameStates";
 import BaseRole from "../BaseRole";
-import { setTimeout as wait } from 'timers/promises';
+import { setTimeout as sleep } from 'timers/promises';
 
 export class Mafia extends BaseRole {
   gameRole: Exclude<GameRoles, GameRoles.Unknown> = GameRoles.Mafia;
@@ -32,7 +32,7 @@ export class Mafia extends BaseRole {
   }
 
   async night(server: GameServer): Promise<void> {
-    await wait(1_000 +
+    await sleep(1_000 +
       // If we have a possible sheriff or a doctor, skip long waiting
       (this.possibleSheriff + this.possibleDoctor !== -2 ? 0 : Math.floor(Math.random() * 5_000)
       ));
@@ -82,7 +82,6 @@ export class Mafia extends BaseRole {
   ): Promise<void> {
     const messageContent = msgContent
       .toLowerCase()
-      .replaceAll('\'', '');
 
 
     // Day/Night
@@ -97,12 +96,22 @@ export class Mafia extends BaseRole {
           this.currentlyVotingFor = +mafiaProposalMatches[1];
         }
       }
+
+      // Random player suspicions
+      const suspicionMatches = messageContent.match(SuspicionMessage);
+      if (
+        suspicionMatches?.[1]
+        && !Number.isNaN(suspicionMatches?.[1])
+        && await this.vote(+suspicionMatches[1])
+      ) {
+        await this.sendMessage(`Alright. Voting for ${suspicionMatches[1]}, too.`);
+      }
     }
     else {
       // Sheriff: proposal to kick somebody
       const sheriffProposalMatches = messageContent.match(SheriffProposalToKick);
       if (sheriffProposalMatches?.[1] && !Number.isNaN(sheriffProposalMatches?.[1])) {
-        await wait(3_000 + Math.floor(Math.random() * 6_000));
+        await sleep(3_000 + Math.floor(Math.random() * 6_000));
 
         const votes: { [key: number]: number } = {};
         for (let i = 0; i < server.votes.citizens.length; i++) {
