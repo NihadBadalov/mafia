@@ -1,4 +1,8 @@
 import * as Sentry from "@sentry/sveltekit";
+import { dev } from "$app/environment";
+import { npm_package_version } from "$env/static/private";
+
+const version = `${npm_package_version}-${dev ? 'dev' : 'prod'}`;
 
 // If you don't want to use Session Replay, remove the `Replay` integration, 
 // `replaysSessionSampleRate` and `replaysOnErrorSampleRate` options.
@@ -8,7 +12,7 @@ Sentry.init({
   replaysSessionSampleRate: 0.1,
   replaysOnErrorSampleRate: 1,
   integrations: [new Sentry.Replay()],
-  release: `mafia@${process.env.npm_package_version}`,
+  release: `mafia@${version}`,
 })
 
 export const handleError = Sentry.handleErrorWithSentry();
