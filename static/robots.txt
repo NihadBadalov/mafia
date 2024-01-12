@@ -1,11 +1,7 @@
 User-agent: *
 Allow: /
-Disallow: /api/
 Disallow: /audios/
-Disallow: /css/
-Disallow: /images/
 Disallow: /scss/
-Disallow: /favicon.png
 Disallow: /account
 Allow: /robots.txt
 Allow: /sitemap.xml
