@@ -1,6 +1,6 @@
 import { redirect, error } from '@sveltejs/kit';
 import { handleUserSession } from '$lib/server';
-import type { GameServer } from '$types';
+import type GameServer from "$lib/server/GameServer";
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = (async ({ fetch, params, cookies }) => {

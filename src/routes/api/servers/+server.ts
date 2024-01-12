@@ -4,6 +4,7 @@ import { getGameServerWithUserById, getUserByAst, getUserRoleInServer, isMafiaGa
 import type { ServerData, User } from '$types';
 import { GameStates } from '$types/GameStates';
 import { GameRoles } from '$types/GameRoles';
+import GameServer from '$lib/server/GameServer';
 
 export const GET: RequestHandler = async ({ cookies, setHeaders, url }) => {
   let user = getUserByAst(cookies.get('ast'));
@@ -112,53 +113,16 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
   }
 
   const newServerId = getNewServerId();
-  _data.servers.unshift({
-    id: newServerId,
-    name: serverName,
-    maxPlayerCount: maxPlayerAmount,
-    mafiaCount: amountOfMafia,
-    playingSong: undefined,
-
-    fillWithBots: fillWithBots,
-    bots: [],
-
-    players: [],
-    initialPlayers: [],
-    playerRoles: [],
-    playerBlacklist: [],
-
-    ownerId: (getUserByAst(cookies.get('ast') as unknown as string) as unknown as User)?.id,
-    started: false,
-    state: GameStates.Waiting,
-    specialStates: {
-      sheriffAbility: false,
-      doctorAbility: false,
-    },
-
-    announcements: {
-      [GameRoles.Mafia]: '',
-      [GameRoles.Don]: '',
-      [GameRoles.Citizen]: '',
-      [GameRoles.Doctor]: '',
-      [GameRoles.Sheriff]: '',
-    },
-    citizenChat: [],
-    mafiaChat: [],
-    playersCanChat: true,
-
-    votingBetween: [],
-    whoCanVoteKick: [],
-    votes: {
-      don: undefined,
-      doctor: undefined,
-      mafia: [],
-      citizens: [],
-    },
-    sheriffHasChecked: [],
-
-    totalTimerSeconds: undefined,
-    timer: undefined,
-  });
+  _data.servers.unshift(
+    new GameServer(
+      newServerId,
+      serverName,
+      maxPlayerAmount,
+      amountOfMafia,
+      fillWithBots,
+      (getUserByAst(cookies.get('ast') as unknown as string) as unknown as User)?.id,
+    )
+  );
   _data.servers = _data.servers;
 
   // Don't update the servers as it causes invalidateAll() for..

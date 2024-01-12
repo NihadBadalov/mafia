@@ -8,7 +8,7 @@
     "preview": "vite preview",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-    "dev-local": "npm run dev -- --host --port 3000",
+    "dev-local": "bun run dev -- --host --port 3000",
     "server": "bun server.js"
   },
   "devDependencies": {

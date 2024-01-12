@@ -1,5 +1,5 @@
 import { MafiaProposalToKill, SheriffProposalToKick, arrayShuffle, getGameServerById, getUserById, getUserRoleInServer, isMafiaGameRole } from "$lib";
-import type { GameServer } from "$types";
+import type GameServer from "$lib/server/GameServer";
 import { GameRoles } from "$types/GameRoles";
 import { GameStates } from "$types/GameStates";
 import BaseRole from "../BaseRole";

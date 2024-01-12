@@ -1,6 +1,6 @@
 import { json, error, type RequestHandler } from '@sveltejs/kit';
 import { _data, _generateUserToken } from '$api';
-import type { GameServer } from '$types';
+import type GameServer from "$lib/server/GameServer";
 import { createBotUsername, updateServer, updateServers } from '$lib';
 import { setTimeout as wait } from 'timers/promises';
 import { Citizen } from '$lib/server/ai/roles/citizens/Citizen';

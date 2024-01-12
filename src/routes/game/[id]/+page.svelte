@@ -7,9 +7,10 @@
   import { auth } from "$lib/firebase/firebase.client";
   import { authStore } from "$stores/auth";
   import { PlayerCard, Chat, Opengraph } from "$lib/components";
-  import type { GameServer, ModifiedServerData, User } from "$types";
+  import type { ModifiedServerData, User } from "$types";
   import { GameStates } from "$types/GameStates";
   import { Header } from "$lib/components";
+  import type GameServer from "$lib/server/GameServer";
 
   export let data: ModifiedServerData;
   $: currentServer = data.servers.find(
@@ -210,7 +211,7 @@
       }
     });
 
-    const unsubscribe = auth.onAuthStateChanged(async (user) => {
+    auth.onAuthStateChanged(async (user) => {
       authStore.update((curr) => {
         return { ...curr, isLoading: false, currentUser: user };
       });

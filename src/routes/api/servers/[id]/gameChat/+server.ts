@@ -1,7 +1,7 @@
 import { json, error, type RequestHandler } from '@sveltejs/kit';
 import { _data } from '$api';
 import { getIncludedRolesForGameAnnouncement, getUserByAst, getUserRoleInServer, hasCurseWords } from '$lib';
-import type { GameServer } from '$types';
+import type GameServer from "$lib/server/GameServer";
 import { GameRoles } from '$types/GameRoles';
 import { GameStates } from '$types/GameStates';
 import { io } from '$lib/webSocketConnection';
@@ -64,10 +64,12 @@ export const POST: RequestHandler = async ({ request, params }) => {
     server.citizenChat.push({
       userId: userId,
       content: message,
+      timestamp: Date.now(),
     });
     server.mafiaChat.push({
       userId: userId,
       content: message,
+      timestamp: Date.now(),
     });
 
     io.emit('serverEvent', {
@@ -95,10 +97,12 @@ export const POST: RequestHandler = async ({ request, params }) => {
     server.citizenChat.push({
       userId: userId,
       content: message,
+      timestamp: Date.now(),
     });
     server.mafiaChat.push({
       userId: userId,
       content: message,
+      timestamp: Date.now(),
     });
     io.emit('serverEvent', {
       message: 'chatMessageFromServerToServer',
@@ -118,6 +122,7 @@ export const POST: RequestHandler = async ({ request, params }) => {
     server.mafiaChat.push({
       userId: userId,
       content: message,
+      timestamp: Date.now(),
     });
     io.emit('serverEvent', {
       message: 'chatMessageFromServerToServer',

@@ -1,7 +1,7 @@
 import { json, error, type RequestHandler } from '@sveltejs/kit';
 import { _data } from '$api';
 import { arrayShuffle, getUserByAst, randomEnumValue } from '$lib';
-import type { GameServer } from '$types';
+import type GameServer from "$lib/server/GameServer";
 import { GameRoles } from '$types/GameRoles';
 import { io } from '$lib/webSocketConnection';
 import { Mafia } from '$lib/server/ai/roles/mafia/Mafia';

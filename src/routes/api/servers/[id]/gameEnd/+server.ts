@@ -1,7 +1,7 @@
 import { gameAnnounce, getUserRoleInServer, isMafiaGameRole } from "$lib";
 import { io } from "$lib/webSocketConnection";
 import { _data } from "$routes/api";
-import type { GameServer } from "$types";
+import type GameServer from "$lib/server/GameServer";
 import { GameStates } from "$types/GameStates";
 import { error, json, type RequestHandler } from "@sveltejs/kit";
 import { setTimeout as wait } from 'timers/promises';

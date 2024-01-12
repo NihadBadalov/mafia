@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { GameServer } from "$types";
+  import type GameServer from "$lib/server/GameServer";
 
   export let data: { servers: GameServer[] };
   export let title: string = "";

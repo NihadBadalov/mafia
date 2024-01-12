@@ -1,6 +1,7 @@
 import { BotMentionRegex } from "$lib";
+import type GameServer from "$lib/server/GameServer";
 import { _data } from "$routes/api";
-import type { GameServer, UserId } from "$types";
+import type { UserId } from "$types";
 import { GameRoles } from "$types/GameRoles";
 import { setTimeout as wait } from "timers/promises";
 
@@ -265,6 +266,15 @@ export default abstract class BaseRole {
     }
 
     return true;
+  }
+
+  async suspect(userId: UserId) {
+    // TODO: this.
+    const user = _data.users.find(u => u.id === userId);
+    if (!user) return;
+
+    await wait(Math.floor(Math.random() * 5_000) + 1_000);
+    await this.sendMessage(`I suspect ${user.name} (@${user.id}). Let's kick him out`);
   }
 }
 

@@ -1,7 +1,7 @@
 import { json, error, type RequestHandler } from '@sveltejs/kit';
 import { _data } from '$api';
 import { getGameServerWithUserById, getUserByAst, getUserById, getUserRoleInServer, isMafiaGameRole } from '$lib';
-import type { GameServer } from '$types';
+import type GameServer from "$lib/server/GameServer";
 import { GameStates } from '$types/GameStates';
 import { GameRoles } from '$types/GameRoles';
 
@@ -55,11 +55,13 @@ export const POST: RequestHandler = async ({ request, params }) => {
 
     server.citizenChat.push({
       userId: -1,
-      content: `${user.name} (${user.id}) voted for ${targetUser.name} (${targetUser.id})`
+      content: `${user.name} (${user.id}) voted for ${targetUser.name} (${targetUser.id})`,
+      timestamp: Date.now(),
     });
     server.mafiaChat.push({
       userId: -1,
-      content: `${user.name} (${user.id}) voted for ${targetUser.name} (${targetUser.id})`
+      content: `${user.name} (${user.id}) voted for ${targetUser.name} (${targetUser.id})`,
+      timestamp: Date.now(),
     });
 
     server.whoCanVoteKick = server.whoCanVoteKick.filter(e => e !== user?.id);
@@ -81,7 +83,8 @@ export const POST: RequestHandler = async ({ request, params }) => {
 
     server.mafiaChat.push({
       userId: -1,
-      content: `<i>${user.name} (${user.id}) voted for ${targetUser.name} (${targetUser.id})</i>`
+      content: `<i>${user.name} (${user.id}) voted for ${targetUser.name} (${targetUser.id})</i>`,
+      timestamp: Date.now(),
     });
 
     server.whoCanVoteKick = server.whoCanVoteKick.filter(e => e !== user?.id);

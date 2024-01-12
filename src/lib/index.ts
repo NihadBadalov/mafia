@@ -1,10 +1,11 @@
 // place files you want to import through the `$lib` alias in this folder.
 import { _data, _generateUserToken } from '$api';
-import type { GameServer, ModifiedServerData, User, UserId } from '$types';
+import type { ModifiedServerData, User, UserId } from '$types';
 import { GameRoles } from '$types/GameRoles';
 import { io } from '$lib/webSocketConnection';
 // @ts-ignore
 import washyourmouthwithsoap from 'washyourmouthoutwithsoap';
+import type GameServer from './server/GameServer';
 
 export const BotMentionRegex = new RegExp(/^(@?\d+(,\s|,|\s))+/);
 export const MafiaProposalToKill= new RegExp(/lets vote for id (\d+)\. thats the guy with username \w*/);

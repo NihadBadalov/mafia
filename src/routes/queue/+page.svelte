@@ -4,7 +4,8 @@
   import { auth } from "$lib/firebase/firebase.client";
   import { authStore } from "$stores/auth";
   import { LoadingSpinner, Opengraph } from "$lib/components";
-  import type { GameServer, ModifiedServerData } from "$types";
+  import type { ModifiedServerData } from "$types";
+  import type GameServer from "$lib/server/GameServer";
   import { fade } from "svelte/transition";
   import { arrayShuffle, gameTips, queueLoadingStates } from "$lib";
 

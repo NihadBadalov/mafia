@@ -1,5 +1,6 @@
 import { gameAnnounce, getUserById, getUserRoleInServer, isMafiaGameRole } from "$lib";
-import type { GameServer, User } from "$types";
+import type { User } from "$types";
+import type GameServer from "$lib/server/GameServer";
 import { GameRoles } from "$types/GameRoles";
 import { json } from "@sveltejs/kit";
 import type { Socket } from "socket.io-client";

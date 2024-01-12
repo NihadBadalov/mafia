@@ -1,6 +1,6 @@
 import { error, type RequestHandler } from '@sveltejs/kit';
 import { _data } from '$api';
-import type { GameServer } from '$types';
+import type GameServer from "$lib/server/GameServer";
 import { GameStates } from '$types/GameStates';
 import { io } from '$lib/webSocketConnection';
 import { day } from './day';

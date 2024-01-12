@@ -1,6 +1,6 @@
 import { json, error, type RequestHandler } from '@sveltejs/kit';
 import { _data } from '$api';
-import type { GameServer } from '$types';
+import type GameServer from "$lib/server/GameServer";
 import { GameStates } from '$types/GameStates';
 import { setTimeout as wait } from 'node:timers/promises';
 import { io } from '$lib/webSocketConnection';
