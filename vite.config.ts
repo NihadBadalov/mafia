@@ -1,3 +1,5 @@
+import { sentryVitePlugin } from "@sentry/vite-plugin";
+import { sentrySvelteKit } from "@sentry/sveltekit";
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vite';
 import { webSocketServer } from './webSocketPluginVite';
@@ -11,10 +13,19 @@ export default defineConfig({
     // port: 443,
     // https: false,
   },
-  plugins: [
-    sveltekit(),
-    //mkcert(),
-    webSocketServer,
-  ],
-});
 
+  plugins: [sentrySvelteKit({
+    sourceMapsUploadOptions: {
+      org: "nihadbadalov",
+      project: "javascript-sveltekit"
+    }
+  }), //mkcert(),
+  sveltekit(), webSocketServer, sentryVitePlugin({
+    org: "nihadbadalov",
+    project: "mafia"
+  })],
+
+  build: {
+    sourcemap: true
+  }
+});

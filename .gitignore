@@ -13,3 +13,12 @@ ngrok.exe
 .vercel
 bun.lockb
 
+
+# Sentry Config File
+.sentryclirc
+
+# Sentry Config File
+.sentryclirc
+
+# Sentry Config File
+.env.sentry-build-plugin
