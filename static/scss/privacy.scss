@@ -1,0 +1,50 @@
+@import "main";
+
+.wrapper {
+  display: flex;
+  flex-flow: column nowrap;
+  width: 100%;
+
+  &>* {
+    width: 100%;
+  }
+
+  .main {
+    color: #fff;
+    padding: 2rem 4rem;
+    // text breaking, wrapping, white space
+    word-break: break-word;
+    word-wrap: break-word;
+    
+    .main_inner {
+      padding: 3rem;
+      background-color: rgba(0, 0, 0, 0.3);
+      border-radius: 1rem;
+    }
+    h2 {
+      margin-top: 3.5rem;
+    }
+    p {
+      margin: 0.5rem 0;
+      margin-left: 3.5rem;
+    }
+    ul {
+      margin-left: 5rem;
+    }
+  }
+
+  footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    gap: 2em;
+    font-weight: 600;
+    justify-self: flex-end;
+    padding: 0.5em 0;
+
+    a {
+      color: #fff;
+    }
+  }
+}
