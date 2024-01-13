@@ -78,6 +78,9 @@ button.btn:hover, button.btn:active, button.btn:focus {
   &.no_underline {
     text-decoration: none;
   }
+  &.no_cursor {
+    cursor: default;
+  }
 }
 
 .bold {
