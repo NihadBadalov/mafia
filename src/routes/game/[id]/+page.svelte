@@ -124,15 +124,21 @@
     });
 
     io.on("playSound", (soundName) => {
-      playSound(soundName);
+      try {
+        playSound(soundName);
+      } catch (e) {}
     });
 
     io.on("playSong", (songName) => {
-      playSong(songName);
+      try {
+        playSong(songName);
+      } catch (e) {}
     });
 
     io.on("playEffect", (songName) => {
-      playEffect(songName);
+      try {
+        playEffect(songName);
+      } catch (e) {}
     });
 
     io.on("chatMessageToClient", ({ iT1, iT2, iT3, userId }) => {
@@ -175,7 +181,9 @@
       if (userId === data?.currentUserId) p.classList.add("ownMessage");
 
       chat.append(p);
-      playSound("beep");
+      try {
+        playSound("beep");
+      } catch (e) {}
     });
 
     io.on("serverEvent", async (message) => {
