@@ -1,7 +1,7 @@
 import * as Sentry from "@sentry/sveltekit";
 import { dev } from "$app/environment";
-import { npm_package_version } from "$env/static/private";
 
+const npm_package_version = '0.4.4';
 const version = `${npm_package_version}-${dev ? 'dev' : 'prod'}`;
 
 // If you don't want to use Session Replay, remove the `Replay` integration, 

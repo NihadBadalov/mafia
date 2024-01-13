@@ -29,7 +29,17 @@ if (argv.find(arg => arg.includes('major'))) {
   newVersionParts[newVersionParts.length - 1] += action;
 }
 
-packageJson['version'] = newVersionParts.join('.');
+const newVersion = newVersionParts.join('.');
 
+// package.json
+packageJson['version'] = newVersion;
 fs.writeFileSync('../../package.json', JSON.stringify(packageJson, null, 2));
+console.log('- Version updated in package.json');
+
+// hooks.client.ts
+const hooksContent = fs.readFileSync('../hooks.client.ts').toString();
+fs.writeFileSync('../hooks.client.ts', hooksContent.replace(/const npm_package_version \= \'.+/, `const npm_package_version = '${newVersion}';`));
+console.log('- Version updated in hooks.client.ts');
+
+console.log(`\nVersion set to ${newVersion}`);
 
