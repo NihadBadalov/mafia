@@ -1,8 +1,9 @@
 import * as Sentry from "@sentry/sveltekit";
-import { dev } from "$app/environment";
+import { dev, building } from "$app/environment";
 
-const npm_package_version = '0.4.5';
-const version = `${npm_package_version}-${dev ? 'dev' : 'prod'}`;
+const npm_package_version = '0.4.6';
+const version = `${npm_package_version}-${building ? 'build' : dev ? 'dev' : 'prod'}`;
+
 
 // If you don't want to use Session Replay, remove the `Replay` integration, 
 // `replaysSessionSampleRate` and `replaysOnErrorSampleRate` options.
