@@ -1,28 +1,47 @@
 /* eslint-env node */
 module.exports = {
-  extends: [
-    'eslint:recommended',
-    // 'plugin:@typescript-eslint/recommended',
-    'plugin:@typescript-eslint/recommended-type-checked',
-    'plugin:@typescript-eslint/stylistic-type-checked',
-  ],
   parser: '@typescript-eslint/parser',
-  parserOptions: {
-    'ecmaVersion': 'latest',
-    'sourceType': 'module',
-    'project': ['./tsconfig.json'],
-  },
   plugins: ['@typescript-eslint'],
-  overrides: [{
-    files: ['*.ts'],
+  overrides: [
+    // Typescript
+    {
+      files: ['*.ts'],
 
-    parserOptions: {
-      project: ['./tsconfig.json'],
+      extends: [
+        'eslint:recommended',
+        // 'plugin:@typescript-eslint/recommended-type-checked',
+        'plugin:@typescript-eslint/recommended-type-checked',
+        'plugin:@typescript-eslint/stylistic-type-checked',
+      ],
+
+      parserOptions: {
+        project: ['./tsconfig.json'],
+      },
+      rules: {
+        '@typescript-eslint/no-misused-promises': 'off',
+        '@typescript-eslint/no-unsafe-assignment': 'off',
+        '@typescript-eslint/no-unsafe-member-access': 'off',
+        '@typescript-eslint/no-unsafe-argument': 'off',
+        '@typescript-eslint/no-unsafe-return': 'off',
+        '@typescript-eslint/no-unsafe-call': 'off',
+        '@typescript-eslint/no-explicit-any': 'off',
+        '@typescript-eslint/no-unnecessary-type-assertion': 'off',
+        '@typescript-eslint/prefer-for-of': 'off',
+        '@typescript-eslint/no-floating-promises': 'off',
+        '@typescript-eslint/require-await': 'off',
+        'no-empty': 'off',
+      },
     },
-  }],
+    {
+      files: ['*.svelte'],
+
+      extends: [
+        // 'eslint:recommended',
+        'plugin:svelte/recommended',
+      ],
+    },
+  ],
   root: true,
-  rules: {
-  },
 };
 
 /* module.exports = {
