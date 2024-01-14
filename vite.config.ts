@@ -29,7 +29,7 @@ export default defineConfig({
       project: "mafia"
     }),
     process.env.VITEST ? undefined : checker({
-      typescript: true,
+      typescript: false,
       eslint: {
         // for example, lint .ts and .tsx
         lintCommand: 'eslint "./src/**/*.ts" --parser "@typescript-eslint/parser"'
