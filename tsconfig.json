@@ -15,9 +15,14 @@
 		"resolveJsonModule": true,
 		"sourceMap": true,
 
-    "plugins": [{
-      "name": "typescript-svelte-plugin"
-    }],
+    "plugins": [
+      {
+        "name": "typescript-svelte-plugin"
+      },
+      {
+        "name": "typescript-eslint"
+      }
+    ],
 
     // Best practices
 		"strict": true,
