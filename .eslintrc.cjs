@@ -29,7 +29,11 @@ module.exports = {
         '@typescript-eslint/prefer-for-of': 'off',
         '@typescript-eslint/no-floating-promises': 'off',
         '@typescript-eslint/require-await': 'off',
+        '@typescript-eslint/require-await': 'off',
+        'no-unsafe-optional-chaining': 'off',
         'no-empty': 'off',
+        // Because of svelte's reactivity
+        'no-self-assign': 'off',
       },
     },
     {
