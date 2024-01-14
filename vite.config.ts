@@ -3,6 +3,7 @@ import { sentrySvelteKit } from "@sentry/sveltekit";
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vite';
 import { webSocketServer } from './webSocketPluginVite';
+import checker from 'vite-plugin-checker';
 
 export default defineConfig({
   server: {
@@ -14,16 +15,27 @@ export default defineConfig({
     // https: false,
   },
 
-  plugins: [sentrySvelteKit({
-    sourceMapsUploadOptions: {
+  plugins: [
+    sentrySvelteKit({
+      sourceMapsUploadOptions: {
+        org: "nihadbadalov",
+        project: "javascript-sveltekit"
+      }
+    }),
+    sveltekit(),
+    webSocketServer,
+    sentryVitePlugin({
       org: "nihadbadalov",
-      project: "javascript-sveltekit"
-    }
-  }), //mkcert(),
-  sveltekit(), webSocketServer, sentryVitePlugin({
-    org: "nihadbadalov",
-    project: "mafia"
-  })],
+      project: "mafia"
+    }),
+    process.env.VITEST ? undefined : checker({
+      typescript: true,
+      eslint: {
+        // for example, lint .ts and .tsx
+        lintCommand: 'eslint "./src/**/*.{ts,tsx}" --ignore-pattern "/src/solid/*"'
+      }
+    })
+  ],
 
   build: {
     sourcemap: true
