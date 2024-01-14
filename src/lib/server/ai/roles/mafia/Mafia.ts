@@ -9,9 +9,9 @@ export class Mafia extends BaseRole {
   gameRole: Exclude<GameRoles, GameRoles.Unknown> = GameRoles.Mafia;
   isMafia = true;
   mafiaIds: number[] = [];
-  currentlyVotingFor: number = -1;
-  possibleSheriff: number = -1;
-  possibleDoctor: number = -1
+  currentlyVotingFor = -1;
+  possibleSheriff = -1;
+  possibleDoctor = -1
 
   constructor(
     ast: string,
@@ -68,6 +68,7 @@ export class Mafia extends BaseRole {
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/require-await
   async day(): Promise<void> {
     setTimeout(async () => {
       await this.sendMessage(this.replies.STARTED.NOT_MUCH[Math.floor(Math.random() * this.replies.STARTED.NOT_MUCH.length)]);
@@ -113,14 +114,14 @@ export class Mafia extends BaseRole {
       if (sheriffProposalMatches?.[1] && !Number.isNaN(sheriffProposalMatches?.[1])) {
         await sleep(3_000 + Math.floor(Math.random() * 6_000));
 
-        const votes: { [key: number]: number } = {};
+        const votes: Record<number, number> = {};
         for (let i = 0; i < server.votes.citizens.length; i++) {
           const vote = server.votes.citizens[i];
           if (isMafiaGameRole(getUserRoleInServer(vote.for))) continue;
           votes[vote.for] = votes[vote.for] ? votes[vote.for] + 1 : 1;
         }
 
-        let mostVoted = [0, 0];
+        const mostVoted = [0, 0];
         for (const [id, votesAmount] of Object.entries(votes)) {
           if (votesAmount > mostVoted[1]) {
             mostVoted[0] = +id;
@@ -162,7 +163,7 @@ export class Mafia extends BaseRole {
         /* Server has started yet */
         // What is the current action?
         if (this.messageContainsKeywords(messageContent, ['what', 'current', 'action'])) {
-          let currentActionText = 'Current action: ' + (() => {
+          const currentActionText = 'Current action: ' + (() => {
             if (server.state === GameStates.Day) {
               return server.votingBetween.length > 0 ? 'voting' : 'discussing who to kick';
             }
@@ -183,7 +184,7 @@ export class Mafia extends BaseRole {
 
         // Who are we voting for/between?
         if (this.messageContainsKeywords(messageContent, ['who', 'voting', ['for', 'between']])) {
-          await this.sendMessage(`Voting for ${server.votingBetween.map(uid => getUserById(uid)?.name || 'Unnamed user').join(', ') || 'no one'}`);
+          await this.sendMessage(`Voting for ${server.votingBetween.map(uid => getUserById(uid)?.name ?? 'Unnamed user').join(', ') || 'no one'}`);
         }
 
         // Who is/are mafia(-s)?

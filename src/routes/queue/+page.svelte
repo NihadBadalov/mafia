@@ -20,7 +20,7 @@
   }
 
   onMount(() => {
-    const _unsubscribe = auth.onAuthStateChanged(async (user) => {
+    auth.onAuthStateChanged(async (user) => {
       authStore.update((curr) => {
         return { ...curr, isLoading: false, currentUser: user };
       });
@@ -117,7 +117,6 @@
       </div>
 
       <div class="bottom">
-        <!-- TODO: game tips -->
         <p
           style="margin-top: 10rem;"
           id="gameTip"

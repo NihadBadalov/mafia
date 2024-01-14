@@ -24,6 +24,7 @@ export class Citizen extends BaseRole {
     this.realSheriffId = dataServer?.playerRoles.find(pr => getUserRoleInServer(pr.userId) === GameRoles.Sheriff)?.userId;
   }
 
+  // eslint-disable-next-line @typescript-eslint/require-await
   async day(): Promise<void> {
     setTimeout(async () => {
       await this.sendMessage(this.replies.STARTED.NOT_MUCH[Math.floor(Math.random() * this.replies.STARTED.NOT_MUCH.length)]);
@@ -102,7 +103,7 @@ export class Citizen extends BaseRole {
         /* Server has started yet */
         // What is the current action?
         if (this.messageContainsKeywords(messageContent, ['what', 'current', 'action'])) {
-          let currentActionText = 'Current action: ' + (() => {
+          const currentActionText = 'Current action: ' + (() => {
             if (server.state === GameStates.Day) {
               return server.votingBetween.length > 0 ? 'voting' : 'discussing who to kick';
             }
@@ -123,7 +124,7 @@ export class Citizen extends BaseRole {
 
         // Who are we voting for/between?
         if (this.messageContainsKeywords(messageContent, ['who', 'voting', ['for', 'between']])) {
-          await this.sendMessage(`Voting for ${server.votingBetween.map(uid => getUserById(uid)?.name || 'Unnamed user').join(', ') || 'no one'}`);
+          await this.sendMessage(`Voting for ${server.votingBetween.map(uid => getUserById(uid)?.name ?? 'Unnamed user').join(', ') || 'no one'}`);
         }
 
         // Who is/are mafia(-s)?

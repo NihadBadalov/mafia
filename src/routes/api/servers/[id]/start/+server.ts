@@ -1,7 +1,6 @@
 import { json, error, type RequestHandler } from '@sveltejs/kit';
 import { _data } from '$api';
 import { arrayShuffle, getUserByAst, randomEnumValue } from '$lib';
-import type GameServer from "$lib/server/GameServer";
 import { GameRoles } from '$types/GameRoles';
 import { io } from '$lib/webSocketConnection';
 import { Mafia } from '$lib/server/ai/roles/mafia/Mafia';
@@ -9,8 +8,8 @@ import { Doctor } from '$lib/server/ai/roles/citizens/Doctor';
 import { Sheriff } from '$lib/server/ai/roles/citizens/Sheriff';
 
 export const POST: RequestHandler = async ({ request, params, fetch }) => {
-  let { userId, ast } = await request.json();
-  let user = getUserByAst(ast);
+  const { userId, ast } = await request.json();
+  const user = getUserByAst(ast);
 
   if (user?.id != userId)
     throw error(403, 'Not Authorized');
@@ -18,8 +17,8 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
   if (!params?.id || isNaN(params?.id as any))
     throw error(404, 'Couldn\'t find the server');
 
-  let serverId = +params?.id;
-  let server = _data.servers.find(s => s.id === serverId) as GameServer;
+  const serverId = +params?.id;
+  const server = _data.servers.find(s => s.id === serverId)!;
   if (!server) throw error(404, 'Couldn\'t find the server');
 
   // Check if appropriate player amount to start the server
@@ -32,7 +31,7 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
 
 
   // Player roles
-  let amountOfPlayersToAssign = server.players.length;
+  const amountOfPlayersToAssign = server.players.length;
 
   const playersToAssign: { [key in GameRoles]: any } = {
     [GameRoles.Unknown]: 0,
@@ -56,7 +55,7 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
   for (let i = 0; i < playerIds.length; i++) {
     let role: (0 | typeof GameRoles[keyof typeof GameRoles]) = 0;
     while (amountOfPlayersToAssign !== 0 && !role) {
-      let roleId = randomEnumValue(GameRoles);
+      const roleId = randomEnumValue(GameRoles);
       if (playersToAssign[roleId] == 0) continue;
 
       role = +roleId;
@@ -141,7 +140,7 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
     },
   } as RequestInit);
 
-  // @ts-ignore
+  // @ts-expect-error Yeah
   return json({}, { statusCode: 200 });
 }
 

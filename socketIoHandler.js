@@ -1,4 +1,5 @@
 import { Server } from 'socket.io';
+import chalk from 'chalk';
 
 /**
   * @param endpointPath {string}
@@ -38,7 +39,8 @@ export default function injectSocketIO(server) {
     sockets.push(socket);
     socket.join('lobby');
 
-    socket.on('fallbackEvent', async ({ message: event, endpoint }) => {
+    // There is also endpoint in the object below
+    socket.on('fallbackEvent', async ({ message: event }) => {
       // joinServer from client
       if (!event) return;
 
@@ -190,6 +192,7 @@ export default function injectSocketIO(server) {
               io.of(`/game/${args?.serverId}`).to('citizens').emit('chatMessageToClient', emitContent);
               break;
           }
+          break;
 
         default:
           break;
@@ -230,5 +233,5 @@ export default function injectSocketIO(server) {
     });
   });
 
-  console.log('SocketIO injected');
+  console.log(chalk.bgRed.white('SocketIO injected\n'));
 }

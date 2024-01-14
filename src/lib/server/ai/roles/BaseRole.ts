@@ -139,7 +139,7 @@ export default abstract class BaseRole {
   urlOrigin: URL['origin'];
 
   replies = REPLIES;
-  isAlive: boolean = true;
+  isAlive = true;
 
   constructor(
     ast: string,
@@ -216,7 +216,7 @@ export default abstract class BaseRole {
       ?.includes('' + this.userId);
   }
 
-  messageContainsKeywords(messageContent: string, keywords: Array<string | string[]>): boolean {
+  messageContainsKeywords(messageContent: string, keywords: (string | string[])[]): boolean {
     let allHits = false;
 
     for (let i = 0; i < keywords.length; i++) {

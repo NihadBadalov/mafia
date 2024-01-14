@@ -7,7 +7,7 @@ import { GameRoles } from '$types/GameRoles';
 import GameServer from '$lib/server/GameServer';
 
 export const GET: RequestHandler = async ({ cookies, setHeaders, url }) => {
-  let user = getUserByAst(cookies.get('ast'));
+  const user = getUserByAst(cookies.get('ast'));
   let userServer;
   if (user) userServer = getGameServerWithUserById(user?.id);
 
@@ -16,8 +16,7 @@ export const GET: RequestHandler = async ({ cookies, setHeaders, url }) => {
     'Cache-Control': 'max-age=3',
   });
 
-  // @ts-ignore
-  let dc = structuredClone(_data) as ServerData;
+  const dc = structuredClone(_data) as ServerData;
   dc.userAsts = undefined;
   delete dc.userAsts;
   delete dc.serverPassphrase;
@@ -82,6 +81,7 @@ export const GET: RequestHandler = async ({ cookies, setHeaders, url }) => {
 }
 
 export const POST: RequestHandler = async ({ request, cookies }) => {
+  // eslint-disable-next-line prefer-const
   let { serverName, maxPlayerAmount, amountOfMafia, fillWithBots } = await request.json();
 
   if (Number.isNaN(maxPlayerAmount) || Number.isNaN(amountOfMafia))

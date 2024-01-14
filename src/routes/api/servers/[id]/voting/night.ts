@@ -33,12 +33,12 @@ export async function night(
     // Anounce that we are voting between 2 players
     const votingBetweenUsers: User[] = [];
     for (let i = 0; i < server.votingBetween.length; i++) {
-      let u = getUserById(server.votingBetween[i]);
+      const u = getUserById(server.votingBetween[i]);
       if (u) votingBetweenUsers.push(u);
     }
 
     if (!votingBetweenUsers.length) {
-      // @ts-ignore
+      // @ts-expect-error Yeah
       return json({ complete: true, killedPerson: [] }, { statusCode: 200 });
     }
     else {
@@ -92,7 +92,7 @@ export async function night(
 
   server.whoCanVoteKick = [];
 
-  let chosenPlayerIds: number[] = [];
+  const chosenPlayerIds: number[] = [];
   for (const kickInfo of server.votes.mafia) {
     chosenPlayerIds.push(kickInfo.for);
   }
@@ -122,7 +122,7 @@ export async function night(
     }
   })();
 
-  let donChoice = passedDonChoice ?? server.votes.don;
+  const donChoice = passedDonChoice ?? server.votes.don;
   server.votes.mafia = [];
   server.votes.don = undefined;
   server.votingBetween = [];
@@ -131,6 +131,6 @@ export async function night(
     complete: typeof (chosenPlayerId) === 'number',
     killedPerson: chosenPlayerId,
     donChoice: donChoice,
-    // @ts-ignore
+    // @ts-expect-error Yeah
   }, { statusCode: 200 });
 }

@@ -1,13 +1,12 @@
 import { json, error, type RequestHandler } from '@sveltejs/kit';
 import { _data } from '$api';
 import { gameAnnounce, getUserByAst, getUserById, getUserRoleInServer } from '$lib';
-import type GameServer from "$lib/server/GameServer";
 import { GameRoles } from '$types/GameRoles';
 
 export const POST: RequestHandler = async ({ request, params }) => {
-  let { targetUserId, userId, ast } = await request.json();
-  let user = getUserByAst(ast);
-  let targetUser = getUserById(targetUserId);
+  const { targetUserId, userId, ast } = await request.json();
+  const user = getUserByAst(ast);
+  const targetUser = getUserById(targetUserId);
 
   if (!user?.id || user?.id != userId)
     throw error(403, 'Not Authorized');
@@ -16,8 +15,8 @@ export const POST: RequestHandler = async ({ request, params }) => {
 
   if (!params?.id || isNaN(params?.id as any))
     throw error(404, 'Couldn\'t find the server');
-  let serverId = +params?.id;
-  let server = _data.servers.find(s => s.id === serverId) as GameServer;
+  const serverId = +params?.id;
+  const server = _data.servers.find(s => s.id === serverId)!;
   if (!server) throw error(404, 'Couldn\'t find the server');
 
   // Check if users are in the server
@@ -28,7 +27,7 @@ export const POST: RequestHandler = async ({ request, params }) => {
   if (!server.specialStates.sheriffAbility)
     throw error(403, 'Sheriff cannot use his ability at the moment');
 
-  let userRole = getUserRoleInServer(user?.id);
+  const userRole = getUserRoleInServer(user?.id);
   if (userRole !== GameRoles.Sheriff)
     throw error(403, 'Cannot view roles as not a Sheriff');
 
@@ -49,7 +48,7 @@ export const POST: RequestHandler = async ({ request, params }) => {
 
   server.sheriffHasChecked.unshift(targetUser?.id);
 
-  // @ts-ignore
+  // @ts-expect-error Yeah
   return json({}, { statusCode: 200 });
 }
 

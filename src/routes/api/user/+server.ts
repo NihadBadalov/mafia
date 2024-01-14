@@ -2,7 +2,7 @@ import { error, json, type RequestHandler } from '@sveltejs/kit'
 import { _data } from '../index';
 
 export const POST: RequestHandler = async ({ request }) => {
-  let { origin, username, bot } = await request.json();
+  const { origin, username, bot } = await request.json();
 
   if (origin !== _data.serverPassphrase)
     throw error(403, 'Not Authorized');
@@ -25,7 +25,7 @@ export const POST: RequestHandler = async ({ request }) => {
 }
 
 export const DELETE: RequestHandler = async ({ request }) => {
-  let { origin, userId } = await request.json();
+  const { origin, userId } = await request.json();
 
   if (origin !== _data.serverPassphrase)
     throw error(403, 'Not Authorized');

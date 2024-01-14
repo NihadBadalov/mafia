@@ -8,10 +8,8 @@ import { setTimeout as sleep } from 'timers/promises';
 export class Sheriff extends BaseRole {
   gameRole: Exclude<GameRoles, GameRoles.Unknown> = GameRoles.Sheriff;
   isMafia = false;
-  roleGuesses: {
-    [key: number]: typeof GameRoles[keyof typeof GameRoles] | undefined;
-  } = {}
-  playerIdRoleGuessedLastNight: number = -1;
+  roleGuesses: Record<number, typeof GameRoles[keyof typeof GameRoles] | undefined> = {}
+  playerIdRoleGuessedLastNight = -1;
   impersonators: number[] = [];
 
   constructor(
@@ -125,7 +123,7 @@ export class Sheriff extends BaseRole {
         /* Server has started yet */
         // What is the current action?
         if (this.messageContainsKeywords(messageContent, ['what', 'current', 'action'])) {
-          let currentActionText = 'Current action: ' + (() => {
+          const currentActionText = 'Current action: ' + (() => {
             if (server.state === GameStates.Day) {
               return server.votingBetween.length > 0 ? 'voting' : 'discussing who to kick';
             }
@@ -146,7 +144,7 @@ export class Sheriff extends BaseRole {
 
         // Who are we voting for/between?
         if (this.messageContainsKeywords(messageContent, ['who', 'voting', ['for', 'between']])) {
-          await this.sendMessage(`Voting for ${server.votingBetween.map(uid => getUserById(uid)?.name || 'Unnamed user').join(', ') || 'no one'}`);
+          await this.sendMessage(`Voting for ${server.votingBetween.map(uid => getUserById(uid)?.name ?? 'Unnamed user').join(', ') || 'no one'}`);
         }
 
         // Who is/are mafia(-s)?

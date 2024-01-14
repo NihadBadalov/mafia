@@ -1,9 +1,4 @@
 import type GameServer from '$lib/server/GameServer';
-import type SuspicionGroup from '$lib/server/ai/SuspicionGroup';
-import type { BaseRoleDerivative } from '$lib/server/ai/roles/BaseRole';
-import type BaseRole from '$lib/server/ai/roles/BaseRole';
-import type { GameRoles } from './GameRoles';
-import type { GameStates } from './GameStates';
 
 export type UserId = number;
 
@@ -24,7 +19,9 @@ export interface ServerData {
   serverPassphrase: string | undefined;
 }
 
+// eslint-disable-next-line
 export interface ModifiedServerData extends ServerData {
+  // eslint-disable-next-line
   [key: string]: any;
 }
 
@@ -33,10 +30,10 @@ export interface ChatMessage {
   content: string;
   timestamp: number;
 }
-export type Chat = Array<ChatMessage>;
+export type Chat = ChatMessage[];
 
-export type Votes = {
+export interface Votes {
   for: UserId;
   by: UserId;
-};
+}
 

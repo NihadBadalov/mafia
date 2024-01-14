@@ -1,16 +1,15 @@
 import { getGameServerWithUserById } from "$lib";
-import { _data } from "$routes/api";
 import type { UserId } from "$types";
 import { GameRoles } from "$types/GameRoles";
 
 export default class SuspicionGroup {
   suspecting: UserId;
   possibleRole: GameRoles;
-  roleProposals: Map<GameRoles, number> = new Map();
+  roleProposals = new Map<GameRoles, number>();
   botsAttached: UserId[] = [];
 
   constructor(
-    userId: UserId | number,
+    userId: UserId,
     possibleRole: GameRoles = GameRoles.Unknown,
   ) {
     this.suspecting = userId;

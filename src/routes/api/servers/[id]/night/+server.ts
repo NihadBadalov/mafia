@@ -1,6 +1,5 @@
 import { json, error, type RequestHandler } from '@sveltejs/kit';
 import { _data } from '$api';
-import type GameServer from "$lib/server/GameServer";
 import { GameStates } from '$types/GameStates';
 import { setTimeout as sleep } from 'node:timers/promises';
 import { io } from '$lib/webSocketConnection';
@@ -9,7 +8,7 @@ import { GameRoles } from '$types/GameRoles';
 
 
 export const POST: RequestHandler = async ({ request, params, fetch }) => {
-  let { origin, type } = await request.json();
+  const { origin, type } = await request.json();
 
   if (origin !== _data.serverPassphrase)
     throw error(403, 'Not Authorized');
@@ -17,8 +16,8 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
   if (!params?.id || isNaN(params?.id as any))
     throw error(404, 'Couldn\'t find the server');
 
-  let serverId = +params?.id;
-  let server = _data.servers.find(s => s.id === serverId) as GameServer;
+  const serverId = +params?.id;
+  const server = _data.servers.find(s => s.id === serverId)!;
   if (!server) throw error(404, 'Couldn\'t find the server');
 
   // Check if appropriate player amount to start the server
@@ -150,7 +149,7 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
         serverId,
       );
 
-      let sheriffBot = server.bots.find(bot => bot.gameRole === GameRoles.Sheriff);
+      const sheriffBot = server.bots.find(bot => bot.gameRole === GameRoles.Sheriff);
       if (sheriffBot) sheriffBot.night!(server);
 
       // Start a timer
@@ -212,7 +211,7 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
         serverId,
       );
 
-      let doctorBot = server.bots.find(bot => bot.gameRole === GameRoles.Doctor);
+      const doctorBot = server.bots.find(bot => bot.gameRole === GameRoles.Doctor);
       if (doctorBot) doctorBot.night!(server);
 
       // Start a timer
@@ -255,7 +254,7 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
       : ((voting as any)?.killedPerson as number[]).filter(n => n !== doctorChoice);
     let killText = (() => {
       if (typeof (killedPersonId) === 'number') {
-        let u = getUserById(killedPersonId);
+        const u = getUserById(killedPersonId);
         if (!u) return 'NO PLAYERS WERE KILLED';
         return `${u.name} WAS KILLED`;
       }
@@ -348,7 +347,7 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
   }
 
 
-  // @ts-ignore
+  // @ts-expect-error Yeah
   return json({}, { statusCode: 200 });
 }
 

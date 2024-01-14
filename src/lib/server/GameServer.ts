@@ -31,9 +31,7 @@ export default class GameServer {
     doctorAbility: boolean;
   };
 
-  announcements: {
-    [key: typeof GameRoles[keyof typeof GameRoles] | number]: string;
-  };
+  announcements: Record<typeof GameRoles[keyof typeof GameRoles] | number, string>;
   citizenChat: Chat;
   mafiaChat: Chat;
   playersCanChat: boolean;
@@ -111,6 +109,9 @@ export default class GameServer {
   }
 
   async tick() {
+    if (this.state === GameStates.Waiting) return;
+
+    console.log('tick');
     // More than 5 seconds since the last message
     if ((this.citizenChat.at(-1)?.timestamp ?? 0) - Date.now() > 5_000) {
       const eligiblePlayers = arrayShuffle([...this.players]);
@@ -147,6 +148,6 @@ export default class GameServer {
   playerLastChattedMessage(userId: UserId): ChatMessage | undefined {
     const citizenChatMessage = this.citizenChat.find(message => message.userId === userId);
     const mafiaChatMessage = this.mafiaChat.find(message => message.userId === userId);
-    return citizenChatMessage || mafiaChatMessage;
+    return citizenChatMessage ?? mafiaChatMessage;
   }
 }

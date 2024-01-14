@@ -28,12 +28,12 @@ export async function day(
     // Anounce that we are voting between 2 players
     const votingBetweenUsers: User[] = [];
     for (let i = 0; i < server.votingBetween.length; i++) {
-      let u = getUserById(server.votingBetween[i]);
+      const u = getUserById(server.votingBetween[i]);
       if (u) votingBetweenUsers.push(u);
     }
 
     if (!votingBetweenUsers.length) {
-      // @ts-ignore
+      // @ts-expect-error Yeah
       return json({ complete: true, kickedPerson: [] }, { statusCode: 200 });
     }
     else {
@@ -88,7 +88,7 @@ export async function day(
 
   server.whoCanVoteKick = [];
 
-  let chosenPlayerIds: number[] = [];
+  const chosenPlayerIds: number[] = [];
   for (const kickInfo of server.votes.citizens) {
     chosenPlayerIds.push(kickInfo.for);
   }
@@ -122,10 +122,10 @@ export async function day(
   server.votingBetween = [];
 
   if (typeof (chosenPlayerId) === 'number') {
-    // @ts-ignore
+    // @ts-expect-error Yeah
     return json({ complete: true, kickedPerson: chosenPlayerId }, { statusCode: 200 });
   }
 
-  // @ts-ignore
+  // @ts-expect-error Yeah
   return json({ complete: false, kickedPerson: chosenPlayerId }, { statusCode: 200 });
 }

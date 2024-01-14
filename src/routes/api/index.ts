@@ -1,6 +1,6 @@
 import type { ServerData } from '$types';
 
-export let _data = {
+export const _data = {
   servers: [],
   users: [],
   userAsts: [],

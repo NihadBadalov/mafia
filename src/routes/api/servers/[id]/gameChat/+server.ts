@@ -28,8 +28,8 @@ function notifyBots(
 }
 
 export const POST: RequestHandler = async ({ request, params }) => {
-  let { message, userId, ast } = await request.json();
-  let user = getUserByAst(ast);
+  const { message, userId, ast } = await request.json();
+  const user = getUserByAst(ast);
 
   if (!message && !message?.trim()?.length)
     throw error(400, 'Message can not be empty');
@@ -43,8 +43,8 @@ export const POST: RequestHandler = async ({ request, params }) => {
   if (!params?.id || isNaN(params?.id as any))
     throw error(404, 'Couldn\'t find the server');
 
-  let serverId = +params?.id;
-  let server = _data.servers.find(s => s.id === serverId) as GameServer;
+  const serverId = +params?.id;
+  const server = _data.servers.find(s => s.id === serverId)!;
   if (!server) throw error(404, 'Couldn\'t find the server');
 
   if (!server.players.find(pid => pid === user?.id))
@@ -88,7 +88,7 @@ export const POST: RequestHandler = async ({ request, params }) => {
 
     // updateServer(server?.id);
 
-    // @ts-ignore
+    // @ts-expect-error Yeah
     return json({}, { statusCode: 200 });
   }
 
@@ -141,7 +141,7 @@ export const POST: RequestHandler = async ({ request, params }) => {
 
   // updateServer(server?.id);
 
-  // @ts-ignore
+  // @ts-expect-error Yeah
   return json({}, { statusCode: 200 });
 }
 

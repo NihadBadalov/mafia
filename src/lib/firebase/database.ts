@@ -1,4 +1,4 @@
-import { Database, child, get, onValue, ref, set, update } from "firebase/database";
+import { child, get, onValue, ref, set, update } from "firebase/database";
 import { database } from "./firebase.client";
 import { adminDatabase } from "./firebase.admin";
 
@@ -15,7 +15,7 @@ export const rawDatabaseActions = {
   /**
     * There is no reason to use this for now
     */
-  listen: async (path: string): Promise<any> => {
+  listen: (path: string): Promise<any> => {
     const reference = ref(database, path);
     let data: any;
     onValue(reference, (snapshot) => {
@@ -37,7 +37,7 @@ export const rawDatabaseActions = {
   },
 
   // https://firebase.google.com/docs/database/web/read-and-write#update_specific_fields
-  update: async (updates: { [key: string]: any }): Promise<void> => {
+  update: async (updates: Record<string, any>): Promise<void> => {
     return update(ref(database), updates);
   },
 
@@ -59,7 +59,7 @@ export const rawAdminDatabaseActions = {
   /**
     * There is no reason to use this for now
     */
-  listen: async (path: string): Promise<any> => {
+  listen: (path: string): Promise<any> => {
     const reference = ref(adminDatabase as any, path);
     let data: any;
     onValue(reference, (snapshot) => {
@@ -81,7 +81,7 @@ export const rawAdminDatabaseActions = {
   },
 
   // https://firebase.google.com/docs/database/web/read-and-write#update_specific_fields
-  update: async (updates: { [key: string]: any }): Promise<void> => {
+  update: async (updates: Record<string, any>): Promise<void> => {
     return update(ref(adminDatabase as any), updates);
   },
 

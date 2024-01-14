@@ -4,6 +4,7 @@ import { adminAuth } from "$lib/firebase/firebase.admin";
 import { error, json, type RequestHandler } from "@sveltejs/kit";
 
 export const POST: RequestHandler = async ({ request, cookies }) => {
+  // eslint-disable-next-line prefer-const
   let { ast, idToken } = await request.json();
 
   const dataUser = getUserByAst(ast);

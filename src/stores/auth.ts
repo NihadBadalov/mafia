@@ -1,7 +1,7 @@
 import { browser } from "$app/environment";
 import { auth, provider } from "$lib/firebase/firebase.client";
 import { createUserWithEmailAndPassword, fetchSignInMethodsForEmail, GoogleAuthProvider, OAuthCredential, sendPasswordResetEmail, signInWithEmailAndPassword, signInWithPopup, signOut, updateEmail, updatePassword, type User, type UserCredential } from "firebase/auth";
-import { writable, type Writable } from "svelte/store";
+import { writable } from "svelte/store";
 import cookie from 'cookie';
 import type { UserAccessToken } from "$types";
 
@@ -17,7 +17,7 @@ export const authStore = writable<{
 
 type LoginWithGoogleReturnType = Promise<
   { user: User; token: string | undefined }
-  | { email: any; credential: OAuthCredential | null; errorCode: string; errorMessage: string }
+  | { email: string | undefined | null; credential: OAuthCredential | null; errorCode: string; errorMessage: string }
 >;
 
 export const authHandlers = {
@@ -30,6 +30,7 @@ export const authHandlers = {
       .catch(() => false);
   },
 
+  // eslint-disable-next-line
   loginWithGoogle: async (ast?: UserAccessToken, fetch?: any): LoginWithGoogleReturnType => {
     return signInWithPopup(auth, provider)
       .then(async (result) => {
@@ -41,6 +42,7 @@ export const authHandlers = {
         // IdP data available using getAdditionalUserInfo(result)
 
         if (ast && fetch) {
+          // eslint-disable-next-line
           fetch('/api/auth/updateUser', {
             method: 'POST',
             body: JSON.stringify({
@@ -104,7 +106,7 @@ export const authHandlers = {
 
 if (browser) {
   auth.onIdTokenChanged(async (newUser) => {
-    const currentToken = cookie.parse(document.cookie)?.token;
+    // const currentToken = cookie.parse(document.cookie)?.token;
     const token = await newUser?.getIdToken();
     document.cookie = cookie.serialize('fbs', token ?? '', {
       path: '/',

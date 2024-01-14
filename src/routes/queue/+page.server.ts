@@ -7,7 +7,7 @@ export const load: PageServerLoad = (async ({ fetch, cookies, url }) => {
   const response = await fetch('/api/servers');
   const data = await response.json();
 
-  if (!data || !data?.servers)
+  if (!data?.servers)
     throw error(500, 'Server error: Couldn\'t fetch servers');
 
   const currentUserId = await handleUserSession(cookies, fetch, data.endpoint);
@@ -21,7 +21,7 @@ export const load: PageServerLoad = (async ({ fetch, cookies, url }) => {
   if (!servers.find(s => s.id === +serverId))
     throw redirect(307, '/');
 
-  const currentServer = servers.find(s => s.id === +serverId) as GameServer;
+  const currentServer = servers.find(s => s.id === +serverId)!;
   return {
     ...data,
     currentServerId: currentServer.id,

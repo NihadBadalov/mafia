@@ -1,5 +1,4 @@
 import { getUserByAst, hasCurseWords } from '$lib';
-import { _data } from '$routes/api';
 import { authHandlers } from '$stores/auth';
 import { fail, type Actions } from '@sveltejs/kit';
 import type { UserCredential } from 'firebase/auth';

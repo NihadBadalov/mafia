@@ -1,13 +1,12 @@
 import { json, error, type RequestHandler } from '@sveltejs/kit';
 import { _data, _generateUserToken } from '$api';
-import type GameServer from "$lib/server/GameServer";
 import { createBotUsername, updateServer, updateServers } from '$lib';
 import { setTimeout as sleep } from 'timers/promises';
 import { Citizen } from '$lib/server/ai/roles/citizens/Citizen';
 import { io } from '$lib/webSocketConnection';
 
 export const POST: RequestHandler = async ({ request, params, fetch, url }) => {
-  let { origin } = await request.json();
+  const { origin } = await request.json();
 
   if (origin !== _data.serverPassphrase)
     throw error(403, 'Not Authorized');
@@ -15,8 +14,8 @@ export const POST: RequestHandler = async ({ request, params, fetch, url }) => {
   if (!params?.id || isNaN(params?.id as any))
     throw error(404, 'Couldn\'t find the server');
 
-  let serverId = +params?.id;
-  let server = _data.servers.find(s => s.id === serverId) as GameServer;
+  const serverId = +params?.id;
+  const server = _data.servers.find(s => s.id === serverId)!;
   if (!server) throw error(404, 'Couldn\'t find the server');
 
   if (!server.fillWithBots || (server.fillWithBots && server.players.length >= server.maxPlayerCount))
@@ -48,7 +47,7 @@ export const POST: RequestHandler = async ({ request, params, fetch, url }) => {
     await sleep(500);
   }
 
-  // @ts-ignore
+  // @ts-expect-error Yeah
   return json({}, { statusCode: 200 });
 }
 

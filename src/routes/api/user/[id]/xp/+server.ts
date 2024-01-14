@@ -4,12 +4,12 @@ import { _data } from "$routes/api";
 import { error, json, type RequestHandler } from "@sveltejs/kit";
 
 export const GET: RequestHandler = async ({ params, cookies }) => {
-  let user = getUserByAst(cookies.get('ast'));
+  const user = getUserByAst(cookies.get('ast'));
   if (!user)
     throw error(403, 'Not Authorized. User not logged in');
 
-  let { id: userId } = params;
-  let targetUser = getUserById(Number(userId), _data);
+  const { id: userId } = params;
+  const targetUser = getUserById(Number(userId), _data);
   if (!targetUser || !userId)
     throw error(404, 'User not found');
 

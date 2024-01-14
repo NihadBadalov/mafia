@@ -12,8 +12,7 @@ export const guestUserUsernameRegExp = new RegExp(/User \d+/);
 */
 export async function handleUserSession(cookies: Cookies, fetch: any, endpoint: string) {
   // User session
-  if (!cookies.get('ast')
-    || !cookies.get('ast')?.length
+  if (!cookies.get('ast')?.length
     || !getUserByAst(cookies.get('ast')! as string)) {
     // Not in session 
     const fbs = cookies.get('fbs');
@@ -54,7 +53,7 @@ export async function handleUserSession(cookies: Cookies, fetch: any, endpoint: 
     if (!user) return;
     if (!guestUserUsernameRegExp.test(user.name)) return user?.id;
 
-    const firebaseUserId = await adminAuth.verifyIdToken(cookies.get('fbs') as string)
+    const firebaseUserId = await adminAuth.verifyIdToken(cookies.get('fbs')!)
       .then((user) => user.uid)
       .catch(() => null);
     const firebaseUser = firebaseUserId ? await adminAuth.getUser(firebaseUserId) : null;
@@ -63,7 +62,7 @@ export async function handleUserSession(cookies: Cookies, fetch: any, endpoint: 
     const dataUser = _data.users.find(u => u.id === user?.id);
     if (!dataUser) return user?.id;
 
-    const databaseUsername = await usernameActions?.get(rawAdminDatabaseActions.db, firebaseUserId as string);
+    const databaseUsername = await usernameActions?.get(rawAdminDatabaseActions.db, firebaseUserId!);
 
     dataUser.name = firebaseUser.displayName
       ?? databaseUsername

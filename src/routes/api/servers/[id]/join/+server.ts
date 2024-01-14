@@ -12,7 +12,7 @@ function sendMessage(event: string, text: string | object, ep: string) {
 }
 
 export const POST: RequestHandler = async ({ request, params, url, fetch }) => {
-  let { userId, ast, fbs } = await request.json();
+  const { userId, ast, fbs } = await request.json();
 
   if (getUserByAst(ast)?.id != userId)
     throw error(403, 'Not Authorized');
@@ -31,8 +31,8 @@ export const POST: RequestHandler = async ({ request, params, url, fetch }) => {
   if (!params?.id || isNaN(params?.id as any))
     throw error(404, 'Couldn\'t find the server');
 
-  let serverId = +params?.id;
-  let server = _data.servers.find(s => s.id === serverId);
+  const serverId = +params?.id;
+  const server = _data.servers.find(s => s.id === serverId);
   if (!server) throw error(404, 'Couldn\'t find the server');
 
   // Player in a server already
@@ -76,7 +76,7 @@ export const POST: RequestHandler = async ({ request, params, url, fetch }) => {
     });
   }
 
-  // @ts-ignore
+  // @ts-expect-error Yeah
   return json({}, { statusCode: 200 });
 }
 

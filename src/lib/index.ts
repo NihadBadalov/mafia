@@ -1,14 +1,14 @@
 // place files you want to import through the `$lib` alias in this folder.
-import { _data, _generateUserToken } from '$api';
+import { _data } from '$api';
 import type { ModifiedServerData, User, UserId } from '$types';
 import { GameRoles } from '$types/GameRoles';
 import { io } from '$lib/webSocketConnection';
-// @ts-ignore
+// @ts-expect-error Not sure if this is a correct import
 import washyourmouthwithsoap from 'washyourmouthoutwithsoap';
 import type GameServer from './server/GameServer';
 
 export const BotMentionRegex = new RegExp(/^(@?\d+(,\s|,|\s))+/);
-export const MafiaProposalToKill= new RegExp(/lets vote for id (\d+)\. thats the guy with username \w*/);
+export const MafiaProposalToKill = new RegExp(/lets vote for id (\d+)\. thats the guy with username \w*/);
 export const SheriffProposalToKick = new RegExp(/im the sheriff. i checked .+ and his role is mafia. vote for him! \(his id is (\d+)\)/);
 export const ChatVoteSystemMessage = new RegExp(/.+ \((\d+)\) voted for .+ \((\d+)\)/);
 export const SheriffCondemnationMessage = new RegExp(/@(\d+) .+ is not the sheriff. i am the sheriff. he is lying. lets kick him. in all lowercase without quotes/);
@@ -152,7 +152,7 @@ export function getIncludedRolesForGameAnnouncement(
     ];
   }
   else if (!Number.isNaN(inc)) {
-    include = [inc as number];
+    include = [inc!];
   }
   else {
     include = [
@@ -171,7 +171,7 @@ export function getIncludedRolesForGameAnnouncement(
 /*
 * Get a random value of an Enum
 */
-export function randomEnumValue<T extends object>(enumeration: T | any): T[keyof T] {
+export function randomEnumValue<T extends object>(enumeration: any): T[keyof T] {
   const numberEnumValues = Object.keys(enumeration).filter(k => !Number.isNaN(+k)) as unknown as T[keyof T][];
   return numberEnumValues[Math.floor(Math.random() * numberEnumValues.length)];
 }
@@ -225,36 +225,36 @@ export function getFullEndpointUrl(endpointPath: string, currentLocationHref: st
 }
 
 export function getUserRoleInServer(id: UserId | undefined, data?: ModifiedServerData) {
-  let server = getGameServerWithUserById(id, data);
+  const server = getGameServerWithUserById(id, data);
   if (!server) return;
 
   if (!server.started) return;
 
-  let role = server.playerRoles.find(pr => pr.userId === id);
+  const role = server.playerRoles.find(pr => pr.userId === id);
   return role?.role;
 }
 
-export function getGameServerWithUserByAst(ast: string | unknown | undefined, data: ModifiedServerData = _data): GameServer | undefined {
-  let user = getUserByAst(ast) as unknown as User;
+export function getGameServerWithUserByAst(ast: string | undefined, data: ModifiedServerData = _data): GameServer | undefined {
+  const user = getUserByAst(ast) as unknown as User;
   if (!user) return;
 
-  let server = data.servers.find(s => s.players.includes(user.id));
+  const server = data.servers.find(s => s.players.includes(user.id));
   if (!server) return;
 
   return server;
 }
 
 export function getGameServerWithUserById(id: number | string | undefined, data: ModifiedServerData = _data): GameServer | undefined {
-  let user = getUserById(id, data) as unknown as User;
+  const user = getUserById(id, data) as unknown as User;
   if (!user) return;
 
-  let server = data.servers.find(s => s.players.includes(user.id));
+  const server = data.servers.find(s => s.players.includes(user.id));
   if (!server) return;
 
   return server;
 }
 
-export function getUserByAst(ast: string | unknown | undefined, data: ModifiedServerData = _data): User | undefined {
+export function getUserByAst(ast: string | undefined, data: ModifiedServerData = _data): User | undefined {
   if (typeof (ast) == 'undefined') return undefined;
   if (!ast) return undefined;
 
@@ -268,7 +268,7 @@ export function getUserByAst(ast: string | unknown | undefined, data: ModifiedSe
 export function getUserById(id: number | string | undefined, data: ModifiedServerData = _data): User | undefined {
   if (Number.isNaN(id)) return;
 
-  let user = data.users.find(u => u?.id === id);
+  const user = data.users.find(u => u?.id === id);
   return user;
 }
 

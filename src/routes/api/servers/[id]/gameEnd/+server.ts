@@ -1,13 +1,12 @@
 import { gameAnnounce, getUserRoleInServer, isMafiaGameRole } from "$lib";
 import { io } from "$lib/webSocketConnection";
 import { _data } from "$routes/api";
-import type GameServer from "$lib/server/GameServer";
 import { GameStates } from "$types/GameStates";
 import { error, json, type RequestHandler } from "@sveltejs/kit";
 import { setTimeout as sleep } from 'timers/promises';
 
 export const POST: RequestHandler = async ({ request, params }) => {
-  let { origin } = await request.json();
+  const { origin } = await request.json();
 
   if (origin !== _data.serverPassphrase)
     throw error(403, 'Not Authorized');
@@ -15,8 +14,8 @@ export const POST: RequestHandler = async ({ request, params }) => {
   if (!params?.id || isNaN(params?.id as any))
     throw error(404, 'Couldn\'t find the server');
 
-  let serverId = +params?.id;
-  let server = _data.servers.find(s => s.id === serverId) as GameServer;
+  const serverId = +params?.id;
+  const server = _data.servers.find(s => s.id === serverId)!;
   if (!server) throw error(404, 'Couldn\'t find the server');
 
   // Check if appropriate player amount to start the server
@@ -58,6 +57,6 @@ export const POST: RequestHandler = async ({ request, params }) => {
   });
 
 
-  // @ts-ignore
+  // @ts-expect-error Yeah
   return json({}, { statusCode: 200 });
 }
