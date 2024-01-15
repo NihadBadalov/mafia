@@ -335,7 +335,7 @@
           {:else}
             <h1>WAITING FOR THE SESSION-CREATOR TO START...</h1>
 
-            {#if currentServer.ownerId == data.currentUserId}
+            {#if currentServer.ownerId == data.currentUserId && (!currentServer.fillWithBots || (currentServer.fillWithBots && currentServer.players.length == currentServer.maxPlayerCount))}
               <button
                 class="btn"
                 id="btn_start_game"
