@@ -6,6 +6,8 @@ import SuspicionGroup from './ai/SuspicionGroup';
 import type BaseRole from './ai/roles/BaseRole';
 import type { BaseRoleDerivative } from './ai/roles/BaseRole';
 import { setTimeout as sleep } from 'timers/promises';
+import { _data } from '$routes/api';
+import { UserObservableArray } from '$utils/UserObservableArray';
 
 export default class GameServer {
   id: number;
@@ -18,7 +20,7 @@ export default class GameServer {
   bots: BaseRoleDerivative<BaseRole>[];
   suspicionGroups: SuspicionGroup[];
 
-  players: UserId[];
+  players: UserObservableArray<UserId>;
   initialPlayers: UserId[];
   playerBlacklist: UserId[];
   playerRoles: { userId: UserId; role: typeof GameRoles[keyof typeof GameRoles] | number }[];
@@ -68,7 +70,7 @@ export default class GameServer {
     this.bots = [];
     this.suspicionGroups = [];
 
-    this.players = [];
+    this.players = new UserObservableArray();
     this.initialPlayers = [];
     this.playerRoles = [];
     this.playerBlacklist = [];
@@ -105,16 +107,60 @@ export default class GameServer {
     this.totalTimerSeconds = undefined;
     this.timer = undefined;
 
+    this.players.onUserKickEvent((userId: number) => {
+      const suspicionGroupIndex = this.suspicionGroups.findIndex(
+        spGroup => spGroup.suspecting === userId
+      );
+      if (suspicionGroupIndex !== -1) {
+        this.suspicionGroups.splice(suspicionGroupIndex, 1);
+      }
+    });
+
     this.tick();
   }
 
-  async tick() {
-    if (this.state === GameStates.Waiting) return;
+  private checkForExistance() {
+    return !!_data.servers.find(s => s.id);
+  }
 
-    console.log('tick');
+  private async tick(): Promise<void> {
+    if (this.state === GameStates.Waiting) {
+      await sleep(1_000);
+      return this.tick();
+    }
+
+    // Ticks
+    if (this.#tickDirection == 0) {
+      this.#tickCounter += 1;
+      if (this.#tickCounter === 10) this.#tickDirection = 1;
+    }
+    else {
+      this.#tickCounter -= 1;
+      if (this.#tickCounter === 0) this.#tickDirection = 0;
+    }
+
+    // Let gc collect us if we do not exist
+    if (this.#tickCounter % 10 == 0 && this.checkForExistance() === false) return;
+
+
+    console.log('tick test');
     // More than 5 seconds since the last message
-    if ((this.citizenChat.at(-1)?.timestamp ?? 0) - Date.now() > 5_000) {
-      const eligiblePlayers = arrayShuffle([...this.players]);
+    console.log(
+      !!this.citizenChat.at(-1)?.timestamp,
+      Date.now() - (this.citizenChat.at(-1)?.timestamp ?? 0) > 5_000,
+      Date.now() - (this.citizenChat.at(-1)?.timestamp ?? 0) !== Date.now()
+    );
+    if (
+      !this.#suspicionDebounce
+      && !!this.citizenChat.at(-1)?.timestamp
+      && Date.now() - (this.citizenChat.at(-1)?.timestamp ?? 0) > 5_000
+      && Date.now() - (this.citizenChat.at(-1)?.timestamp ?? 0) !== Date.now()
+      && this.suspicionGroups.length < 3
+    ) {
+      this.#suspicionDebounce = true;
+
+      const eligiblePlayers = arrayShuffle([...this.players.filter(pid => !this.suspicionGroups.find(spGroup => spGroup.suspecting === pid))]);
+      console.log('eligibles', eligiblePlayers);
 
       let suspectedPlayer: UserId = -1;
       for (let i = 0; i < eligiblePlayers.length; i++) {

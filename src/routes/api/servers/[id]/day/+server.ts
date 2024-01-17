@@ -109,7 +109,10 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
     // Kick player, if there is one to kick
     if (kickText?.endsWith(' WAS VOTE-KICKED')) {
       server.playerBlacklist.push(kickedPersonId);
-      server.players = server.players.filter(pid => pid !== kickedPersonId);
+
+      const kickedPersonInd = server.players.indexOf(kickedPersonId);
+      if (kickedPersonInd !== -1) server.players.splice(kickedPersonInd, 1);
+
       io.emit('serverEvent', {
         message: 'updateServer',
         serverId: serverId,

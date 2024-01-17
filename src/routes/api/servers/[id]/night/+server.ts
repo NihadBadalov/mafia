@@ -117,12 +117,12 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
     });
     await gameAnnounce(
       'THE MAFIA HAVE CHOSEN WHOM TO KILL',
-        [
-          GameRoles.Unknown,
-          GameRoles.Citizen,
-          GameRoles.Sheriff,
-          GameRoles.Doctor,
-        ],
+      [
+        GameRoles.Unknown,
+        GameRoles.Citizen,
+        GameRoles.Sheriff,
+        GameRoles.Doctor,
+      ],
       serverId,
     );
     await sleep(6_000);
@@ -275,7 +275,10 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
     // Don's choice, he has killed somebody
     if (killedPersonIdByDon) {
       server.playerBlacklist.push(killedPersonIdByDon);
-      server.players = server.players.filter(pid => pid !== killedPersonIdByDon);
+
+      const killedPersonInd = server.players.indexOf(killedPersonId);
+      if (killedPersonInd !== -1) server.players.splice(killedPersonInd, 1);
+
       if (server.bots.find(b => b.userId === killedPersonIdByDon)) {
         server.bots.find(b => b.userId === killedPersonIdByDon)?.selfDestruct();
       }
