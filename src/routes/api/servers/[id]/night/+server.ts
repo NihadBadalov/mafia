@@ -267,7 +267,10 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
     // Kill player, if there is one to kill
     if (killText?.endsWith(' WAS KILLED')) {
       server.playerBlacklist.push(killedPersonId);
-      server.players = server.players.filter(pid => pid !== killedPersonId);
+
+      const killedPersonInd = server.players.indexOf(killedPersonId);
+      if (killedPersonInd !== -1) server.players.splice(killedPersonInd, 1);
+
       if (server.bots.find(b => b.userId === killedPersonId)) {
         server.bots.find(b => b.userId === killedPersonId)?.selfDestruct();
       }
