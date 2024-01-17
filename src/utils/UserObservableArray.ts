@@ -5,28 +5,32 @@
 */
 export class UserObservableArray<T> extends Array<T> {
   // Event emitter function type
-  private onUserKick?: (userId: number) => void;
+  private events: Record<string, ((...args: any[]) => any)[]> = {};
 
   /* constructor(...args: any[]) {
     super(...args);
   } */
 
-  /**
-   * Event emitter callback function
-   * @param callback - Callback funciton to execute when user is kicked
-   */
-  onUserKickEvent(
-    callback: (userId: number) => void,
-  ): void {
-    this.onUserKick = callback;
+  // Set the user kick event listener
+  on(event: string, callback: (...args: any[]) => any): void {
+    if (!this.events[event]) this.events[event] = [];
+    this.events[event].push(callback.apply(this, this));
   }
+
+  emit(event: string, ...data: any[]) {
+    const eventListeners = this.events[event];
+    if (!eventListeners) return;
+
+    eventListeners.forEach(listener => listener(...data));
+  }
+
 
   splice(...args: any[]): T[] {
     const userId = super.splice(args as any);
 
-    if (typeof userId === 'number' && this.onUserKick) {
+    if (typeof userId === 'number') {
       // If we are here, it means a user got kicked
-      this.onUserKick(userId);
+      this.emit('userKick', userId);
     }
 
     return userId;

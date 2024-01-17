@@ -116,10 +116,11 @@ export default class GameServer {
     this.totalTimerSeconds = undefined;
     this.timer = undefined;
 
-    this.players.onUserKickEvent((userId: number) => {
-      const suspicionGroupIndex = this.suspicionGroups.findIndex(
-        spGroup => spGroup.suspecting === userId
-      );
+
+    this.players.on('userKick', (userId: number) => {
+      const suspicionGroupIndex = this.suspicionGroups.findIndex(spGroup => {
+        spGroup.suspecting === userId
+      });
       if (suspicionGroupIndex !== -1) {
         this.suspicionGroups.splice(suspicionGroupIndex, 1);
       }
@@ -152,15 +153,16 @@ export default class GameServer {
     if (this.#tickCounter % 10 == 0 && this.checkForExistance() === false) return;
 
 
-    /* console.log('tick test');
+    console.log('tick test');
     // More than 5 seconds since the last message
     console.log(
       !!this.citizenChat.at(-1)?.timestamp,
       Date.now() - (this.citizenChat.at(-1)?.timestamp ?? 0) > 5_000,
       Date.now() - (this.citizenChat.at(-1)?.timestamp ?? 0) !== Date.now()
-    ); */
+    );
     if (
       !this.#suspicionDebounce
+      && this.state === GameStates.Day
       && !!this.citizenChat.at(-1)?.timestamp
       && Date.now() - (this.citizenChat.at(-1)?.timestamp ?? 0) > 5_000
       && Date.now() - (this.citizenChat.at(-1)?.timestamp ?? 0) !== Date.now()
