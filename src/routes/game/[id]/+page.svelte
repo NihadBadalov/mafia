@@ -295,6 +295,7 @@
         ?.role ?? 0
     );
   };
+  // $: console.log(currentServer);
 </script>
 
 <audio src="/audios/gong.mp3" id="gameSound" />

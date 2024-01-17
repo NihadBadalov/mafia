@@ -16,10 +16,6 @@ export default class SuspicionGroup {
     this.possibleRole = possibleRole;
   }
 
-  /*
-    * TODO:
-    * - Player on-kick: destruct
-  */
   attach(userId: UserId) {
     this.botsAttached.unshift(userId);
 

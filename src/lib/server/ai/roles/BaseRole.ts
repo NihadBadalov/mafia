@@ -269,8 +269,10 @@ export default abstract class BaseRole {
 
   async suspect(userId: UserId) {
     const user = _data.users.find(u => u.id === userId);
+    console.log('suspect 1');
     if (!user) return;
 
+    console.log('suspect 2');
     await sleep(Math.floor(Math.random() * 5_000) + 1_000);
     await this.sendMessage(`I suspect ${user.name} (@${user.id}). Let's kick him out`);
   }

@@ -51,6 +51,15 @@ export default class GameServer {
   totalTimerSeconds: number | undefined;
   timer: number | undefined;
 
+  /**
+    * Tick -> 10 -> 0 -> 10 ...
+    * 0: 0 -> 10
+    * 1: 10 -> 0
+    */
+  #tickDirection: 0 | 1 = 0;
+  #tickCounter: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 = 0;
+  #suspicionDebounce = false;
+
 
   constructor(
     newServerId: number,
@@ -182,6 +191,10 @@ export default class GameServer {
         const citizenPlayerIDs = arrayShuffle(this.playerRoles).find(uid => !isMafiaGameRole(getUserRoleInServer(uid)));
         suspicionGroup.attach(citizenPlayerIDs[Math.floor(Math.random() * citizenPlayerIDs.length)]);
       }
+
+      setTimeout(() => {
+        this.#suspicionDebounce = false;
+      }, 6000);
     }
 
     await sleep(1_000);
@@ -197,3 +210,4 @@ export default class GameServer {
     return citizenChatMessage ?? mafiaChatMessage;
   }
 }
+
