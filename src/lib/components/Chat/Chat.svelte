@@ -96,7 +96,7 @@
       /* _server?.players.length
         ? _server.players[i]
         : (messages[i]?.userId as any), */
-      messages[i]?.userId
+      messages[i]?.userId,
     );
   }
 </script>
@@ -130,11 +130,15 @@
           {#if message.userId === -1}
             <!-- System message -->
             <span class="italic">
+              <!-- eslint ignore -->
+              <!-- eslint-disable-next-line svelte/no-at-html-tags -->
               {@html cache[message?.userId]}:
+              <!-- eslint-disable-next-line svelte/no-at-html-tags -->
               {@html message.content}
             </span>
           {:else}
             <!-- Normal message -->
+            <!-- eslint-disable-next-line svelte/no-at-html-tags -->
             {@html cache[message?.userId]}:
             {message.content}
           {/if}
