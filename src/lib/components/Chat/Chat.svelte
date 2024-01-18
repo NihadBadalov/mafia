@@ -11,7 +11,7 @@
   export let ast: string;
   export let serverId: number;
   let formInputPlaceholder = "Enter your message";
-  let _server = data.servers.find((s) => s.id === serverId);
+  // let _server = data.servers.find((s) => s.id === serverId);
   $: disableSending = false;
   $: {
     let s = data.servers.find((s) => s.id === serverId);
@@ -65,6 +65,7 @@
   function fetchUser(uid: number) {
     cache[uid] =
       getUserById(uid, data as ModifiedServerData)?.name ?? "Unnamed user";
+    console.log("fetched chat user", cache[uid]);
 
     if (uid === userId)
       cache[uid] =
@@ -78,20 +79,24 @@
     return cache[uid];
   }
 
-  for (let i = 0; i < (_server?.players.length ?? messages.length); i++) {
+  const chattedPlayerIDs = [];
+  messages.forEach((m) => chattedPlayerIDs.push(m?.userId));
+  for (let i = 0; i < chattedPlayerIDs.length; i++) {
     if (
       cache[
-        _server?.players.length
+        /* _server?.players.length
           ? _server.players[i]
-          : (messages[i]?.userId as any)
+          : (messages[i]?.userId as any) */
+        messages[i]?.userId
       ]
     )
       continue;
 
     fetchUser(
-      _server?.players.length
+      /* _server?.players.length
         ? _server.players[i]
-        : (messages[i]?.userId as any),
+        : (messages[i]?.userId as any), */
+      messages[i]?.userId
     );
   }
 </script>
@@ -128,7 +133,6 @@
               {@html cache[message?.userId]}:
               {@html message.content}
             </span>
-
           {:else}
             <!-- Normal message -->
             {@html cache[message?.userId]}:
