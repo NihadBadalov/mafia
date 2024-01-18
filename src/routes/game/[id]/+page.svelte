@@ -324,6 +324,8 @@
         YOU CANNOT PLAY IN THIS SERVER BECAUSE YOU ARE NOT LOGGED IN
       </h2>
     {/if}
+
+    <!-- eslint-disable-next-line svelte/no-at-html-tags -->
     <h2 class="gameStateText">{@html gameState}</h2>
     <div class="main_inner">
       <div class="top">
@@ -352,6 +354,7 @@
           currentServer.totalTimerSeconds !== undefined
             ? `${currentServer.timer}/${currentServer.totalTimerSeconds} - `
             : ""}
+          <!-- eslint-disable-next-line svelte/no-at-html-tags -->
           {@html currentServer.announcements[getCurrentUserRoleId()] ?? ""}
         </h1>
       </div>
@@ -373,48 +376,48 @@
                 serverId={data?.currentServerId}
               />
             {/each}
-            {:else}
+          {:else}
             <!-- Normal mode -->
-          {#each currentServer.players as playerId}
-            {#if playerId === data?.currentUserId}
-              <PlayerCard
-                {data}
-                {playerId}
-                playerName={getPlayerNameById(playerId)}
-                playerRole={currentServer.playerRoles.find(
-                  (pr) => pr.userId === playerId,
-                )?.role}
-                ownCard
-                ownUserId={data?.currentUserId}
-                ast={data?.ast}
-                serverId={data?.currentServerId}
-              />
-            {:else if isMafiaGameRole(currentServer.playerRoles.find((pr) => pr.userId === data?.currentUserId)?.role)}
-              <PlayerCard
-                {data}
-                {playerId}
-                playerName={getPlayerNameById(playerId)}
-                playerRole={currentServer.playerRoles.find(
-                  (pr) => pr.userId === playerId,
-                )?.role}
-                ownUserId={data?.currentUserId}
-                ast={data?.ast}
-                serverId={data?.currentServerId}
-              />
-            {:else}
-              <PlayerCard
-                {data}
-                {playerId}
-                playerRole={currentServer.playerRoles.find(
-                  (pr) => pr.userId === playerId,
-                )?.role}
-                playerName={getPlayerNameById(playerId)}
-                ownUserId={data?.currentUserId}
-                ast={data?.ast}
-                serverId={data?.currentServerId}
-              />
-            {/if}
-          {/each}
+            {#each currentServer.players as playerId}
+              {#if playerId === data?.currentUserId}
+                <PlayerCard
+                  {data}
+                  {playerId}
+                  playerName={getPlayerNameById(playerId)}
+                  playerRole={currentServer.playerRoles.find(
+                    (pr) => pr.userId === playerId,
+                  )?.role}
+                  ownCard
+                  ownUserId={data?.currentUserId}
+                  ast={data?.ast}
+                  serverId={data?.currentServerId}
+                />
+              {:else if isMafiaGameRole(currentServer.playerRoles.find((pr) => pr.userId === data?.currentUserId)?.role)}
+                <PlayerCard
+                  {data}
+                  {playerId}
+                  playerName={getPlayerNameById(playerId)}
+                  playerRole={currentServer.playerRoles.find(
+                    (pr) => pr.userId === playerId,
+                  )?.role}
+                  ownUserId={data?.currentUserId}
+                  ast={data?.ast}
+                  serverId={data?.currentServerId}
+                />
+              {:else}
+                <PlayerCard
+                  {data}
+                  {playerId}
+                  playerRole={currentServer.playerRoles.find(
+                    (pr) => pr.userId === playerId,
+                  )?.role}
+                  playerName={getPlayerNameById(playerId)}
+                  ownUserId={data?.currentUserId}
+                  ast={data?.ast}
+                  serverId={data?.currentServerId}
+                />
+              {/if}
+            {/each}
           {/if}
         {:else}
           <!-- Game ended -->

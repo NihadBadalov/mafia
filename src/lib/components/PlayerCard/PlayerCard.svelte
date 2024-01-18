@@ -96,7 +96,6 @@
   }
 </script>
 
-<!-- svelte-ignore a11y-click-events-have-key-events -->
 <div
   on:click={() => vote()}
   on:keyup={async (e) => await keyboardVote(e)}
@@ -105,5 +104,6 @@
   class="card card_{playerId} {ownCard ? 'ownCard' : ''}"
 >
   <img src={getImagePath(playerRole)} alt="Card" />
+  <!-- eslint-disable-next-line svelte/no-at-html-tags -->
   <p>{@html playerName}</p>
 </div>

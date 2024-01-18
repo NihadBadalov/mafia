@@ -8,7 +8,7 @@
   import { onMount } from "svelte";
 
   export let form: any;
-  export let data: { ast: UserAccessToken, ref: string|undefined };
+  export let data: { ast: UserAccessToken; ref: string | undefined };
 
   onMount(async () => {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
@@ -240,6 +240,7 @@
         {/if}
 
         <p style="color: #ff6060; font-weight: 600;">
+          <!-- eslint-disable-next-line svelte/no-at-html-tags -->
           {@html formError}
         </p>
       </form>
