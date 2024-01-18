@@ -1,5 +1,7 @@
 import { hasCurseWords } from '$lib';
-import { fail, redirect, type Actions } from '@sveltejs/kit';
+import { fail, redirect, type Actions, error } from '@sveltejs/kit';
+import type { PageServerLoad } from './$types';
+import { handleUserSession } from '$lib/server';
 
 export const actions = {
   default: async ({ request, fetch, cookies }) => {
@@ -8,7 +10,6 @@ export const actions = {
     let maxPlayerAmount = data.get('maxPlayerAmount') as unknown as number;
     let amountOfMafia = data.get('amountOfMafia') as unknown as number;
     const fillWithBots = !!data.get('fillWithBots');
-
 
     if (!cookies.get('fbs'))
       return fail(403, { notLoggedIn: true });
@@ -56,3 +57,15 @@ export const actions = {
     }
   },
 } satisfies Actions;
+
+export const load: PageServerLoad = (async ({ fetch, cookies }) => {
+  const response = await fetch('/api/servers');
+  const data = await response.json();
+
+  if (!data?.servers)
+    throw error(500, 'Server error: Couldn\'t fetch servers');
+
+   await handleUserSession(cookies, fetch, data.endpoint);
+});
+
+
