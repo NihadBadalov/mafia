@@ -45,6 +45,11 @@ module.exports = {
         // 'eslint:recommended',
         'plugin:svelte/recommended',
       ],
+
+      parser: 'svelte-eslint-parser',
+      parserOptions: {
+        parser: '@typescript-eslint/parser',
+      },
     },
   ],
   root: true,
