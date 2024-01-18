@@ -5,7 +5,7 @@
 
   export let form: any;
 
-  let _playerAmount = (form?.maxPlayerAmount as any as number) ?? 6;
+  let _playerAmount = (form?.maxPlayerAmount as any as number) ?? 16;
   $: _minMafiaAmount = 1 ?? (Math.floor(_playerAmount / 4) - 1 || 1);
   $: _maxMafiaAmount = Math.ceil(_playerAmount / 3);
   $: _mafiaAmount = (form?.amountOfMafia as any as number) ?? _minMafiaAmount;
