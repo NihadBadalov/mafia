@@ -32,7 +32,7 @@ export default defineConfig({
       typescript: false,
       eslint: {
         // for example, lint .ts and .tsx
-        lintCommand: 'eslint "./src/**/*.ts" --parser "@typescript-eslint/parser"'
+        lintCommand: 'eslint "./src/**/*.ts"'
       }
     })
   ],
