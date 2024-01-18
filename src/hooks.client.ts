@@ -1,7 +1,7 @@
 import * as Sentry from "@sentry/sveltekit";
 import { dev, building } from "$app/environment";
 
-const npm_package_version = '0.4.10';
+const npm_package_version = '0.4.11';
 const version = `${npm_package_version}-${building ? 'build' : dev ? 'dev' : 'prod'}`;
 
 
