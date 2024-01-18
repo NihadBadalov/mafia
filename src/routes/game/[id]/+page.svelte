@@ -358,6 +358,23 @@
 
       <div class="cards">
         {#if currentServer.state != GameStates.Ended}
+          {#if currentServer.specialStates.playerIdsRevealingRoles.length > 0}
+            <!-- User role reveal -->
+            {#each currentServer.specialStates.playerIdsRevealingRoles as playerId}
+              <PlayerCard
+                {data}
+                {playerId}
+                playerName={getPlayerNameById(playerId)}
+                playerRole={currentServer.playerRoles.find(
+                  (pr) => pr.userId === playerId,
+                )?.role}
+                ownUserId={data?.currentUserId}
+                ast={data?.ast}
+                serverId={data?.currentServerId}
+              />
+            {/each}
+            {:else}
+            <!-- Normal mode -->
           {#each currentServer.players as playerId}
             {#if playerId === data?.currentUserId}
               <PlayerCard
@@ -372,7 +389,7 @@
                 ast={data?.ast}
                 serverId={data?.currentServerId}
               />
-            {:else if (currentServer.playerRoles.find((pr) => pr.userId === data?.currentUserId)?.role === GameRoles.Mafia || currentServer.playerRoles.find((pr) => pr.userId === data?.currentUserId)?.role === GameRoles.Don) && (currentServer.playerRoles.find((pr) => pr.userId === playerId)?.role === GameRoles.Mafia || currentServer.playerRoles.find((pr) => pr.userId === playerId)?.role === GameRoles.Don)}
+            {:else if isMafiaGameRole(currentServer.playerRoles.find((pr) => pr.userId === data?.currentUserId)?.role)}
               <PlayerCard
                 {data}
                 {playerId}
@@ -398,6 +415,7 @@
               />
             {/if}
           {/each}
+          {/if}
         {:else}
           <!-- Game ended -->
           {#each currentServer.initialPlayers as playerId}

@@ -285,11 +285,8 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
       if (server.bots.find(b => b.userId === killedPersonIdByDon)) {
         server.bots.find(b => b.userId === killedPersonIdByDon)?.selfDestruct();
       }
-    }
 
-
-    // Change announcement text if both Mafia and Don killed someone
-    if (killedPersonIdByDon) {
+      // Change announcement text if both Mafia and Don killed someone
       const u = getUserById(killedPersonIdByDon);
 
       if (killText?.endsWith(' WAS KILLED')) {
@@ -308,6 +305,7 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
       'all',
       server?.id,
     );
+
     await sleep(3_000);
 
     await gameAnnounce(
@@ -316,7 +314,27 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
       server?.id,
     );
 
-    await sleep(4_000);
+    // Show the role
+    if (killText?.endsWith(' WAS KILLED') || (killText?.endsWith(' WERE KILLED') && killedPersonIdByDon)) {
+      console.log('night reveal');
+      await sleep(5_000);
+
+      await fetch(`/api/servers/${server.id}/revealPlayerRole`, {
+        method: 'POST',
+        body: JSON.stringify({
+          origin: _data.serverPassphrase,
+          userIds: [
+            killedPersonId,
+            killedPersonIdByDon && killText?.endsWith(' WERE KILLED') ? killedPersonIdByDon : undefined,
+          ],
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      } as RequestInit);
+    }
+
+    await sleep(3_000);
   }
 
 

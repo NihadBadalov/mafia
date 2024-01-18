@@ -31,6 +31,7 @@ export default class GameServer {
   specialStates: {
     sheriffAbility: boolean;
     doctorAbility: boolean;
+    playerIdsRevealingRoles: UserId[];
   };
 
   announcements: Record<typeof GameRoles[keyof typeof GameRoles] | number, string>;
@@ -90,6 +91,7 @@ export default class GameServer {
     this.specialStates = {
       sheriffAbility: false,
       doctorAbility: false,
+      playerIdsRevealingRoles: [],
     };
 
     this.announcements = {

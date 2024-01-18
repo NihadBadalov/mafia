@@ -124,14 +124,32 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
       'all',
       server?.id,
     );
-    await sleep(2_000);
+
+    await sleep(3_000);
+
     await gameAnnounce(
       kickText,
       'all',
       server?.id,
     );
 
-    await sleep(7_000);
+    // Show the role
+    if (kickText?.endsWith(' WAS VOTE-KICKED')) {
+      await sleep(5_000);
+
+      await fetch(`/api/servers/${server.id}/revealPlayerRole`, {
+        method: 'POST',
+        body: JSON.stringify({
+          origin: _data.serverPassphrase,
+          userIds: [kickedPersonId],
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      } as RequestInit);
+    }
+
+    await sleep(3_000);
   }
 
   const endVotePlayerRoles = server.players.map(pid => isMafiaGameRole(getUserRoleInServer(pid)));

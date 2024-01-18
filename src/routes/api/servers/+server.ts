@@ -51,13 +51,22 @@ export const GET: RequestHandler = async ({ cookies, setHeaders, url }) => {
     if (userIsMafia) {
       // Hide non-mafia playerRoles for Mafia
       for (let j = 0; j < server.playerRoles?.length; j++) {
-        if (!isMafiaGameRole(server.playerRoles[j].role)) server.playerRoles[j].role = GameRoles.Unknown;
+        // Continue if player is kicked and his role is being revealed
+        if (server.specialStates.playerIdsRevealingRoles.indexOf(server.playerRoles[j]?.userId) !== -1)
+          continue;
+
+        if (!isMafiaGameRole(server.playerRoles[j].role))
+          server.playerRoles[j].role = GameRoles.Unknown;
       }
     }
 
     if (!userIsMafia) {
       // Hide mafia playerRoles for Non-mafia
       for (let j = 0; j < server.playerRoles?.length; j++) {
+        // Continue if player is kicked and his role is being revealed
+        if (server.specialStates.playerIdsRevealingRoles.indexOf(server.playerRoles[j]?.userId) !== -1)
+          continue;
+
         if (server.playerRoles[j]?.userId === user?.id) continue;
         server.playerRoles[j].role = GameRoles.Unknown;
       }
