@@ -24,6 +24,11 @@ interface UserObservableArrayInterface<T> extends Array<T> {
    * @returns An array containing the elements that were deleted.
    */
   splice(inLoop: 'passed', start: number, deleteCount?: number): T[];
+  /**
+    * Returns an array of the UserObservableArray
+   * @returns Array<T> Array from UserObservableArray
+   */
+  toArray(): T[];
 }
 
 /*
@@ -81,5 +86,13 @@ export class UserObservableArray<T> extends Array<T> implements UserObservableAr
     }
 
     return userId;
+  }
+
+  /**
+    * Returns an array of the UserObservableArray
+   * @returns {Array<T>} Array from UserObservableArray
+   */
+  toArray(): T[] {
+    return [...this.values()];
   }
 }
