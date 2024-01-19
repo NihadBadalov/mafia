@@ -85,7 +85,7 @@
         <!-- Input type checkbox to check if people want their servers to be filled with bots when there aren't enough players -->
         <div class="fill_with_bots">
           <p>Fill with bots?</p>
-          <input type="checkbox" name="fillWithBots" />
+          <input type="checkbox" name="fillWithBots" checked />
         </div>
         <button class="btn" id="btn_create" type="submit">Create</button>
 
