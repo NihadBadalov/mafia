@@ -176,7 +176,7 @@ export function randomEnumValue<T extends object>(enumeration: any): T[keyof T] 
   return numberEnumValues[Math.floor(Math.random() * numberEnumValues.length)];
 }
 
-export function arrayShuffle(array: any[]) {
+export function arrayShuffle<T>(array: T[]): T[] {
   let currentIndex = array.length, randomIndex;
 
   // While there remain elements to shuffle.
