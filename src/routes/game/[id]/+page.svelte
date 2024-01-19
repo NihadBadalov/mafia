@@ -154,7 +154,7 @@
       );
       if (!chat) return;
 
-      console.log(`clientmsg: ${iT1} ${iT2} ${iT3} ${userId}`);
+      // console.log(`clientmsg: ${iT1} ${iT2} ${iT3} ${userId}`);
       let p = null;
       p = document.createElement("p");
 
@@ -174,10 +174,10 @@
         return cache[uid];
       }
 
-      let innerText =
-        iT1 + (cache[userId] ?? fetchUser(userId)) + ": " + iT2 + iT3;
+      let innerText = iT1 + (cache[userId] ?? fetchUser(userId)) + ": " + iT2 + iT3;
 
       p.innerHTML = innerText;
+      p.classList.add('chatMessage');
       if (userId === data?.currentUserId) p.classList.add("ownMessage");
 
       chat.append(p);

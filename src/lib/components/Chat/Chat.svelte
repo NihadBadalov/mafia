@@ -65,7 +65,6 @@
   function fetchUser(uid: number) {
     cache[uid] =
       getUserById(uid, data as ModifiedServerData)?.name ?? "Unnamed user";
-    console.log("fetched chat user", cache[uid]);
 
     if (uid === userId)
       cache[uid] =
@@ -130,7 +129,6 @@
           {#if message.userId === -1}
             <!-- System message -->
             <span class="italic">
-              <!-- eslint ignore -->
               <!-- eslint-disable-next-line svelte/no-at-html-tags -->
               {@html cache[message?.userId]}:
               <!-- eslint-disable-next-line svelte/no-at-html-tags -->
@@ -139,7 +137,7 @@
           {:else}
             <!-- Normal message -->
             <!-- eslint-disable-next-line svelte/no-at-html-tags -->
-            {@html cache[message?.userId]}:
+            {@html cache[message?.userId] ?? fetchUser(message?.userId)}:
             {message.content}
           {/if}
         </p>
