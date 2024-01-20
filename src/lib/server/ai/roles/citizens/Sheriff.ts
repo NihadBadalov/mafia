@@ -1,4 +1,4 @@
-import { SuspicionMessage, getGameServerById, getUserById, isMafiaGameRole } from "$lib";
+import { ImpostorDoctorMessage, SuspicionMessage, getGameServerById, getUserById, isMafiaGameRole } from "$lib";
 import type GameServer from "$lib/server/GameServer";
 import { GameRoles } from "$types/GameRoles";
 import { GameStates } from "$types/GameStates";
@@ -52,7 +52,7 @@ export class Sheriff extends BaseRole {
       await this.sendMessage(this.replies.STARTED.NOT_MUCH[Math.floor(Math.random() * this.replies.STARTED.NOT_MUCH.length)]);
     }, 500 + Math.floor(Math.random() * 1000));
 
-    await sleep(1000 + Math.floor(Math.random() * 3_000));
+    if (!this.impersonators.length) await sleep(1000 + Math.floor(Math.random() * 3_000));
 
     // Someone guessed last night
     const player = getUserById(this.playerIdRoleGuessedLastNight);
@@ -92,20 +92,48 @@ export class Sheriff extends BaseRole {
       .replaceAll('\'', '');
 
     if (server.state === GameStates.Day) {
+      const author = getUserById(authorId);
+      if (!author) return;
+
+      // Doctor: let's kick the fake Doctor
+      const doctorSuspicionMessage = messageContent.match(ImpostorDoctorMessage);
+      if (
+        doctorSuspicionMessage?.[1]
+        && !Number.isNaN(doctorSuspicionMessage?.[1])
+      ) {
+        await sleep(1_000 + Math.floor(Math.random() * 1_000));
+
+        await this.sendMessage(`Sure, voting for ${doctorSuspicionMessage[1]}.`);
+        await this.vote(+doctorSuspicionMessage[1]);
+      }
+
+      // Someone's suspecting someone
+      const suspicionMessage = messageContent.match(SuspicionMessage);
+      if (
+        suspicionMessage?.[1]
+        && !Number.isNaN(suspicionMessage?.[1])
+      ) {
+        await sleep(1_000 + Math.floor(Math.random() * 1_500));
+
+        const suspectUserId = +suspicionMessage[1];
+
+        if (suspectUserId === this.userId) {
+          // We are being suspected
+          const possibleReplies = this.replies.STARTED.GOT_SUSPECTED.GENERAL
+            .concat(this.replies.STARTED.GOT_SUSPECTED?.[this.gameRole]);
+
+          await this.sendMessage(possibleReplies[Math.floor(Math.random() * possibleReplies.length)]);
+        } else {
+          const willVote = Math.floor(Math.random() * 100) > 35;
+          if (Math.floor(Math.random() * 100) > 35) await this.sendMessage(`${willVote ? 'Yep' : 'Nope'},${willVote ? '' : ' not'} voting for them.`);
+          if (willVote) await this.vote(suspectUserId);
+        }
+      }
+
       if (this.userId !== authorId && this.messageContainsKeywords(messageContent, ['i', ['im', 'am'], 'sheriff'])) {
         // Someone is impersonating us
         await this.sendMessage(`@${authorId} ${authorName} is not the Sheriff. I am the Sheriff. He is lying. Let's kick him.`);
         this.impersonators.unshift(authorId);
-      }
-
-      // Random player suspicions
-      const suspicionMatches = messageContent.match(SuspicionMessage);
-      if (
-        suspicionMatches?.[1]
-        && !Number.isNaN(suspicionMatches?.[1])
-        && await this.vote(+suspicionMatches[1])
-      ) {
-        await this.sendMessage(`Alright. Voting for ${suspicionMatches[1]}, too.`);
       }
     }
 

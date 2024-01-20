@@ -7,6 +7,33 @@ import { setTimeout as sleep } from "timers/promises";
 
 const REPLIES = {
   STARTED: {
+    GOT_SUSPECTED: {
+      GENERAL: [
+        'I swear to God it\'s not me',
+        'I swear it\'s not me',
+      ],
+      [GameRoles.Sheriff]: [
+        'I\'m the Sheriff',
+        'I\'m the sheriff',
+        'I\'m a Doctor',
+      ],
+      [GameRoles.Citizen]: [
+        'I am a citizen',
+        'I am a Citizen',
+      ],
+      [GameRoles.Doctor]: [
+        'I\'m the Doctor',
+        'I\'m the doctor',
+      ],
+      [GameRoles.Mafia]: [
+        'I\'m a citizen',
+        'I\'m a Citizen',
+      ],
+      [GameRoles.Don]: [
+        'I\'m a citizen',
+        'I\'m a Citizen',
+      ],
+    },
     WHO_IS_MAFIA: [
       'Who is Mafia? I have no idea',
       'No clue who the Mafia are',
@@ -269,12 +296,11 @@ export default abstract class BaseRole {
 
   async suspect(userId: UserId) {
     const user = _data.users.find(u => u.id === userId);
-    console.log('suspect 1');
     if (!user) return;
 
-    console.log('suspect 2');
-    await sleep(Math.floor(Math.random() * 5_000) + 1_000);
+    await sleep(Math.floor(Math.random() * 1_000) + 1_000);
     await this.sendMessage(`I suspect ${user.name} (@${user.id}). Let's kick him out`);
+    await this.vote(user.id);
   }
 }
 

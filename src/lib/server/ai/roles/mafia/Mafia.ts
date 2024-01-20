@@ -1,4 +1,4 @@
-import { MafiaProposalToKill, SheriffProposalToKick, SuspicionMessage, arrayShuffle, getGameServerById, getUserById, getUserRoleInServer, isMafiaGameRole } from "$lib";
+import { ImpostorDoctorMessage, ImpostorSheriffMessage, MafiaProposalToKill, SheriffProposalToKick, SuspicionMessage, arrayShuffle, getGameServerById, getUserById, getUserRoleInServer, isMafiaGameRole } from "$lib";
 import type GameServer from "$lib/server/GameServer";
 import { GameRoles } from "$types/GameRoles";
 import { GameStates } from "$types/GameStates";
@@ -84,11 +84,35 @@ export class Mafia extends BaseRole {
     const messageContent = msgContent
       .toLowerCase()
 
-
     // Day/Night
     if (server.state === GameStates.Night) {
+      /* Day */
       const author = getUserById(authorId);
       if (!author) return;
+
+      // Sheriff: let's kick the fake Sheriff
+      const sheriffSuspicionMessage = messageContent.match(ImpostorSheriffMessage);
+      if (
+        sheriffSuspicionMessage?.[1]
+        && !Number.isNaN(sheriffSuspicionMessage?.[1])
+      ) {
+        await sleep(1_000 + Math.floor(Math.random() * 1_000));
+
+        await this.sendMessage(`Sure, voting for ${sheriffSuspicionMessage[1]}.`);
+        await this.vote(+sheriffSuspicionMessage[1]);
+      }
+
+      // Doctor: let's kick the fake Doctor
+      const doctorSuspicionMessage = messageContent.match(ImpostorDoctorMessage);
+      if (
+        doctorSuspicionMessage?.[1]
+        && !Number.isNaN(doctorSuspicionMessage?.[1])
+      ) {
+        await sleep(1_000 + Math.floor(Math.random() * 1_000));
+
+        await this.sendMessage(`Sure, voting for ${doctorSuspicionMessage[1]}.`);
+        await this.vote(+doctorSuspicionMessage[1]);
+      }
 
       if (isMafiaGameRole(getUserRoleInServer(author?.id))) {
         // Mafia: proposal to kill somebody
@@ -97,18 +121,35 @@ export class Mafia extends BaseRole {
           this.currentlyVotingFor = +mafiaProposalMatches[1];
         }
       }
-
-      // Random player suspicions
-      const suspicionMatches = messageContent.match(SuspicionMessage);
-      if (
-        suspicionMatches?.[1]
-        && !Number.isNaN(suspicionMatches?.[1])
-        && await this.vote(+suspicionMatches[1])
-      ) {
-        await this.sendMessage(`Alright. Voting for ${suspicionMatches[1]}, too.`);
-      }
     }
     else {
+      /* Night */
+      const author = getUserById(authorId);
+      if (!author) return;
+
+      // Someone's suspecting someone
+      const suspicionMessage = messageContent.match(SuspicionMessage);
+      if (
+        suspicionMessage?.[1]
+        && !Number.isNaN(suspicionMessage?.[1])
+      ) {
+        await sleep(1_000 + Math.floor(Math.random() * 1_500));
+
+        const suspectUserId = +suspicionMessage[1];
+
+        if (suspectUserId === this.userId) {
+          // We are being suspected
+          const possibleReplies = this.replies.STARTED.GOT_SUSPECTED.GENERAL
+            .concat(this.replies.STARTED.GOT_SUSPECTED?.[this.gameRole]);
+
+          await this.sendMessage(possibleReplies[Math.floor(Math.random() * possibleReplies.length)]);
+        } else {
+          const willVote = Math.floor(Math.random() * 100) > 35;
+          if (Math.floor(Math.random() * 100) > 35) await this.sendMessage(`${willVote ? 'Yep' : 'Nope'},${willVote ? '' : ' not'} voting for them.`);
+          if (willVote) await this.vote(suspectUserId);
+        }
+      }
+
       // Sheriff: proposal to kick somebody
       const sheriffProposalMatches = messageContent.match(SheriffProposalToKick);
       if (sheriffProposalMatches?.[1] && !Number.isNaN(sheriffProposalMatches?.[1])) {

@@ -316,7 +316,6 @@ export const POST: RequestHandler = async ({ request, params, fetch }) => {
 
     // Show the role
     if (killText?.endsWith(' WAS KILLED') || (killText?.endsWith(' WERE KILLED') && killedPersonIdByDon)) {
-      console.log('night reveal');
       await sleep(5_000);
 
       await fetch(`/api/servers/${server.id}/revealPlayerRole`, {

@@ -60,6 +60,7 @@ export default class GameServer {
   #tickDirection: 0 | 1 = 0;
   #tickCounter: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 = 0;
   #suspicionDebounce = false;
+  #goingToWin: 'mafia' | 'citizens' | undefined;
 
 
   constructor(
@@ -118,6 +119,9 @@ export default class GameServer {
     this.totalTimerSeconds = undefined;
     this.timer = undefined;
 
+    this.#goingToWin = Math.floor(Math.random() * 100) > 65 ? 'mafia' : 'citizens';
+    console.log(this.#goingToWin);
+
 
     this.players.on('userKick', (userId: number) => {
       const suspicionGroupIndex = this.suspicionGroups.findIndex(spGroup => {
@@ -132,7 +136,7 @@ export default class GameServer {
   }
 
   private checkForExistance() {
-    return !!_data.servers.find(s => s.id);
+    return !!_data.servers.find(s => s.id === this.id);
   }
 
   private async tick(): Promise<void> {
@@ -155,30 +159,24 @@ export default class GameServer {
     if (this.#tickCounter % 10 == 0 && this.checkForExistance() === false) return;
 
 
-    console.log('tick test');
-    // More than 5 seconds since the last message
-    console.log(
-      !!this.citizenChat.at(-1)?.timestamp,
-      Date.now() - (this.citizenChat.at(-1)?.timestamp ?? 0) > 5_000,
-      Date.now() - (this.citizenChat.at(-1)?.timestamp ?? 0) !== Date.now()
-    );
+    // Suspicion
     if (
       !this.#suspicionDebounce
+      && this.votingBetween.length
       && this.state === GameStates.Day
       && !!this.citizenChat.at(-1)?.timestamp
       && Date.now() - (this.citizenChat.at(-1)?.timestamp ?? 0) > 5_000
       && Date.now() - (this.citizenChat.at(-1)?.timestamp ?? 0) !== Date.now()
       && this.suspicionGroups.length < 3
     ) {
-      this.#suspicionDebounce = true;
-
-      const eligiblePlayers = arrayShuffle([...this.players.filter(pid => !this.suspicionGroups.find(spGroup => spGroup.suspecting === pid))]);
-      console.log('eligibles', eligiblePlayers);
+      const eligiblePlayers = this.#goingToWin === 'citizens' && Math.floor(Math.random() * 100) > 45
+        ? arrayShuffle([...this.players.toArray().filter(pid => this.votingBetween.indexOf(pid) !== -1 && isMafiaGameRole(getUserRoleInServer(pid)) && !this.suspicionGroups.find(spGroup => spGroup.suspecting === pid))])
+        : arrayShuffle([...this.players.toArray().filter(pid => this.votingBetween.indexOf(pid) !== -1 && !this.suspicionGroups.find(spGroup => spGroup.suspecting === pid))]);
 
       let suspectedPlayer: UserId = -1;
       for (let i = 0; i < eligiblePlayers.length; i++) {
-        const triggerMessage = !this.citizenChat.findLast(
-          message => message.userId === eligiblePlayers[i] && message.timestamp > 20_000
+        const triggerMessage = this.citizenChat.findLast(
+          message => message.userId === eligiblePlayers[i]
         );
 
         if (triggerMessage) {
@@ -192,13 +190,17 @@ export default class GameServer {
         const suspicionGroup = new SuspicionGroup(suspectedPlayer, GameRoles.Mafia);
         this.suspicionGroups.unshift(suspicionGroup);
 
-        const citizenPlayerIDs = arrayShuffle(this.playerRoles).find(uid => !isMafiaGameRole(getUserRoleInServer(uid)));
+        this.#suspicionDebounce = true;
+
+        const citizenPlayerIDs = arrayShuffle(this.playerRoles)
+          .map(pr => pr?.userId)
+          .filter(pr => !isMafiaGameRole(getUserRoleInServer(pr)) && pr !== suspectedPlayer);
+
         suspicionGroup.attach(citizenPlayerIDs[Math.floor(Math.random() * citizenPlayerIDs.length)]);
+        console.log(`Suspicion group created against ${suspectedPlayer}`);
       }
 
-      setTimeout(() => {
-        this.#suspicionDebounce = false;
-      }, 6000);
+      setTimeout(() => this.#suspicionDebounce = false, 3_000);
     }
 
     await sleep(1_000);
