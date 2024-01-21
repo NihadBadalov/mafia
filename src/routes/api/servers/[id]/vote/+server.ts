@@ -53,11 +53,13 @@ export const POST: RequestHandler = async ({ request, params }) => {
     });
 
     server.citizenChat.push({
+      id: (server.citizenChat.at(-1)?.id ?? 0) + 1,
       userId: -1,
       content: `${user.name} (${user.id}) voted for ${targetUser.name} (${targetUser.id})`,
       timestamp: Date.now(),
     });
     server.mafiaChat.push({
+      id: (server.mafiaChat.at(-1)?.id ?? 0) + 1,
       userId: -1,
       content: `${user.name} (${user.id}) voted for ${targetUser.name} (${targetUser.id})`,
       timestamp: Date.now(),
@@ -81,6 +83,7 @@ export const POST: RequestHandler = async ({ request, params }) => {
     });
 
     server.mafiaChat.push({
+      id: (server.mafiaChat.at(-1)?.id ?? 0) + 1,
       userId: -1,
       content: `<i>${user.name} (${user.id}) voted for ${targetUser.name} (${targetUser.id})</i>`,
       timestamp: Date.now(),

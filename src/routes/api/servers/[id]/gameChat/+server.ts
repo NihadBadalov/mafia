@@ -61,12 +61,16 @@ export const POST: RequestHandler = async ({ request, params }) => {
 
   // Server not started yet
   if (!server.started) {
+    const citizenChatMessageID = (server.citizenChat.at(-1)?.id ?? 0) + 1;
+    const mafiaChatMessageID = (server.mafiaChat.at(-1)?.id ?? 0) + 1;
     server.citizenChat.push({
+      id: citizenChatMessageID,
       userId: userId,
       content: message,
       timestamp: Date.now(),
     });
     server.mafiaChat.push({
+      id: mafiaChatMessageID,
       userId: userId,
       content: message,
       timestamp: Date.now(),
@@ -74,10 +78,19 @@ export const POST: RequestHandler = async ({ request, params }) => {
 
     io.emit('serverEvent', {
       message: 'chatMessageFromServerToServer',
-      to: 2,
+      to: 0,
       serverId: server?.id,
       userId: userId,
       content: message,
+      messageId: mafiaChatMessageID,
+    });
+    io.emit('serverEvent', {
+      message: 'chatMessageFromServerToServer',
+      to: 1,
+      serverId: server?.id,
+      userId: userId,
+      content: message,
+      messageId: citizenChatMessageID,
     });
     io.emit('serverEvent', {
       message: 'playSound',
@@ -94,32 +107,16 @@ export const POST: RequestHandler = async ({ request, params }) => {
 
   // Server started
   if (server.state === GameStates.Day) {
+    const citizenChatMessageID = (server.citizenChat.at(-1)?.id ?? 0) + 1;
+    const mafiaChatMessageID = (server.mafiaChat.at(-1)?.id ?? 0) + 1;
     server.citizenChat.push({
+      id: citizenChatMessageID,
       userId: userId,
       content: message,
       timestamp: Date.now(),
     });
     server.mafiaChat.push({
-      userId: userId,
-      content: message,
-      timestamp: Date.now(),
-    });
-    io.emit('serverEvent', {
-      message: 'chatMessageFromServerToServer',
-      to: 1,
-      serverId: server?.id,
-      userId: userId,
-      content: message,
-    });
-    io.emit('serverEvent', {
-      message: 'playSound',
-      soundName: 'beep',
-      serverId: server?.id,
-    });
-    notifyBots(server, message, user.name, user.id, 2);
-  }
-  else {
-    server.mafiaChat.push({
+      id: mafiaChatMessageID,
       userId: userId,
       content: message,
       timestamp: Date.now(),
@@ -130,6 +127,38 @@ export const POST: RequestHandler = async ({ request, params }) => {
       serverId: server?.id,
       userId: userId,
       content: message,
+      messageId: mafiaChatMessageID,
+    });
+    io.emit('serverEvent', {
+      message: 'chatMessageFromServerToServer',
+      to: 1,
+      serverId: server?.id,
+      userId: userId,
+      content: message,
+      messageId: citizenChatMessageID,
+    });
+    io.emit('serverEvent', {
+      message: 'playSound',
+      soundName: 'beep',
+      serverId: server?.id,
+    });
+    notifyBots(server, message, user.name, user.id, 2);
+  }
+  else {
+    const mafiaChatMessageID = (server.mafiaChat.at(-1)?.id ?? 0) + 1;
+    server.mafiaChat.push({
+      id: mafiaChatMessageID,
+      userId: userId,
+      content: message,
+      timestamp: Date.now(),
+    });
+    io.emit('serverEvent', {
+      message: 'chatMessageFromServerToServer',
+      to: 0,
+      serverId: server?.id,
+      userId: userId,
+      content: message,
+      messageId: mafiaChatMessageID,
     });
     io.emit('serverEvent', {
       message: 'playSound',
