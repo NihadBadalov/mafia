@@ -29,8 +29,8 @@ export const POST: RequestHandler = async ({ request, params }) => {
     throw error(403, 'Not Authorized');
 
   const revealTitle = userIdsToReveal.length > 1
-    ? 'THEIR ROLES ARE:'
-    : 'HIS ROLE IS:';
+    ? 'THEIR ROLES WERE:'
+    : 'HIS ROLE WAS:';
 
   server.specialStates.playerIdsRevealingRoles = userIdsToReveal;
   await gameAnnounce(
