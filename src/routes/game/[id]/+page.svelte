@@ -141,20 +141,17 @@
       } catch (e) {}
     });
 
-    io.on("chatMessageToClient", ({ iT1, iT2, iT3, userId }) => {
-      /*
-      Quick summary on why we cannot use sounds for in-game messages:
-
-      The reason is
-      that svelte reactivity updates faster than the WS (idk how and why)
-      which is why it cannot play an audio
-      */
+    io.on("chatMessageToClient", ({ content, userId, messageId }) => {
       let chat = document.querySelector(
         ".game_chat > .game_chat__contents > .game_chat__inner__message_holder",
       );
       if (!chat) return;
 
-      // console.log(`clientmsg: ${iT1} ${iT2} ${iT3} ${userId}`);
+      // Prevent duplicates
+      const duplicate = chat.querySelector(`p[data-message-id="${messageId}"]`);
+      console.log('duplicate', duplicate);
+      if (duplicate) return;
+
       let p = null;
       p = document.createElement("p");
 
@@ -174,10 +171,12 @@
         return cache[uid];
       }
 
-      let innerText = iT1 + (cache[userId] ?? fetchUser(userId)) + ": " + iT2 + iT3;
-
+      let innerText = (cache[userId] ?? fetchUser(userId)) + ": " + content;
       p.innerHTML = innerText;
-      p.classList.add('chatMessage');
+      p.classList.add("chatMessage");
+      p.classList.add("from-socket");
+      p.setAttribute("data-message-id", messageId);
+
       if (userId === data?.currentUserId) p.classList.add("ownMessage");
 
       chat.append(p);

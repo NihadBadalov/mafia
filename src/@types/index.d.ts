@@ -26,6 +26,7 @@ export interface ModifiedServerData extends ServerData {
 }
 
 export interface ChatMessage {
+  id: number;
   userId: UserId;
   content: string;
   timestamp: number;

@@ -98,6 +98,8 @@
       messages[i]?.userId,
     );
   }
+
+  let chat;
 </script>
 
 <div class="game_chat">
@@ -123,24 +125,29 @@
   </form>
 
   <div class="game_chat__inner game_chat__contents">
-    <div class="game_chat__inner__message_holder">
+    <div bind:this={chat} class="game_chat__inner__message_holder">
       {#each messages as message}
-        <p class="chatMessage {userId === message.userId ? 'ownMessage' : ''}">
-          {#if message.userId === -1}
-            <!-- System message -->
-            <span class="italic">
+        {#if !chat?.querySelector(`p.from-socket[data-message-id="${message.id}"]`)}
+          <p
+            class="chatMessage{userId === message.userId ? ' ownMessage' : ''}"
+            data-message-id={message.id}
+          >
+            {#if message.userId === -1}
+              <!-- System message -->
+              <span class="italic">
+                <!-- eslint-disable-next-line svelte/no-at-html-tags -->
+                {@html cache[message?.userId]}:
+                <!-- eslint-disable-next-line svelte/no-at-html-tags -->
+                {@html message.content}
+              </span>
+            {:else}
+              <!-- Normal message -->
               <!-- eslint-disable-next-line svelte/no-at-html-tags -->
-              {@html cache[message?.userId]}:
-              <!-- eslint-disable-next-line svelte/no-at-html-tags -->
-              {@html message.content}
-            </span>
-          {:else}
-            <!-- Normal message -->
-            <!-- eslint-disable-next-line svelte/no-at-html-tags -->
-            {@html cache[message?.userId] ?? fetchUser(message?.userId)}:
-            {message.content}
-          {/if}
-        </p>
+              {@html cache[message?.userId] ?? fetchUser(message?.userId)}:
+              {message.content}
+            {/if}
+          </p>
+        {/if}
       {/each}
     </div>
   </div>

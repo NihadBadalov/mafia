@@ -163,17 +163,18 @@ export default function injectSocketIO(server) {
           break;
 
         case 'chatMessageFromServerToServer':
-          if (args?.to === undefined
+          if (
+            args?.to === undefined
             || !args?.serverId
             || !args?.userId
-            || !args?.content) return;
+            || !args?.content
+            || !args?.messageId
+          ) return;
 
           let emitContent = {
-            // iT being innerText
-            iT1: '<p class="chatMessage">',
-            iT2: args?.content ?? '',
-            iT3: '</p>',
+            content: args?.content ?? '',
             userId: args?.userId,
+            messageId: args?.messageId ?? 0,
           };
 
           switch (args?.to) {
