@@ -87,7 +87,6 @@ export class Citizen extends BaseRole {
           await this.sendMessage(possibleReplies[Math.floor(Math.random() * possibleReplies.length)]);
         } else {
           const willVote = Math.floor(Math.random() * 100) > 35;
-          console.log(`Bot ${this.userId} is willingToVote? ${willVote}`);
           if (Math.floor(Math.random() * 100) > 35) await this.sendMessage(`${willVote ? 'Yep' : 'Nope'},${willVote ? '' : ' not'} voting for them.`);
           if (willVote) await this.vote(suspectUserId);
         }

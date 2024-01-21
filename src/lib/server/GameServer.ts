@@ -145,7 +145,7 @@ export default class GameServer {
       return this.tick();
     }
 
-    // Ticks
+    // Handle tick count (0-10)
     if (this.#tickDirection == 0) {
       this.#tickCounter += 1;
       if (this.#tickCounter === 10) this.#tickDirection = 1;
@@ -155,8 +155,13 @@ export default class GameServer {
       if (this.#tickCounter === 0) this.#tickDirection = 0;
     }
 
-    // Let gc collect us if we do not exist
-    if (this.#tickCounter % 10 == 0 && this.checkForExistance() === false) return;
+    if (this.#tickCounter % 10 == 0) {
+      // Let gc collect us if we do not exist
+      if (this.checkForExistance() === false) return;
+
+      // Remove inactive SuspicionGroups with 60+ inactivity
+      this.suspicionGroups = this.suspicionGroups.filter(spGroup => spGroup.created - Date.now() < 60_000);
+    }
 
 
     // Suspicion
@@ -197,7 +202,6 @@ export default class GameServer {
           .filter(pr => !isMafiaGameRole(getUserRoleInServer(pr)) && pr !== suspectedPlayer);
 
         suspicionGroup.attach(citizenPlayerIDs[Math.floor(Math.random() * citizenPlayerIDs.length)]);
-        console.log(`Suspicion group created against ${suspectedPlayer}`);
       }
 
       setTimeout(() => this.#suspicionDebounce = false, 3_000);

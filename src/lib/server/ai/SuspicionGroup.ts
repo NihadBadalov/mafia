@@ -8,6 +8,7 @@ export default class SuspicionGroup {
   possibleRole: GameRoles;
   roleProposals = new Map<GameRoles, number>();
   botsAttached: UserId[] = [];
+  created: number;
 
   constructor(
     userId: UserId,
@@ -15,6 +16,7 @@ export default class SuspicionGroup {
   ) {
     this.suspecting = userId;
     this.possibleRole = possibleRole;
+    this.created = Date.now();
   }
 
   attach(userId: UserId) {
