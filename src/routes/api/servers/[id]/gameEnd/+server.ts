@@ -1,5 +1,4 @@
 import { gameAnnounce, getUserRoleInServer, isMafiaGameRole } from "$lib";
-import { io } from "$lib/webSocketConnection";
 import { _data } from "$routes/api";
 import { GameStates } from "$types/GameStates";
 import { error, json, type RequestHandler } from "@sveltejs/kit";
@@ -49,13 +48,7 @@ export const POST: RequestHandler = async ({ request, params }) => {
 
   await sleep(20_000);
 
-  _data.servers = _data.servers.filter(s => s.id !== serverId);
-
-  io.emit('serverEvent', {
-    message: 'gameEndRedirect',
-    serverId: serverId,
-  });
-
+  await server.shutdown();
 
   // @ts-expect-error Yeah
   return json({}, { statusCode: 200 });

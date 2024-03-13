@@ -219,5 +219,30 @@ export default class GameServer {
     const mafiaChatMessage = this.mafiaChat.find(message => message.userId === userId);
     return citizenChatMessage ?? mafiaChatMessage;
   }
+
+  /**
+   * Shuts the server down and redirects the players
+   */
+  async shutdown(message?: string): Promise<void> {
+    this.playersCanChat = false;
+    this.state = GameStates.Ended;
+
+    if (message) {
+      await gameAnnounce(
+        message,
+        'all',
+        this.id,
+      );
+
+      await sleep(5_000);
+    }
+
+    _data.servers = _data.servers.filter(s => s.id !== this.id);
+
+    io.emit('serverEvent', {
+      message: 'gameEndRedirect',
+      serverId: this.id,
+    });
+  }
 }
 
