@@ -328,6 +328,14 @@
     <h2 class="gameStateText">{@html gameState}</h2>
     <div class="main_inner">
       <div class="top">
+        <h1 class="announcementText">
+          {currentServer.timer !== undefined &&
+          currentServer.totalTimerSeconds !== undefined
+            ? `${currentServer.timer}/${currentServer.totalTimerSeconds} - `
+            : ""}
+          <!-- eslint-disable-next-line svelte/no-at-html-tags -->
+          {@html currentServer.announcements[getCurrentUserRoleId()] ?? ""}
+        </h1>
         {#if !gameStarted}
           {#if currentServer.players.length < 6}
             <h1>
@@ -348,14 +356,6 @@
             {/if}
           {/if}
         {/if}
-        <h1 class="announcementText">
-          {currentServer.timer !== undefined &&
-          currentServer.totalTimerSeconds !== undefined
-            ? `${currentServer.timer}/${currentServer.totalTimerSeconds} - `
-            : ""}
-          <!-- eslint-disable-next-line svelte/no-at-html-tags -->
-          {@html currentServer.announcements[getCurrentUserRoleId()] ?? ""}
-        </h1>
       </div>
 
       <div class="cards">
