@@ -1,4 +1,4 @@
-import { arrayShuffle, getUserRoleInServer, isMafiaGameRole } from '$lib';
+import { arrayShuffle, gameAnnounce, getUserRoleInServer, isMafiaGameRole } from '$lib';
 import type { Chat, ChatMessage, UserId, Votes } from '$types';
 import { GameRoles } from '$types/GameRoles';
 import { GameStates } from '$types/GameStates';
@@ -8,6 +8,7 @@ import type { BaseRoleDerivative } from './ai/roles/BaseRole';
 import { setTimeout as sleep } from 'timers/promises';
 import { _data } from '$routes/api';
 import { UserObservableArray } from '$utils/UserObservableArray';
+import { io } from "$lib/webSocketConnection";
 
 export default class GameServer {
   id: number;
@@ -51,6 +52,7 @@ export default class GameServer {
 
   totalTimerSeconds: number | undefined;
   timer: number | undefined;
+  created: number;
 
   /**
     * Tick -> 10 -> 0 -> 10 ...
@@ -118,9 +120,9 @@ export default class GameServer {
 
     this.totalTimerSeconds = undefined;
     this.timer = undefined;
+    this.created = Date.now();
 
     this.#goingToWin = Math.floor(Math.random() * 100) > 65 ? 'mafia' : 'citizens';
-    console.log(this.#goingToWin);
 
 
     this.players.on('userKick', (userId: number) => {
@@ -140,11 +142,6 @@ export default class GameServer {
   }
 
   private async tick(): Promise<void> {
-    if (this.state === GameStates.Waiting) {
-      await sleep(1_000);
-      return this.tick();
-    }
-
     // Handle tick count (0-10)
     if (this.#tickDirection == 0) {
       this.#tickCounter += 1;
@@ -159,8 +156,24 @@ export default class GameServer {
       // Let gc collect us if we do not exist
       if (this.checkForExistance() === false) return;
 
+
+      // If we haven't started and are waiting for 30 minutes, end the sufferings
+      if (Date.now() - this.created > 1 * 60_000 && this.state === GameStates.Waiting) {
+        await this.shutdown(
+          'SHUTTING DOWN:<br/><span class="color_red">INACTIVITY</span>'
+        );
+        return;
+      }
+
       // Remove inactive SuspicionGroups with 60+ inactivity
       this.suspicionGroups = this.suspicionGroups.filter(spGroup => spGroup.created - Date.now() < 60_000);
+    }
+
+
+    // Don't continue if we're waiting
+    if (this.state === GameStates.Waiting) {
+      await sleep(1_000);
+      return this.tick();
     }
 
 
