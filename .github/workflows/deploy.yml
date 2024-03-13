@@ -13,14 +13,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v1
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8
 
       - name: Install dependencies
-        run: bun install &
+        run: pnpm install &
 
       - name: Build
-        run: bun run build &
+        run: pnpm run build &
         env:
           VITE_APIKEY: ${{ secrets.VITE_APIKEY }}
           VITE_AUTHDOMAIN: ${{ secrets.VITE_AUTHDOMAIN }}
@@ -44,5 +46,5 @@ jobs:
           script: |
             source ~/.bashrc
             cd ~/mafia
-            git pull origin main && ~/.bun/bin/bun install && ~/.bun/bin/bun run build && pm2 restart mafia
+            git pull origin main && pnpm install && pnpm run build && pm2 restart mafia
 
