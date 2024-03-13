@@ -158,7 +158,7 @@ export default class GameServer {
 
 
       // If we haven't started and are waiting for 30 minutes, end the sufferings
-      if (Date.now() - this.created > 1 * 60_000 && this.state === GameStates.Waiting) {
+      if (Date.now() - this.created > 30 * 60_000 && this.state === GameStates.Waiting) {
         await this.shutdown(
           'SHUTTING DOWN:<br/><span class="color_red">INACTIVITY</span>'
         );
