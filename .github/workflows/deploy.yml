@@ -13,12 +13,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v3
+      - name: Setup npm
+        uses: actions/setup-node@v4
         with:
-          version: 8
+          node-version: 18
 
       - name: Install dependencies
+        uses: actions/setup-node@v4
         run: pnpm install &
 
       - name: Build
@@ -46,5 +47,5 @@ jobs:
           script: |
             source ~/.bashrc
             cd ~/mafia
-            git pull origin main && pnpm install && pnpm run build && pm2 restart mafia
+            git pull origin main && npm install && npm run build && pm2 restart mafia
 
