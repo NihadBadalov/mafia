@@ -19,7 +19,6 @@ jobs:
           node-version: 18
 
       - name: Install dependencies
-        uses: actions/setup-node@v4
         run: pnpm install &
 
       - name: Build
