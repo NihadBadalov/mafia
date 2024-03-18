@@ -43,7 +43,7 @@
     "firebase": "~10.6.0",
     "firebase-admin": "~11.11.0",
     "socket.io": "^4.7.1",
-    "socket.io-client": "^4.7.1",
+    "socket.io-client": "^4.7.5",
     "vite": "^4.5.1",
     "washyourmouthoutwithsoap": "^1.0.2",
     "zod": "^3.22.4"
