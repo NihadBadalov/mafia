@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@firebase/auth':
-    specifier: ^1.4.0
-    version: 1.6.1(@firebase/app@0.9.28)
+    specifier: ^1.6.2
+    version: 1.6.2(@firebase/app@0.9.28)
   '@sentry/sveltekit':
     specifier: ^7.93.0
     version: 7.106.0(@sveltejs/kit@1.30.4)(encoding@0.1.13)(svelte@4.2.12)
@@ -661,8 +661,8 @@ packages:
       - encoding
     dev: false
 
-  /@firebase/auth@1.6.1(@firebase/app@0.9.28):
-    resolution: {integrity: sha512-oOuQVOxtxKr+kTTqEkkI2qXIeGbkNLpA8FzO030LF4KXmMcETqsPaIqw7Aw1Y4Zl82l1qpZtpc4vN4Da2qZdfQ==}
+  /@firebase/auth@1.6.2(@firebase/app@0.9.28):
+    resolution: {integrity: sha512-BFo/Nj1AAbKLbFiUyXCcnT/bSqMJicFOgdTAKzlXvCul7+eUE29vWmzd1g59O3iKAxvv3+fbQYjQVJpNTTHIyw==}
     peerDependencies:
       '@firebase/app': 0.x
       '@react-native-async-storage/async-storage': ^1.18.1
