@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@firebase/auth':
-    specifier: ^1.4.0
-    version: 1.6.1(@firebase/app@0.9.28)
+    specifier: ^1.7.0
+    version: 1.7.0(@firebase/app@0.9.28)
   '@sentry/sveltekit':
     specifier: ^7.93.0
     version: 7.106.0(@sveltejs/kit@1.30.4)(encoding@0.1.13)(svelte@4.2.12)
@@ -661,8 +661,8 @@ packages:
       - encoding
     dev: false
 
-  /@firebase/auth@1.6.1(@firebase/app@0.9.28):
-    resolution: {integrity: sha512-oOuQVOxtxKr+kTTqEkkI2qXIeGbkNLpA8FzO030LF4KXmMcETqsPaIqw7Aw1Y4Zl82l1qpZtpc4vN4Da2qZdfQ==}
+  /@firebase/auth@1.7.0(@firebase/app@0.9.28):
+    resolution: {integrity: sha512-xvyCR3Ivan74AwT/rQOqrYkyu4Ccz6GOFaohi1Pw3gLOpG2WIdC/phc4zdQkLJjmbGFcYNisHyqII2P/H9ZJow==}
     peerDependencies:
       '@firebase/app': 0.x
       '@react-native-async-storage/async-storage': ^1.18.1
@@ -671,9 +671,9 @@ packages:
         optional: true
     dependencies:
       '@firebase/app': 0.9.28
-      '@firebase/component': 0.6.5
-      '@firebase/logger': 0.4.0
-      '@firebase/util': 1.9.4
+      '@firebase/component': 0.6.6
+      '@firebase/logger': 0.4.1
+      '@firebase/util': 1.9.5
       tslib: 2.6.2
       undici: 5.28.3
     dev: false
@@ -689,6 +689,13 @@ packages:
     resolution: {integrity: sha512-2tVDk1ixi12sbDmmfITK8lxSjmcb73BMF6Qwc3U44hN/J1Fi1QY/Hnnb6klFlbB9/G16a3J3d4nXykye2EADTw==}
     dependencies:
       '@firebase/util': 1.9.4
+      tslib: 2.6.2
+    dev: false
+
+  /@firebase/component@0.6.6:
+    resolution: {integrity: sha512-pp7sWqHmAAlA3os6ERgoM3k5Cxff510M9RLXZ9Mc8KFKMBc2ct3RkZTWUF7ixJNvMiK/iNgRLPDrLR2gtRJ9iQ==}
+    dependencies:
+      '@firebase/util': 1.9.5
       tslib: 2.6.2
     dev: false
 
@@ -875,6 +882,12 @@ packages:
       tslib: 2.6.2
     dev: false
 
+  /@firebase/logger@0.4.1:
+    resolution: {integrity: sha512-tTIixB5UJbG9ZHSGZSZdX7THr3KWOLrejZ9B7jYsm6fpwgRNngKznQKA2wgYVyvBc1ta7dGFh9NtJ8n7qfiYIw==}
+    dependencies:
+      tslib: 2.6.2
+    dev: false
+
   /@firebase/messaging-compat@0.2.4(@firebase/app-compat@0.2.23)(@firebase/app@0.9.23):
     resolution: {integrity: sha512-lyFjeUhIsPRYDPNIkYX1LcZMpoVbBWXX4rPl7c/rqc7G+EUea7IEtSt4MxTvh6fDfPuzLn7+FZADfscC+tNMfg==}
     peerDependencies:
@@ -1022,6 +1035,12 @@ packages:
 
   /@firebase/util@1.9.4:
     resolution: {integrity: sha512-WLonYmS1FGHT97TsUmRN3qnTh5TeeoJp1Gg5fithzuAgdZOUtsYECfy7/noQ3llaguios8r5BuXSEiK82+UrxQ==}
+    dependencies:
+      tslib: 2.6.2
+    dev: false
+
+  /@firebase/util@1.9.5:
+    resolution: {integrity: sha512-PP4pAFISDxsf70l3pEy34Mf3GkkUcVQ3MdKp6aSVb7tcpfUQxnsdV7twDd8EkfB6zZylH6wpUAoangQDmCUMqw==}
     dependencies:
       tslib: 2.6.2
     dev: false
