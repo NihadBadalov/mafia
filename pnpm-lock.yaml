@@ -12,8 +12,8 @@ dependencies:
     specifier: ^7.93.0
     version: 7.106.0(@sveltejs/kit@1.30.4)(encoding@0.1.13)(svelte@4.2.12)
   '@sentry/vite-plugin':
-    specifier: ^2.10.2
-    version: 2.14.3(encoding@0.1.13)
+    specifier: ^2.16.1
+    version: 2.16.1(encoding@0.1.13)
   '@sveltejs/adapter-vercel':
     specifier: ^3.1.0
     version: 3.1.0(@sveltejs/kit@1.30.4)(encoding@0.1.13)
@@ -1505,8 +1505,8 @@ packages:
       '@sentry/utils': 7.106.0
     dev: false
 
-  /@sentry/babel-plugin-component-annotate@2.14.3:
-    resolution: {integrity: sha512-h0ONVTe8j3Ma2g5SMsl9ynmLZdCf+CupLF7PQ7n06K0L8dDtrHqo8yjsWaZSJf4InGrJ9HC4MaOSItbFjiTFLw==}
+  /@sentry/babel-plugin-component-annotate@2.16.1:
+    resolution: {integrity: sha512-pJka66URsqQbk6hTs9H1XFpUeI0xxuqLYf9Dy5pRGNHSJMtfv91U+CaYSWt03aRRMGDXMduh62zAAY7Wf0HO+A==}
     engines: {node: '>= 14'}
     dev: false
 
@@ -1540,17 +1540,17 @@ packages:
       - supports-color
     dev: false
 
-  /@sentry/bundler-plugin-core@2.14.3(encoding@0.1.13):
-    resolution: {integrity: sha512-iEtMdAPFUAYngvYhkfbgY8m3zB439u+5tvovj9rBXHGMr3nEB5fzZLOcVuiL47GEuUvMjDdrubl9MDGZ0c1IuQ==}
+  /@sentry/bundler-plugin-core@2.16.1(encoding@0.1.13):
+    resolution: {integrity: sha512-n6z8Ts3T9HROLuY7tVEYpBKvS+P7+b8NdqxP7QBcwp2nuPUlN5Ola1ivFjk1p5a7wRYeN9zM8orGe4l2HeNfYA==}
     engines: {node: '>= 14'}
     dependencies:
       '@babel/core': 7.24.0
-      '@sentry/babel-plugin-component-annotate': 2.14.3
+      '@sentry/babel-plugin-component-annotate': 2.16.1
       '@sentry/cli': 2.30.0(encoding@0.1.13)
       dotenv: 16.4.5
       find-up: 5.0.0
       glob: 9.3.5
-      magic-string: 0.27.0
+      magic-string: 0.30.8
       unplugin: 1.0.1
     transitivePeerDependencies:
       - encoding
@@ -1747,11 +1747,11 @@ packages:
       - supports-color
     dev: false
 
-  /@sentry/vite-plugin@2.14.3(encoding@0.1.13):
-    resolution: {integrity: sha512-sSMbn6lND0N5eE0R/gmzlZKgegIgkSge/yrECf0xZi3tMHn4n6Ue1VO7m0+sJZFLP5C26htYFh0lI16EUweYEg==}
+  /@sentry/vite-plugin@2.16.1(encoding@0.1.13):
+    resolution: {integrity: sha512-RSIyeqFG3PR5iJsZnagQxzOhM22z1Kh9DG+HQQsfVrxokzrWKRu/G17O2MIDh2I5iYEaL0Fkd/9RAXE4/b0aVg==}
     engines: {node: '>= 14'}
     dependencies:
-      '@sentry/bundler-plugin-core': 2.14.3(encoding@0.1.13)
+      '@sentry/bundler-plugin-core': 2.16.1(encoding@0.1.13)
       unplugin: 1.0.1
     transitivePeerDependencies:
       - encoding
