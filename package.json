@@ -33,7 +33,7 @@
     "@sentry/sveltekit": "^7.93.0",
     "@sentry/vite-plugin": "^2.10.2",
     "@sveltejs/adapter-vercel": "^3.1.0",
-    "@sveltejs/kit": "^1.27.6",
+    "@sveltejs/kit": "^3.0.0",
     "@typescript-eslint/eslint-plugin": "6.18.1",
     "@typescript-eslint/parser": "^6.18.1",
     "bufferutil": "^4.0.8",
@@ -44,8 +44,8 @@
     "firebase-admin": "~11.11.0",
     "socket.io": "^4.7.1",
     "socket.io-client": "^4.7.1",
-    "vite": "^4.5.1",
+    "vite": "^6.4.5",
     "washyourmouthoutwithsoap": "^1.0.2",
-    "zod": "^3.22.4"
+    "zod": "^4.6.6"
   }
 }
